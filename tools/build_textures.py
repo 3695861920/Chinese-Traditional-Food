@@ -686,12 +686,16 @@ def main():
     SIZE = args.size
     U = SIZE / 16.0
 
-    # 内容图标由 texture_icons 绘制（固定 64x64，与 content_data 一一对应）
+    # 内容图标由 texture_icons 绘制（与 content_data 一一对应）
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
     import content_data as DATA
     import texture_icons as ICONS
     ICONS.bind(hash_noise, bayer, quantize, shade)
     ICONS.set_size(SIZE)
+    # 农作物（蔬菜 / 谷物 / 豆 / 种子）另有一套精细画法，固定 64x64
+    import crop_icons
+    ICONS.bind_crops(crop_icons)
+    print("icon size = %d（农作物 %d 种用 64x64）" % (SIZE, len(ICONS.FINE_KINDS)))
 
     _, wood = extract_cc0_palette()
     if not wood or len(wood) < 4:
@@ -759,9 +763,9 @@ def main():
             img = ICONS.draw(kind, palette, seed)
             save(img, ITEM_DIR, "%s.png" % item_id)
             count += 1
-            # 打印进度：逐像素画法本来就慢，没有进度输出时很容易
-            # 被误当成“卡死了”，进而把进程/整个终端一起杀掉。
-            if count % 40 == 0:
+            # 打印进度：逐像素画法本来就慢（64x64 的农作物更慢），
+            # 没有进度输出时很容易被误当成"卡死了"，进而把进程一起杀掉。
+            if count % 20 == 0:
                 print("  ... %d/%d" % (count, len(entries)), flush=True)
 
         print("content icons: %d" % count)

@@ -267,6 +267,10 @@ def check_java_effects():
 
 def check_icon_kinds():
     import texture_icons as ICONS
+    # 农作物（蔬菜 / 谷物 / 豆 / 种子）的画法在 crop_icons 里，
+    # 这里要和 build_textures 一样把它们并进来，否则会误报"没有画法"。
+    import crop_icons
+    ICONS.bind_crops(crop_icons)
     missing = set()
     for row in (DATA.INGREDIENTS + DATA.SEEDS + DATA.SEASONINGS
                 + DATA.FRUITS + DATA.VEGETABLES):

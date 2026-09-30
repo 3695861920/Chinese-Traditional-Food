@@ -14,18 +14,32 @@ Minecraft 风格图标绘制器（64x64）。
 """
 
 import math
+import sys
 
 from PIL import Image
 
 SIZE = 16
 U = SIZE / 16.0
 
+# --size 指定的基准尺寸；农作物那几种会单独用 64x64 画（见 FINE_KINDS）
+BASE_SIZE = SIZE
+FINE_KINDS = frozenset()
+
 
 def set_size(size):
     """由 build_textures 调用。16 = 原版分辨率（默认），64 = 精细。"""
-    global SIZE, U
+    global SIZE, U, BASE_SIZE
     SIZE = size
-    U = SIZE / 16.0
+    U = size / 16.0
+    BASE_SIZE = size
+
+
+def bind_crops(module):
+    """注入农作物画法（crop_icons）：它们的 kind 一律用 64x64。"""
+    global FINE_KINDS
+    module.bind(sys.modules[__name__])
+    PAINTERS.update(module.PAINTERS)
+    FINE_KINDS = frozenset(module.PAINTERS)
 
 # 由 build_textures.py 注入（避免循环 import）
 _noise = None
@@ -1908,10 +1922,32 @@ PAINTERS = {
 
 
 def draw(kind, palette, seed):
-    """按 kind 画一张 64x64 图标。palette 是 4 档颜色元组。"""
+    """按 kind 画一张图标。palette 是 4 档颜色元组。
+
+    农作物（蔬菜 / 谷物 / 豆 / 种子）用 **64x64**，其余物品用 --size
+    （默认 16，与原版一致）：农作物的辨识度全在叶片、瓜棱、瘤点、种脐这些
+    细节上，16x16 抹不下；而工具、器皿、菜品在 16x16 下已经很干净。
+    方块图集与物品图集都允许一张图里混着不同尺寸的贴图。
+    """
+    global SIZE, U
     painter = PAINTERS.get(kind)
     if painter is None:
         raise KeyError("没有 %s 的画法，请在 texture_icons.PAINTERS 里登记" % kind)
-    img = blank()
-    painter(img, palette, seed)
+    want = 64 if kind in FINE_KINDS else BASE_SIZE
+    prev = (SIZE, U)
+    SIZE, U = want, want / 16.0
+    try:
+        img = blank()
+        painter(img, palette, seed)
+    finally:
+        SIZE, U = prev
     return img
+
+
+def draw_at(kind, palette, seed):
+    """按该 kind 自己的分辨率画（供预览脚本使用）。"""
+    return draw(kind, palette, seed)
+
+
+def size_for(kind):
+    return 64 if kind in FINE_KINDS else BASE_SIZE

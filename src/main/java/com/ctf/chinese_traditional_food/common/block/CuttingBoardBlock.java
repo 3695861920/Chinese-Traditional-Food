@@ -9,10 +9,13 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -32,8 +35,31 @@ import org.jetbrains.annotations.Nullable;
  * 想吃菜请用餐盘 / 大拼盘。</p>
  */
 public class CuttingBoardBlock extends Block implements EntityBlock {
+
+    /**
+     * 案板的真实占用体积（与 {@code display_models.cutting_board()} 一致）。
+     *
+     * <p>板子是 {@code x/z = 0.4..15.6, y = 0..1.9} —— 只有 0.12 格高。
+     * 默认的整格碰撞箱会让玩家"踩上台阶"，也会挡住相邻方块的面部别除，
+     * 所以要显式给出真实尺寸。</p>
+     */
+    private static final VoxelShape SHAPE =
+            Block.box(0.4, 0.0, 0.4, 15.6, 1.9, 15.6);
+
     public CuttingBoardBlock(Properties properties) {
         super(properties);
+    }
+
+    @Override
+    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos,
+                                  CollisionContext context) {
+        return SHAPE;
+    }
+
+    @Override
+    protected VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos,
+                                           CollisionContext context) {
+        return SHAPE;
     }
 
     @Nullable

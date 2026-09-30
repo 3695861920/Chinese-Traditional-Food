@@ -63,10 +63,31 @@
     "shape=bowl,palette=eggplant": {
       "model": "chinese_traditional_food:block/placed_dish_bowl"
     },
+    "shape=bowl,palette=cucumber": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=bowl,palette=wintermelon": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=bowl,palette=bitter": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
     "shape=bowl,palette=fungus": {
       "model": "chinese_traditional_food:block/placed_dish_bowl"
     },
+    "shape=bowl,palette=woodear": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
     "shape=bowl,palette=dried": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=bowl,palette=seedbr": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=bowl,palette=seedpale": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=bowl,palette=seedsb": {
       "model": "chinese_traditional_food:block/placed_dish_bowl"
     },
     "shape=bowl,palette=soy": {
@@ -204,10 +225,31 @@
     "shape=plate,palette=eggplant": {
       "model": "chinese_traditional_food:block/placed_dish_plate"
     },
+    "shape=plate,palette=cucumber": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=plate,palette=wintermelon": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=plate,palette=bitter": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
     "shape=plate,palette=fungus": {
       "model": "chinese_traditional_food:block/placed_dish_plate"
     },
+    "shape=plate,palette=woodear": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
     "shape=plate,palette=dried": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=plate,palette=seedbr": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=plate,palette=seedpale": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=plate,palette=seedsb": {
       "model": "chinese_traditional_food:block/placed_dish_plate"
     },
     "shape=plate,palette=soy": {
@@ -345,10 +387,31 @@
     "shape=platter,palette=eggplant": {
       "model": "chinese_traditional_food:block/placed_dish_platter"
     },
+    "shape=platter,palette=cucumber": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=platter,palette=wintermelon": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=platter,palette=bitter": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
     "shape=platter,palette=fungus": {
       "model": "chinese_traditional_food:block/placed_dish_platter"
     },
+    "shape=platter,palette=woodear": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
     "shape=platter,palette=dried": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=platter,palette=seedbr": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=platter,palette=seedpale": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=platter,palette=seedsb": {
       "model": "chinese_traditional_food:block/placed_dish_platter"
     },
     "shape=platter,palette=soy": {
@@ -486,10 +549,31 @@
     "shape=pot,palette=eggplant": {
       "model": "chinese_traditional_food:block/placed_dish_pot"
     },
+    "shape=pot,palette=cucumber": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=pot,palette=wintermelon": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=pot,palette=bitter": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
     "shape=pot,palette=fungus": {
       "model": "chinese_traditional_food:block/placed_dish_pot"
     },
+    "shape=pot,palette=woodear": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
     "shape=pot,palette=dried": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=pot,palette=seedbr": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=pot,palette=seedpale": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=pot,palette=seedsb": {
       "model": "chinese_traditional_food:block/placed_dish_pot"
     },
     "shape=pot,palette=soy": {
@@ -627,10 +711,31 @@
     "shape=fish_plate,palette=eggplant": {
       "model": "chinese_traditional_food:block/placed_dish_fish_plate"
     },
+    "shape=fish_plate,palette=cucumber": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=fish_plate,palette=wintermelon": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=fish_plate,palette=bitter": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
     "shape=fish_plate,palette=fungus": {
       "model": "chinese_traditional_food:block/placed_dish_fish_plate"
     },
+    "shape=fish_plate,palette=woodear": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
     "shape=fish_plate,palette=dried": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=fish_plate,palette=seedbr": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=fish_plate,palette=seedpale": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=fish_plate,palette=seedsb": {
       "model": "chinese_traditional_food:block/placed_dish_fish_plate"
     },
     "shape=fish_plate,palette=soy": {
@@ -768,10 +873,31 @@
     "shape=dumpling,palette=eggplant": {
       "model": "chinese_traditional_food:block/placed_dish_dumpling"
     },
+    "shape=dumpling,palette=cucumber": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=dumpling,palette=wintermelon": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=dumpling,palette=bitter": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
     "shape=dumpling,palette=fungus": {
       "model": "chinese_traditional_food:block/placed_dish_dumpling"
     },
+    "shape=dumpling,palette=woodear": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
     "shape=dumpling,palette=dried": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=dumpling,palette=seedbr": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=dumpling,palette=seedpale": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=dumpling,palette=seedsb": {
       "model": "chinese_traditional_food:block/placed_dish_dumpling"
     },
     "shape=dumpling,palette=soy": {
@@ -909,10 +1035,31 @@
     "shape=mooncake,palette=eggplant": {
       "model": "chinese_traditional_food:block/placed_dish_mooncake"
     },
+    "shape=mooncake,palette=cucumber": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=mooncake,palette=wintermelon": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=mooncake,palette=bitter": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
     "shape=mooncake,palette=fungus": {
       "model": "chinese_traditional_food:block/placed_dish_mooncake"
     },
+    "shape=mooncake,palette=woodear": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
     "shape=mooncake,palette=dried": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=mooncake,palette=seedbr": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=mooncake,palette=seedpale": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=mooncake,palette=seedsb": {
       "model": "chinese_traditional_food:block/placed_dish_mooncake"
     },
     "shape=mooncake,palette=soy": {
@@ -1050,10 +1197,31 @@
     "shape=zongzi,palette=eggplant": {
       "model": "chinese_traditional_food:block/placed_dish_zongzi"
     },
+    "shape=zongzi,palette=cucumber": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=zongzi,palette=wintermelon": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=zongzi,palette=bitter": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
     "shape=zongzi,palette=fungus": {
       "model": "chinese_traditional_food:block/placed_dish_zongzi"
     },
+    "shape=zongzi,palette=woodear": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
     "shape=zongzi,palette=dried": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=zongzi,palette=seedbr": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=zongzi,palette=seedpale": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=zongzi,palette=seedsb": {
       "model": "chinese_traditional_food:block/placed_dish_zongzi"
     },
     "shape=zongzi,palette=soy": {
@@ -1191,10 +1359,31 @@
     "shape=cake_slice,palette=eggplant": {
       "model": "chinese_traditional_food:block/placed_dish_cake_slice"
     },
+    "shape=cake_slice,palette=cucumber": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cake_slice,palette=wintermelon": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cake_slice,palette=bitter": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
     "shape=cake_slice,palette=fungus": {
       "model": "chinese_traditional_food:block/placed_dish_cake_slice"
     },
+    "shape=cake_slice,palette=woodear": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
     "shape=cake_slice,palette=dried": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cake_slice,palette=seedbr": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cake_slice,palette=seedpale": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cake_slice,palette=seedsb": {
       "model": "chinese_traditional_food:block/placed_dish_cake_slice"
     },
     "shape=cake_slice,palette=soy": {
@@ -1332,10 +1521,31 @@
     "shape=cup,palette=eggplant": {
       "model": "chinese_traditional_food:block/placed_dish_cup"
     },
+    "shape=cup,palette=cucumber": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=cup,palette=wintermelon": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=cup,palette=bitter": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
     "shape=cup,palette=fungus": {
       "model": "chinese_traditional_food:block/placed_dish_cup"
     },
+    "shape=cup,palette=woodear": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
     "shape=cup,palette=dried": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=cup,palette=seedbr": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=cup,palette=seedpale": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=cup,palette=seedsb": {
       "model": "chinese_traditional_food:block/placed_dish_cup"
     },
     "shape=cup,palette=soy": {
@@ -1473,10 +1683,31 @@
     "shape=jar,palette=eggplant": {
       "model": "chinese_traditional_food:block/placed_dish_jar"
     },
+    "shape=jar,palette=cucumber": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=jar,palette=wintermelon": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=jar,palette=bitter": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
     "shape=jar,palette=fungus": {
       "model": "chinese_traditional_food:block/placed_dish_jar"
     },
+    "shape=jar,palette=woodear": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
     "shape=jar,palette=dried": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=jar,palette=seedbr": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=jar,palette=seedpale": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=jar,palette=seedsb": {
       "model": "chinese_traditional_food:block/placed_dish_jar"
     },
     "shape=jar,palette=soy": {
@@ -1614,10 +1845,31 @@
     "shape=cube,palette=eggplant": {
       "model": "chinese_traditional_food:block/placed_dish_cube"
     },
+    "shape=cube,palette=cucumber": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=wintermelon": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=bitter": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
     "shape=cube,palette=fungus": {
       "model": "chinese_traditional_food:block/placed_dish_cube"
     },
+    "shape=cube,palette=woodear": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
     "shape=cube,palette=dried": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=seedbr": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=seedpale": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=seedsb": {
       "model": "chinese_traditional_food:block/placed_dish_cube"
     },
     "shape=cube,palette=soy": {
