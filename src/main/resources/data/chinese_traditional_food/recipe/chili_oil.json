@@ -1,12 +1,8 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    {
-      "item": "chinese_traditional_food:chili_powder"
-    },
-    {
-      "item": "minecraft:honey_bottle"
-    }
+    "chinese_traditional_food:chili_powder",
+    "minecraft:honey_bottle"
   ],
   "result": {
     "id": "chinese_traditional_food:chili_oil",

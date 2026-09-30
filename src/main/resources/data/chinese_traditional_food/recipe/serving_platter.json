@@ -5,9 +5,7 @@
     "P P"
   ],
   "key": {
-    "P": {
-      "item": "minecraft:planks"
-    }
+    "P": "#minecraft:planks"
   },
   "result": {
     "id": "chinese_traditional_food:serving_platter",

@@ -1,18 +1,10 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    {
-      "item": "chinese_traditional_food:plate"
-    },
-    {
-      "item": "minecraft:beef"
-    },
-    {
-      "item": "chinese_traditional_food:soy_sauce"
-    },
-    {
-      "item": "chinese_traditional_food:star_anise"
-    }
+    "chinese_traditional_food:plate",
+    "minecraft:beef",
+    "chinese_traditional_food:soy_sauce",
+    "chinese_traditional_food:star_anise"
   ],
   "result": {
     "id": "chinese_traditional_food:lawei_hezheng",

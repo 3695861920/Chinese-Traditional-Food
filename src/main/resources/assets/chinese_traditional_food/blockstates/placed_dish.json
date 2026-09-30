@@ -1,0 +1,40 @@
+{
+  "variants": {
+    "shape=bowl": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=plate": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=platter": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=pot": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=fish_plate": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=dumpling": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=mooncake": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=zongzi": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=cake_slice": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cup": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=jar": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=cube": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    }
+  }
+}

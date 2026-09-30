@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * 案板切割规则的运行时解析。
  *
- * <p>规则表本身由 {@link ModCutting} 提供（那是生成出来的）。这里只做两件事：</p>
+ * <p>规则表本身由 {@link ModRecipes#CUTTING} 提供（那是生成出来的）。这里只做两件事：</p>
  * <ol>
  *   <li>把字符串形式的输入（{@code "ns:path"} 或 {@code "#ns:tag"}）解析成
  *       物品或标签，并缓存下来 —— 不在每次右键时去查注册表；</li>
@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
  * <p>之所以用代码表而不是自定义 {@code RecipeType}：
  * 本装置被要求「配方独立于其它模组、始终可用」，代码表最直接、也不受
  * 数据包加载顺序影响。将来若要支持数据包自定义，把
- * {@link ModCutting#ENTRIES} 换成读取 JSON 即可，调用方不用改。</p>
+ * {@link ModRecipes#CUTTING} 换成读取 JSON 即可，调用方不用改。</p>
  */
 public final class CuttingRecipes {
     /** 解析后的一条规则。 */
@@ -51,7 +51,7 @@ public final class CuttingRecipes {
             return resolved;
         }
         List<Resolved> list = new ArrayList<>();
-        for (ModCutting.Entry entry : ModCutting.ENTRIES) {
+        for (ModRecipes.CuttingEntry entry : ModRecipes.CUTTING) {
             Item item = null;
             TagKey<Item> tag = null;
             String input = entry.input();

@@ -5,9 +5,7 @@
     "S"
   ],
   "key": {
-    "S": {
-      "item": "minecraft:stick"
-    }
+    "S": "minecraft:stick"
   },
   "result": {
     "id": "chinese_traditional_food:chopsticks",

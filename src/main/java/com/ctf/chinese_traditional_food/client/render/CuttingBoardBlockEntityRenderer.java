@@ -2,6 +2,7 @@ package com.ctf.chinese_traditional_food.client.render;
 
 import com.ctf.chinese_traditional_food.common.block.entity.CuttingBoardBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 
 /**
@@ -9,6 +10,8 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
  *
  * <p>因为 {@link CuttingBoardBlockEntity} 复用了"摆放类"的存储与渲染状态，
  * 这里只要决定两个槽位的位置与大小即可 —— 和餐盘 / 大拼盘是同一套机制。</p>
+ *
+ * <p>和盘子一样，物品贴片默认是竖立的，要绕 X 转 -90° 才躺在板面上。</p>
  */
 public class CuttingBoardBlockEntityRenderer extends AbstractDishDisplayRenderer<CuttingBoardBlockEntity> {
 
@@ -18,13 +21,17 @@ public class CuttingBoardBlockEntityRenderer extends AbstractDishDisplayRenderer
 
     @Override
     protected void transformDish(PoseStack poseStack, DishDisplayRenderState renderState, int index) {
+        // 板面在模型里是 1.9/16 格高，抬到它上面一点点
+        double y = 0.13D;
         if (index == CuttingBoardBlockEntity.SLOT_INPUT) {
             // 待切食材：摆在板子左半边
-            poseStack.translate(0.31D, 0.10D, 0.5D);
+            poseStack.translate(0.31D, y, 0.5D);
+            poseStack.mulPose(Axis.XP.rotationDegrees(-90.0F));
             poseStack.scale(0.52F, 0.52F, 0.52F);
         } else {
             // 成品：右半边，稍微小一点，暗示"切好的"
-            poseStack.translate(0.70D, 0.10D, 0.5D);
+            poseStack.translate(0.70D, y, 0.5D);
+            poseStack.mulPose(Axis.XP.rotationDegrees(-90.0F));
             poseStack.scale(0.46F, 0.46F, 0.46F);
         }
     }

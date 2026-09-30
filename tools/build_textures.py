@@ -36,6 +36,7 @@ import colorsys
 import math
 import os
 import sys
+import zlib
 
 from PIL import Image
 
@@ -44,6 +45,7 @@ ASSETS = os.path.join(ROOT, "src", "main", "resources", "assets",
                       "chinese_traditional_food", "textures")
 BLOCK_DIR = os.path.join(ASSETS, "block")
 ITEM_DIR = os.path.join(ASSETS, "item")
+GUI_DIR = os.path.join(ASSETS, "gui")
 DOWNLOADS = os.path.join(ROOT, "tools", "downloads")
 EXTRACTED = os.path.join(DOWNLOADS, "extracted")
 
@@ -666,10 +668,12 @@ def save(img, directory, name):
 def main():
     global SIZE, U
     parser = argparse.ArgumentParser(description="生成 Minecraft 风格纹理")
-    parser.add_argument("--size", type=int, default=64,
-                        help="器皿类纹理的边长，默认 64（原版是 16）")
-    parser.add_argument("--only", choices=["displays", "content", "utilities", "all"], default="all",
-                        help="只生成器皿纹理 / 只生成内容图标 / 只生成工具方块 / 全部")
+    parser.add_argument("--size", type=int, default=16,
+                        help="纹理边长，默认 16（原版分辨率）；想要精细可传 64")
+    parser.add_argument("--only",
+                        choices=["displays", "content", "utilities", "machines", "all"],
+                        default="all",
+                        help="只生成器皿 / 只生成内容图标 / 只生成工具方块 / 只生成机器与界面 / 全部")
     args = parser.parse_args()
     SIZE = args.size
     U = SIZE / 16.0
@@ -679,6 +683,7 @@ def main():
     import content_data as DATA
     import texture_icons as ICONS
     ICONS.bind(hash_noise, bayer, quantize, shade)
+    ICONS.set_size(SIZE)
 
     _, wood = extract_cc0_palette()
     if not wood or len(wood) < 4:
@@ -700,12 +705,21 @@ def main():
     if args.only in ("utilities", "all"):
         import texture_utilities as UTIL
         UTIL.bind(hash_noise, bayer, quantize, shade)
+        UTIL.set_size(SIZE)
         UTIL.main(BLOCK_DIR, ITEM_DIR)
+
+    if args.only in ("machines", "all"):
+        import texture_machines as MACH
+        MACH.bind(hash_noise, bayer, quantize, shade)
+        MACH.set_size(SIZE)
+        MACH.main(BLOCK_DIR, ITEM_DIR, GUI_DIR)
 
     if args.only in ("content", "all"):
         # 收集 content_data 里所有需要图标的条目
         entries = []
         for row in DATA.INGREDIENTS:
+            entries.append((row[0], row[3], row[4]))
+        for row in DATA.SEEDS:
             entries.append((row[0], row[3], row[4]))
         for row in DATA.SEASONINGS:
             entries.append((row[0], row[3], row[4]))
@@ -729,11 +743,12 @@ def main():
                 missing_palettes.add(palette_name)
                 continue
             palette = DATA.PALETTES[palette_name]
-            # 用 id 派生种子，保证每次构建结果一致，同时让同种造型有细微差别
-            seed = abs(hash(item_id)) % 100000
+            # 用 CRC32 而不是 Python 的 hash()：后者对字符串带进程级随机盐，
+            # 每次运行结果都不同，会导致纹理“不可复现”、diff 噪声很大。
+            seed = zlib.crc32(item_id.encode("utf-8")) & 0x7FFFFFFF
             if seed == 0:
                 seed = 1
-            img = ICONS.draw(kind, palette, seed & 0x7FFFFFFF)
+            img = ICONS.draw(kind, palette, seed)
             save(img, ITEM_DIR, "%s.png" % item_id)
             count += 1
 

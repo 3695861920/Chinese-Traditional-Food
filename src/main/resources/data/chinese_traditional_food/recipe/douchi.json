@@ -1,12 +1,8 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    {
-      "item": "chinese_traditional_food:black_bean"
-    },
-    {
-      "item": "chinese_traditional_food:salt"
-    }
+    "chinese_traditional_food:black_bean",
+    "chinese_traditional_food:salt"
   ],
   "result": {
     "id": "chinese_traditional_food:douchi",

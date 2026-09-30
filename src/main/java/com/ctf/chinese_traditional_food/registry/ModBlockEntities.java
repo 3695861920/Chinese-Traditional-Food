@@ -2,8 +2,11 @@ package com.ctf.chinese_traditional_food.registry;
 
 import com.ctf.chinese_traditional_food.ChineseTraditionalFood;
 import com.ctf.chinese_traditional_food.common.block.entity.CuttingBoardBlockEntity;
+import com.ctf.chinese_traditional_food.common.block.entity.GrainShellerBlockEntity;
+import com.ctf.chinese_traditional_food.common.block.entity.PlacedDishBlockEntity;
 import com.ctf.chinese_traditional_food.common.block.entity.PlateBlockEntity;
 import com.ctf.chinese_traditional_food.common.block.entity.ServingPlatterBlockEntity;
+import com.ctf.chinese_traditional_food.common.block.entity.WaterMillBlockEntity;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
@@ -32,6 +35,18 @@ public final class ModBlockEntities {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CuttingBoardBlockEntity>> CUTTING_BOARD =
             BLOCK_ENTITIES.register("cutting_board",
                     () -> new BlockEntityType<>(CuttingBoardBlockEntity::new, ModBlocks.CUTTING_BOARD.get()));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WaterMillBlockEntity>> WATER_MILL =
+            BLOCK_ENTITIES.register("water_mill",
+                    () -> new BlockEntityType<>(WaterMillBlockEntity::new, ModBlocks.WATER_MILL.get()));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GrainShellerBlockEntity>> GRAIN_SHELLER =
+            BLOCK_ENTITIES.register("grain_sheller",
+                    () -> new BlockEntityType<>(GrainShellerBlockEntity::new, ModBlocks.GRAIN_SHELLER.get()));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PlacedDishBlockEntity>> PLACED_DISH =
+            BLOCK_ENTITIES.register("placed_dish",
+                    () -> new BlockEntityType<>(PlacedDishBlockEntity::new, ModBlocks.PLACED_DISH.get()));
 
     public static void register(IEventBus modBus) {
         BLOCK_ENTITIES.register(modBus);

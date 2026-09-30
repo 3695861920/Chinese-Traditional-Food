@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "chinese_traditional_food:item/plate"
+    "model": "chinese_traditional_food:block/plate"
   }
 }

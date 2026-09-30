@@ -1,0 +1,36 @@
+modLoader = "javafml"
+loaderVersion = "[1,)"
+license = "${mod_license}"
+issueTrackerURL = "https://github.com/3695861920/Chinese-Traditional-Food/issues"
+
+[[mods]]
+modId = "${mod_id}"
+version = "${mod_version}"
+displayName = "${mod_name}"
+# 描述用多行字面量，便于写中文
+description = '''
+国风·传统食物。
+
+添加中国常见的食材、调味料、厨具餐具、八大菜系典型菜品与传统节日食物，
+并提供案板 / 刀具、餐盘 / 大拼盘等把菜"摆出来"的方式。
+
+做出来的菜不是背包里一格图标，而是能端上桌的实体。
+'''
+logoFile = "logo.png"
+authors = "3695861920"
+credits = "配色参考自 Kenney.nl 与 OpenGameArt 的 CC0 素材（详见 ATTRIBUTION.md）"
+displayURL = "https://github.com/3695861920/Chinese-Traditional-Food"
+
+[[dependencies.${mod_id}]]
+modId = "neoforge"
+type = "required"
+versionRange = "[26.1.2,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "minecraft"
+type = "required"
+versionRange = "[26.1.2]"
+ordering = "NONE"
+side = "BOTH"

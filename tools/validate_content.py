@@ -64,13 +64,23 @@ def check_json():
 
 
 def check_png():
+    """纹理必须是正方形、边长为 2 的幂（Minecraft 的贴图惯例）。
+
+    默认是原版的 16x16；若用 `build_textures.py --size 64` 生成精细版，
+    这里同样能通过。界面底图（textures/gui）尺寸另算，不参与检查。
+    """
     n = 0
     for path in walk(RES, ".png"):
         img = Image.open(path)
-        if img.size != (64, 64):
-            fail("PNG 尺寸不是 64x64: %s %s" % (os.path.relpath(path, ROOT), img.size))
+        rel = os.path.relpath(path, ROOT).replace("\\", "/")
+        if "/textures/gui/" in rel:
+            n += 1
+            continue
+        w, h = img.size
+        if w != h or w < 16 or (w & (w - 1)) != 0:
+            fail("PNG 尺寸不是正方形 2 的幂: %s %s" % (rel, img.size))
         if img.mode != "RGBA":
-            fail("PNG 不是 RGBA: %s %s" % (os.path.relpath(path, ROOT), img.mode))
+            fail("PNG 不是 RGBA: %s %s" % (rel, img.mode))
         n += 1
     return n
 
@@ -79,7 +89,8 @@ def collect_declared():
     """content_data 里声明的全部条目 id。"""
     ids = set()
     kinds = {}
-    for row in DATA.INGREDIENTS + DATA.SEASONINGS + DATA.FRUITS + DATA.VEGETABLES:
+    for row in (DATA.INGREDIENTS + DATA.SEEDS + DATA.SEASONINGS
+                + DATA.FRUITS + DATA.VEGETABLES):
         ids.add(row[0])
         kinds[row[0]] = row[3]
     for row in DATA.TOOLS:
@@ -90,10 +101,16 @@ def collect_declared():
         ids.add(row[0])
         kinds[row[0]] = row[4]
         dishes.add(row[0])
-    # 手写的摆放 / 加工方块
-    for extra in ("plate", "serving_platter", "cutting_board"):
+    # 手写的功能方块（它们的物品与语言键在 ModItems / lang 里单独提供）
+    for extra in HAND_WRITTEN_BLOCKS:
         ids.add(extra)
     return ids, dishes, kinds
+
+
+# 手写的功能方块：它们注册的是 BlockItem，语言键走 block. 前缀，
+# 且模型 / 方块状态都是手写或由 display_models.py 生成的。
+HAND_WRITTEN_BLOCKS = ("plate", "serving_platter", "cutting_board",
+                       "water_mill", "grain_sheller", "grain_sheller_hopper")
 
 
 def check_assets(ids):
@@ -101,9 +118,16 @@ def check_assets(ids):
     lang_en = load_json(os.path.join(ASSETS, "lang", "en_us.json")) or {}
 
     for item_id in sorted(ids):
-        # 摆放 / 加工方块注册的是 BlockItem，语言键走 block. 前缀
-        hand_written = ("plate", "serving_platter", "cutting_board")
-        prefixes = ("item.", "block.") if item_id in hand_written else ("item.",)
+        # 手写功能方块注册的是 BlockItem：
+        #   语言键走 block. 前缀，客户端物品直接指向三维方块模型，
+        #   所以只需要检查 items/<id>.json（26.1 的真正入口）。
+        if item_id in HAND_WRITTEN_BLOCKS:
+            if not any("block.%s.%s" % (NS, item_id) in d for d in (lang_zh, lang_en)):
+                fail("%s 缺少语言键" % item_id)
+            if not os.path.exists(os.path.join(ASSETS, "items", "%s.json" % item_id)):
+                fail("%s 缺少客户端物品定义" % item_id)
+            continue
+        prefixes = ("item.",)
         checks = {
             "语言(zh)": any("%s%s.%s" % (p, NS, item_id) in lang_zh for p in prefixes),
             "语言(en)": any("%s%s.%s" % (p, NS, item_id) in lang_en for p in prefixes),
@@ -128,7 +152,8 @@ def known_items():
         "minecraft:cod", "minecraft:salmon", "minecraft:kelp", "minecraft:dried_kelp",
         "minecraft:brown_mushroom", "minecraft:red_mushroom", "minecraft:honey_bottle",
         "minecraft:sweet_berries", "minecraft:cocoa_beans", "minecraft:ink_sac",
-        "minecraft:apple", "minecraft:beetroot",
+        "minecraft:apple", "minecraft:beetroot", "minecraft:stone_bricks",
+        "minecraft:stone", "minecraft:wheat_seeds",
     }
     return {"%s:%s" % (NS, i) for i in ids} | allowed_vanilla
 
@@ -148,21 +173,21 @@ def check_recipes(dishes):
         refs = []
         kind = obj.get("type", "")
         if kind == "minecraft:crafting_shapeless":
-            for ing in obj.get("ingredients", []):
-                refs.append(ing)
+            refs.extend(obj.get("ingredients", []))
         elif kind == "minecraft:crafting_shaped":
             refs.extend(obj.get("key", {}).values())
         elif kind == "minecraft:smelting":
-            refs.append(obj.get("ingredient", {}))
+            refs.append(obj.get("ingredient"))
         else:
             fail("配方 %s 使用了未知的 type=%s（本批次只支持工作台与熔炉）" % (recipe_id, kind))
 
+        # 26.1 的 Ingredient 是纯字符串："minecraft:x" 或 "#tag"
         for ref in refs:
-            if "item" in ref:
-                if ref["item"] not in known:
-                    fail("配方 %s 引用了不存在的物品 %s" % (recipe_id, ref["item"]))
-            elif "tag" in ref:
-                tag_ns, tag_path = ref["tag"].split(":", 1)
+            if not isinstance(ref, str):
+                fail("配方 %s 的材料不是字符串（26.1 要求纯字符串）: %r" % (recipe_id, ref))
+                continue
+            if ref.startswith("#"):
+                tag_ns, tag_path = ref[1:].split(":", 1)
                 if tag_ns == "c":
                     tag_file = os.path.join(RES, "data", "c", "tags", "item",
                                             "%s.json" % tag_path)
@@ -171,7 +196,9 @@ def check_recipes(dishes):
                 else:
                     continue      # 原版标签默认存在
                 if not os.path.exists(tag_file):
-                    fail("配方 %s 引用了不存在的标签 #%s" % (recipe_id, ref["tag"]))
+                    fail("配方 %s 引用了不存在的标签 %s" % (recipe_id, ref))
+            elif ref.startswith(NS + ":") and ref not in known:
+                fail("配方 %s 引用了不存在的物品 %s" % (recipe_id, ref))
 
         result = obj.get("result", {})
         rid = result.get("id")
@@ -227,7 +254,8 @@ def check_java_effects():
 def check_icon_kinds():
     import texture_icons as ICONS
     missing = set()
-    for row in DATA.INGREDIENTS + DATA.SEASONINGS + DATA.FRUITS + DATA.VEGETABLES:
+    for row in (DATA.INGREDIENTS + DATA.SEEDS + DATA.SEASONINGS
+                + DATA.FRUITS + DATA.VEGETABLES):
         if row[3] not in ICONS.PAINTERS:
             missing.add(row[3])
     for row in DATA.TOOLS:
@@ -240,7 +268,8 @@ def check_icon_kinds():
         fail("图标种类 %s 没有画法" % kind)
 
     bad_palettes = set()
-    for row in DATA.INGREDIENTS + DATA.SEASONINGS + DATA.FRUITS + DATA.VEGETABLES:
+    for row in (DATA.INGREDIENTS + DATA.SEEDS + DATA.SEASONINGS
+                + DATA.FRUITS + DATA.VEGETABLES):
         if row[4] not in DATA.PALETTES:
             bad_palettes.add(row[4])
     for row in DATA.TOOLS:
@@ -254,23 +283,123 @@ def check_icon_kinds():
 
 
 def check_cutting(ids):
-    """案板切割表：产出必须是本模组真实存在的物品。"""
-    import importlib.util
+    """硬编码处理表：条数要对得上，产出必须是本模组真实存在的物品。"""
     path = os.path.join(ROOT, "src", "main", "java", "com", "ctf",
-                        "chinese_traditional_food", "common", "recipe", "ModCutting.java")
+                        "chinese_traditional_food", "common", "recipe", "ModRecipes.java")
     if not os.path.exists(path):
-        fail("未找到生成的 ModCutting.java")
+        fail("未找到生成的 ModRecipes.java")
         return 0
     with open(path, encoding="utf-8") as fh:
         src = fh.read()
-    entries = re.findall(r'new Entry\("([^"]+)",\s*"([^"]+)",\s*(true|false),\s*(\d+)\)', src)
-    if len(entries) != len(DATA.CUTTING):
-        fail("ModCutting.java 的条目数 %d 与 content_data.CUTTING 的 %d 不一致"
-             % (len(entries), len(DATA.CUTTING)))
-    for (_inp, out, _knife, _time) in entries:
+
+    # 装置规则：new Entry("输入", "产出", 数量, "副产物", 概率F, tick)
+    entries = re.findall(
+        r'new Entry\("([^"]+)",\s*"([^"]+)",\s*(\d+),\s*"([^"]*)",\s*([\d.]+)F,\s*(\d+)\)',
+        src)
+    expected = len(DATA.MILLING) + len(DATA.SHELLING)
+    if len(entries) != expected:
+        fail("ModRecipes.java 的装置规则数 %d 与 content_data 的 %d 不一致"
+             % (len(entries), expected))
+    for (_inp, out, _count, byproduct, _chance, _ticks) in entries:
+        if out not in ids:
+            fail("装置规则产出 %s 不是本模组的物品" % out)
+        if byproduct and byproduct not in ids:
+            fail("装置规则副产物 %s 不是本模组的物品" % byproduct)
+
+    # 案板规则：new CuttingEntry("输入", "产出", true/false, tick)
+    cutting = re.findall(r'new CuttingEntry\("([^"]+)",\s*"([^"]+)",\s*(true|false),\s*(\d+)\)',
+                         src)
+    if len(cutting) != len(DATA.CUTTING):
+        fail("ModRecipes.java 的案板规则数 %d 与 content_data 的 %d 不一致"
+             % (len(cutting), len(DATA.CUTTING)))
+    for (_inp, out, _knife, _time) in cutting:
         if out not in ids:
             fail("案板切割产出 %s 不是本模组的物品" % out)
-    return len(entries)
+
+    return len(entries) + len(cutting)
+
+
+def check_model_refs():
+    """静态检查资源引用链：items -> model -> texture / blockstates -> model -> texture。
+
+    这一类错误（拼错模型路径、少一张贴图）**编译期完全看不出来**，
+    只有进游戏时才会在日志里刷 "Unable to load model"。
+    在这里提前挡住，比每次开客户端捞日志便宜得多。
+    """
+    assets = os.path.join(RES, "assets", NS)
+    item_defs = os.path.join(assets, "items")
+    model_dir = os.path.join(assets, "models")
+    tex_dir = os.path.join(assets, "textures")
+    state_dir = os.path.join(assets, "blockstates")
+
+    def resolve_model(ref):
+        """把 "ns:path" / "path" 解析成 models/<path>.json；跨命名空间返回 None。"""
+        if ":" in ref:
+            space, path = ref.split(":", 1)
+            if space != NS:
+                return None          # 原版 / 其它模组的模型，本脚本不管
+        else:
+            path = ref
+        return os.path.join(model_dir, path + ".json")
+
+    def resolve_texture(ref):
+        if ref.startswith("#"):
+            return None              # 引用本模型 textures 段里的键，另行检查
+        if ":" in ref:
+            space, path = ref.split(":", 1)
+            if space != NS:
+                return None
+        else:
+            path = ref
+        return os.path.join(tex_dir, path + ".png")
+
+    n = 0
+
+    # 1) 客户端物品定义 items/<id>.json -> 模型
+    for path in walk(item_defs, ".json"):
+        obj = load_json(path)
+        ref = (obj or {}).get("model", {}).get("model")
+        n += 1
+        if not ref:
+            fail("%s 没有 model.model" % os.path.relpath(path, ROOT))
+            continue
+        target = resolve_model(ref)
+        if target is not None and not os.path.exists(target):
+            fail("%s 指向了不存在的模型 %s" % (os.path.relpath(path, ROOT), ref))
+
+    # 2) blockstates/<id>.json -> 模型
+    for path in walk(state_dir, ".json"):
+        obj = load_json(path) or {}
+        for variant, body in obj.get("variants", {}).items():
+            for entry in (body if isinstance(body, list) else [body]):
+                ref = entry.get("model")
+                n += 1
+                if not ref:
+                    continue
+                target = resolve_model(ref)
+                if target is not None and not os.path.exists(target):
+                    fail("%s 的变体 %s 指向了不存在的模型 %s"
+                         % (os.path.relpath(path, ROOT), variant, ref))
+        for part in obj.get("multipart", []):
+            ref = part.get("apply", {}).get("model")
+            if ref:
+                target = resolve_model(ref)
+                if target is not None and not os.path.exists(target):
+                    fail("%s 的 multipart 指向了不存在的模型 %s"
+                         % (os.path.relpath(path, ROOT), ref))
+
+    # 3) 模型里的 textures 段 -> 贴图文件
+    for path in walk(model_dir, ".json"):
+        obj = load_json(path) or {}
+        for key, ref in obj.get("textures", {}).items():
+            if not isinstance(ref, str):
+                continue
+            n += 1
+            target = resolve_texture(ref)
+            if target is not None and not os.path.exists(target):
+                fail("%s 的贴图 %s 不存在" % (os.path.relpath(path, ROOT), ref))
+
+    return n
 
 
 def main():
@@ -284,7 +413,8 @@ def main():
     print("配方文件: %d" % n_recipes)
     print("标签文件: %d" % check_tags())
     print("效果常量: 定义 %d / 引用 %d" % check_java_effects())
-    print("案板规则: %d" % check_cutting(ids))
+    print("硬编码处理表: %d 条" % check_cutting(ids))
+    print("资源引用: %d 处" % check_model_refs())
     check_icon_kinds()
 
     if problems:

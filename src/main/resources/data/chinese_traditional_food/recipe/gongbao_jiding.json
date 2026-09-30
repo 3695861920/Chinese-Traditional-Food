@@ -1,18 +1,10 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    {
-      "item": "chinese_traditional_food:plate"
-    },
-    {
-      "item": "minecraft:porkchop"
-    },
-    {
-      "item": "chinese_traditional_food:scallion"
-    },
-    {
-      "item": "chinese_traditional_food:garlic"
-    }
+    "chinese_traditional_food:plate",
+    "minecraft:porkchop",
+    "chinese_traditional_food:scallion",
+    "chinese_traditional_food:garlic"
   ],
   "result": {
     "id": "chinese_traditional_food:gongbao_jiding",

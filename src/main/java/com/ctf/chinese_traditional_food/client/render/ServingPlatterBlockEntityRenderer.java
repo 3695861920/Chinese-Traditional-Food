@@ -2,6 +2,7 @@ package com.ctf.chinese_traditional_food.client.render;
 
 import com.ctf.chinese_traditional_food.common.block.entity.ServingPlatterBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 
 /**
@@ -12,6 +13,9 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
  *   --+--
  *   2 | 3
  * </pre>
+ *
+ * 每个象限的菜同样要绕 X 转 -90° 放平（原因见
+ * {@link PlateBlockEntityRenderer}）。
  */
 public class ServingPlatterBlockEntityRenderer extends AbstractDishDisplayRenderer<ServingPlatterBlockEntity> {
 
@@ -27,7 +31,9 @@ public class ServingPlatterBlockEntityRenderer extends AbstractDishDisplayRender
     @Override
     protected void transformDish(PoseStack poseStack, DishDisplayRenderState renderState, int index) {
         int slot = Math.min(index, OFFSET_X.length - 1);
-        poseStack.translate(OFFSET_X[slot], 0.14D, OFFSET_Z[slot]);
+        // y 抬到托盘面（模型里是 1.15/16 格）之上一点点
+        poseStack.translate(OFFSET_X[slot], 0.09D, OFFSET_Z[slot]);
+        poseStack.mulPose(Axis.XP.rotationDegrees(-90.0F));
         // 拼盘上每份菜要小一点，否则四份会互相穿插
         poseStack.scale(0.45F, 0.45F, 0.45F);
     }

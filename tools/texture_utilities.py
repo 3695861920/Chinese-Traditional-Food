@@ -8,8 +8,14 @@ import os
 
 from PIL import Image
 
-SIZE = 64
+SIZE = 16
 U = SIZE / 16.0
+
+
+def set_size(size):
+    global SIZE, U
+    SIZE = size
+    U = SIZE / 16.0
 
 # 由 build_textures.py 注入
 _noise = None
@@ -46,26 +52,29 @@ def _grain(x, y, seed, period):
 
 # ----------------------------------------------------------------------
 def cutting_board_top():
-    """案板顶面：一整块厚木板 + 中间一圈使用痕迹。"""
+    """案板顶面：一整块打磨过的木板。
+
+    注意这里**不再**画横向的拼板条 —— 拼板已经由三维模型
+    （`tools/display_models.py` 里把板面拆成两块、中间留一道缝）表达了。
+    贴图再叠一层横条纹会和模型的竖缝打架，看起来又乱又脏。
+    所以这里只负责"木头本身的质感"：沿板长的顺纹 + 轻微的使用痕迹。
+    纹理坐标里 U→X、V→Z，而板子沿 Z 方向铺满，所以木纹要**竖直**。
+    """
     img = _opaque()
     for y in range(SIZE):
         for x in range(SIZE):
-            plank = int((y / SIZE) * 3)         # 三块板
-            ly = y - plank * (SIZE / 3.0)
-            local = 1.0 - ly / (SIZE / 3.0)
-            lit = 0.42 + 0.34 * local + 0.30 * _grain(x, y, 211 + plank * 17, 11)
+            # 竖直顺纹：沿 y 拉长、沿 x 每隔几像素才变一次
+            g = _grain(y, x, 211, 11) * 0.65 + _grain(y, x // 3, 233, 7) * 0.35
+            lit = 0.40 + 0.46 * g
             idx = _quantize(lit, 4, x, y)
             c = WOOD[idx]
-            if ly >= SIZE / 3.0 - 2:
-                c = _shade(c, -0.34)
-            elif ly >= SIZE / 3.0 - 3:
-                c = _shade(c, 0.12)
-            # 中间的使用痕迹：一圈略深的刀痕
-            dx = (x + 0.5 - SIZE / 2.0) / SIZE
-            dy = (y + 0.5 - SIZE / 2.0) / SIZE
-            d = math.hypot(dx, dy)
-            if 0.22 < d < 0.36 and _noise(x, y, 907) < 0.35:
-                c = _shade(c, -0.13)
+            # 木节：一两个略深的小点
+            for (nx, ny) in ((4.5, 6.2), (11.2, 10.4)):
+                if math.hypot(x - nx, y - ny) < 1.5:
+                    c = _shade(c, -0.22)
+            # 刀痕：几道几乎看不出的一横线
+            if _noise(x // 2, y, 907) > 0.955:
+                c = _shade(c, -0.10)
             _px(img, x, y, c)
     return img
 

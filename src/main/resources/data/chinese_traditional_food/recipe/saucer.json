@@ -4,9 +4,7 @@
     "CC"
   ],
   "key": {
-    "C": {
-      "item": "minecraft:clay_ball"
-    }
+    "C": "minecraft:clay_ball"
   },
   "result": {
     "id": "chinese_traditional_food:saucer",

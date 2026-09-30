@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "crank=0": {
+      "model": "chinese_traditional_food:block/grain_sheller_crank0"
+    },
+    "crank=1": {
+      "model": "chinese_traditional_food:block/grain_sheller_crank1"
+    },
+    "crank=2": {
+      "model": "chinese_traditional_food:block/grain_sheller_crank2"
+    },
+    "crank=3": {
+      "model": "chinese_traditional_food:block/grain_sheller_crank3"
+    }
+  }
+}

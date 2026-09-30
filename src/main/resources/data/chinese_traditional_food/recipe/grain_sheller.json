@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "PSP",
+    "PIP",
+    "PPP"
+  ],
+  "key": {
+    "P": "#minecraft:planks",
+    "S": "minecraft:stone",
+    "I": "minecraft:iron_ingot"
+  },
+  "result": {
+    "id": "chinese_traditional_food:grain_sheller",
+    "count": 1
+  }
+}

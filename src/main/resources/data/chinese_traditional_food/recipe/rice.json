@@ -1,9 +1,7 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    {
-      "item": "chinese_traditional_food:paddy"
-    }
+    "chinese_traditional_food:paddy"
   ],
   "result": {
     "id": "chinese_traditional_food:rice",

@@ -1,0 +1,21 @@
+{
+  "replace": false,
+  "values": [
+    "chinese_traditional_food:rice_seeds",
+    "chinese_traditional_food:millet_seeds",
+    "chinese_traditional_food:sorghum_seeds",
+    "chinese_traditional_food:corn_seeds",
+    "chinese_traditional_food:soybean_seeds",
+    "chinese_traditional_food:mung_bean_seeds",
+    "chinese_traditional_food:red_bean_seeds",
+    "chinese_traditional_food:peanut_seeds",
+    "chinese_traditional_food:sesame_seeds",
+    "chinese_traditional_food:taro_seeds",
+    "chinese_traditional_food:sweet_potato_slip",
+    "chinese_traditional_food:napa_cabbage_seeds",
+    "chinese_traditional_food:radish_seeds",
+    "chinese_traditional_food:chili_seeds",
+    "chinese_traditional_food:cucumber_seeds",
+    "minecraft:wheat_seeds"
+  ]
+}

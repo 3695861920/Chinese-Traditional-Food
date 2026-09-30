@@ -2,8 +2,12 @@ package com.ctf.chinese_traditional_food.registry;
 
 import com.ctf.chinese_traditional_food.ChineseTraditionalFood;
 import com.ctf.chinese_traditional_food.common.block.CuttingBoardBlock;
+import com.ctf.chinese_traditional_food.common.block.GrainShellerBlock;
+import com.ctf.chinese_traditional_food.common.block.GrainShellerHopperBlock;
+import com.ctf.chinese_traditional_food.common.block.PlacedDishBlock;
 import com.ctf.chinese_traditional_food.common.block.PlateBlock;
 import com.ctf.chinese_traditional_food.common.block.ServingPlatterBlock;
+import com.ctf.chinese_traditional_food.common.block.WaterMillBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredBlock;
@@ -12,9 +16,14 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 /**
  * 方块注册表。
  *
- * <p>本批次只注册"用来摆放菜品"的两个方块。
- * 灶台 / 蒸笼 / 炒锅 / 汤锅 / 砂锅 / 案板 / 水磨 / 脱壳机 按 <code>docs/物品清单.md</code>
- * 的阶段 3~4 陆续补进来，写法与这里完全一致。</p>
+ * <p>共 6 个方块：</p>
+ * <ul>
+ *   <li>餐盘 / 大拼盘 —— 把菜摆出来（1 份 / 4 份）；</li>
+ *   <li>案板 —— 放上食材后用刀切；</li>
+ *   <li>水磨 —— 邻水自动把谷物磨成粉；</li>
+ *   <li>脱壳机 —— 手摇，无界面，给谷物脱壳；</li>
+ *   <li>脱壳机料斗 —— 叠在脱壳机上方扩充进料上限（多方块部件）。</li>
+ * </ul>
  */
 public final class ModBlocks {
     public static final DeferredRegister.Blocks BLOCKS =
@@ -49,9 +58,7 @@ public final class ModBlocks {
                     .noOcclusion());
 
     /**
-     * 案板：放上食材后用刀切。
-     *
-     * <p>厚度 1 格，带方块实体（存输入 / 成品），客户端渲染器把两者画在板面上。</p>
+     * 案板：放上食材后用刀切。厚度 1 格，带方块实体。
      */
     public static final DeferredBlock<CuttingBoardBlock> CUTTING_BOARD = BLOCKS.registerBlock(
             "cutting_board",
@@ -60,6 +67,62 @@ public final class ModBlocks {
                     .strength(0.8F)
                     .sound(SoundType.WOOD)
                     .noOcclusion());
+
+    /** 水磨：石身铁轴，放在水边就转。 */
+    public static final DeferredBlock<WaterMillBlock> WATER_MILL = BLOCKS.registerBlock(
+            "water_mill",
+            WaterMillBlock::new,
+            props -> props
+                    .strength(2.0F, 6.0F)
+                    .sound(SoundType.STONE)
+                    .requiresCorrectToolForDrops());
+
+    /**
+     * 手摇式脱壳机：木箱铁件 + 侧面摇柄，<b>没有界面</b>。
+     *
+     * <p>潜行空手右键 = 摇一圈，带壳谷物右键 = 倒进去，空手右键 = 取成品。
+     * {@code noOcclusion()} 是因为摇柄伸出方块外、料斗也是镂空的。</p>
+     */
+    public static final DeferredBlock<GrainShellerBlock> GRAIN_SHELLER = BLOCKS.registerBlock(
+            "grain_sheller",
+            GrainShellerBlock::new,
+            props -> props
+                    .strength(2.0F, 6.0F)
+                    .sound(SoundType.WOOD)
+                    .noOcclusion()
+                    .requiresCorrectToolForDrops());
+
+    /**
+     * 脱壳机料斗（多方块部件）：叠在脱壳机正上方，进料上限 1 → 16。
+     *
+     * <p>自己不带方块实体 —— 东西一直存在下层主体的方块实体里，
+     * 所以这里没有任何存档负担。被拆时若下方已不是脱壳机就自行掉落。</p>
+     */
+    public static final DeferredBlock<GrainShellerHopperBlock> GRAIN_SHELLER_HOPPER =
+            BLOCKS.registerBlock(
+                    "grain_sheller_hopper",
+                    GrainShellerHopperBlock::new,
+                    props -> props
+                            .strength(1.5F, 4.0F)
+                            .sound(SoundType.METAL)
+                            .noOcclusion()
+                            .requiresCorrectToolForDrops());
+
+    /**
+     * 直接摆在地上的菜。
+     *
+     * <p>没有对应的方块物品 —— 由菜品自己（{@code DishItem#useOn}）放下来，
+     * 空手右键端起来。所以也不掉战利品（{@code noLootTable()}），
+     * 免得坏了之后刷出两份菜。</p>
+     */
+    public static final DeferredBlock<PlacedDishBlock> PLACED_DISH = BLOCKS.registerBlock(
+            "placed_dish",
+            PlacedDishBlock::new,
+            props -> props
+                    .strength(0.3F)
+                    .sound(SoundType.STONE)
+                    .noOcclusion()
+                    .noLootTable());
 
     public static void register(IEventBus modBus) {
         BLOCKS.register(modBus);

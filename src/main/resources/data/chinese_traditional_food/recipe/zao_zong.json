@@ -1,18 +1,10 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    {
-      "item": "chinese_traditional_food:plate"
-    },
-    {
-      "item": "chinese_traditional_food:flour"
-    },
-    {
-      "item": "chinese_traditional_food:scallion"
-    },
-    {
-      "item": "chinese_traditional_food:ginger"
-    }
+    "chinese_traditional_food:plate",
+    "chinese_traditional_food:flour",
+    "chinese_traditional_food:scallion",
+    "chinese_traditional_food:ginger"
   ],
   "result": {
     "id": "chinese_traditional_food:zao_zong",

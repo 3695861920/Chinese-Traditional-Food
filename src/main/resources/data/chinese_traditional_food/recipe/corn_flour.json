@@ -1,9 +1,7 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    {
-      "item": "chinese_traditional_food:corn"
-    }
+    "chinese_traditional_food:corn"
   ],
   "result": {
     "id": "chinese_traditional_food:corn_flour",

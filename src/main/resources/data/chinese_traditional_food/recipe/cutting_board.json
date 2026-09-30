@@ -5,9 +5,7 @@
     "P P"
   ],
   "key": {
-    "P": {
-      "item": "minecraft:stick"
-    }
+    "P": "minecraft:stick"
   },
   "result": {
     "id": "chinese_traditional_food:cutting_board",

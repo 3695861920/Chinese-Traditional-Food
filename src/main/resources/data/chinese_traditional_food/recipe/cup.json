@@ -5,9 +5,7 @@
     " G "
   ],
   "key": {
-    "G": {
-      "item": "minecraft:glass"
-    }
+    "G": "minecraft:glass"
   },
   "result": {
     "id": "chinese_traditional_food:cup",

@@ -25,10 +25,13 @@ public final class ModCreativeTabs {
                     .title(Component.translatable("itemGroup.chinese_traditional_food.main"))
                     .icon(() -> new ItemStack(ModItems.MAPO_TOFU.get()))
                     .displayItems((params, output) -> {
-                        // 餐具与摆放 / 加工方块
+                        // 餐具与功能方块
                         output.accept(ModItems.PLATE.get());
                         output.accept(ModItems.SERVING_PLATTER.get());
                         output.accept(ModItems.CUTTING_BOARD.get());
+                        output.accept(ModItems.WATER_MILL.get());
+                        output.accept(ModItems.GRAIN_SHELLER.get());
+                        output.accept(ModItems.GRAIN_SHELLER_HOPPER.get());
                         // 其余全部内容（食材 / 调味料 / 水果 / 蔬菜 / 厨具 / 菜品）
                         for (var item : ModItems.allFoods()) {
                             output.accept(item.get());
@@ -47,6 +50,9 @@ public final class ModCreativeTabs {
             event.accept(ModItems.PLATE.get());
             event.accept(ModItems.SERVING_PLATTER.get());
             event.accept(ModItems.CUTTING_BOARD.get());
+            event.accept(ModItems.WATER_MILL.get());
+            event.accept(ModItems.GRAIN_SHELLER.get());
+            event.accept(ModItems.GRAIN_SHELLER_HOPPER.get());
         }
         if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
             for (var item : ModItems.allFoods()) {
@@ -60,6 +66,9 @@ public final class ModCreativeTabs {
             event.accept(ModItems.PLATE.get());
             event.accept(ModItems.SERVING_PLATTER.get());
             event.accept(ModItems.CUTTING_BOARD.get());
+            event.accept(ModItems.WATER_MILL.get());
+            event.accept(ModItems.GRAIN_SHELLER.get());
+            event.accept(ModItems.GRAIN_SHELLER_HOPPER.get());
         }
     }
 

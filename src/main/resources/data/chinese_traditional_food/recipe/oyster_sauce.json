@@ -1,15 +1,9 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    {
-      "item": "minecraft:kelp"
-    },
-    {
-      "item": "chinese_traditional_food:salt"
-    },
-    {
-      "item": "minecraft:dried_kelp"
-    }
+    "minecraft:kelp",
+    "chinese_traditional_food:salt",
+    "minecraft:dried_kelp"
   ],
   "result": {
     "id": "chinese_traditional_food:oyster_sauce",

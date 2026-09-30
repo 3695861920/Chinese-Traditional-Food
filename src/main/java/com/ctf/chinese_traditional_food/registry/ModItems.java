@@ -40,12 +40,30 @@ public final class ModItems {
     public static final DeferredItem<BlockItem> CUTTING_BOARD =
             ITEMS.registerSimpleBlockItem(ModBlocks.CUTTING_BOARD);
 
+    /** 水磨，谷物磨粉。 */
+    public static final DeferredItem<BlockItem> WATER_MILL =
+            ITEMS.registerSimpleBlockItem(ModBlocks.WATER_MILL);
+
+    /** 脱壳机，手摇式，无界面。 */
+    public static final DeferredItem<BlockItem> GRAIN_SHELLER =
+            ITEMS.registerSimpleBlockItem(ModBlocks.GRAIN_SHELLER);
+
+    /** 脱壳机料斗（多方块部件）。 */
+    public static final DeferredItem<BlockItem> GRAIN_SHELLER_HOPPER =
+            ITEMS.registerSimpleBlockItem(ModBlocks.GRAIN_SHELLER_HOPPER);
+
     // ==================================================================
     // 基础食材
     // ==================================================================
 
     /** 稻谷（Paddy）。 */
     public static final DeferredItem<Item> PADDY = ITEMS.registerSimpleItem("paddy");
+
+    /** 谷子（Foxtail Millet Grass）。 */
+    public static final DeferredItem<Item> MILLET_GRASS = ITEMS.registerSimpleItem("millet_grass");
+
+    /** 米糠（Rice Bran）。 */
+    public static final DeferredItem<Item> RICE_BRAN = ITEMS.registerSimpleItem("rice_bran");
 
     /** 大米（Rice）：1 饥饿 / 0.2 饱和，效果 NONE。 */
     public static final DeferredItem<DishItem> RICE = ITEMS.registerItem(
@@ -334,6 +352,55 @@ public final class ModItems {
                         .nutrition(3)
                         .saturationModifier(0.30F)
                         .build()));
+
+    // ==================================================================
+    // 作物种子
+    // ==================================================================
+
+    /** 稻种（Rice Seeds）。 */
+    public static final DeferredItem<Item> RICE_SEEDS = ITEMS.registerSimpleItem("rice_seeds");
+
+    /** 谷种（Millet Seeds）。 */
+    public static final DeferredItem<Item> MILLET_SEEDS = ITEMS.registerSimpleItem("millet_seeds");
+
+    /** 高粱种（Sorghum Seeds）。 */
+    public static final DeferredItem<Item> SORGHUM_SEEDS = ITEMS.registerSimpleItem("sorghum_seeds");
+
+    /** 玉米种（Corn Kernels）。 */
+    public static final DeferredItem<Item> CORN_SEEDS = ITEMS.registerSimpleItem("corn_seeds");
+
+    /** 黄豆种（Soybean Seeds）。 */
+    public static final DeferredItem<Item> SOYBEAN_SEEDS = ITEMS.registerSimpleItem("soybean_seeds");
+
+    /** 绿豆种（Mung Bean Seeds）。 */
+    public static final DeferredItem<Item> MUNG_BEAN_SEEDS = ITEMS.registerSimpleItem("mung_bean_seeds");
+
+    /** 红豆种（Red Bean Seeds）。 */
+    public static final DeferredItem<Item> RED_BEAN_SEEDS = ITEMS.registerSimpleItem("red_bean_seeds");
+
+    /** 花生种（Peanut Seeds）。 */
+    public static final DeferredItem<Item> PEANUT_SEEDS = ITEMS.registerSimpleItem("peanut_seeds");
+
+    /** 芝麻种（Sesame Seeds）。 */
+    public static final DeferredItem<Item> SESAME_SEEDS = ITEMS.registerSimpleItem("sesame_seeds");
+
+    /** 芋种（Taro Corms）。 */
+    public static final DeferredItem<Item> TARO_SEEDS = ITEMS.registerSimpleItem("taro_seeds");
+
+    /** 红薯秧（Sweet Potato Slips）。 */
+    public static final DeferredItem<Item> SWEET_POTATO_SLIP = ITEMS.registerSimpleItem("sweet_potato_slip");
+
+    /** 白菜种（Napa Cabbage Seeds）。 */
+    public static final DeferredItem<Item> NAPA_CABBAGE_SEEDS = ITEMS.registerSimpleItem("napa_cabbage_seeds");
+
+    /** 萝卜种（Radish Seeds）。 */
+    public static final DeferredItem<Item> RADISH_SEEDS = ITEMS.registerSimpleItem("radish_seeds");
+
+    /** 辣椒种（Chili Seeds）。 */
+    public static final DeferredItem<Item> CHILI_SEEDS = ITEMS.registerSimpleItem("chili_seeds");
+
+    /** 黄瓜种（Cucumber Seeds）。 */
+    public static final DeferredItem<Item> CUCUMBER_SEEDS = ITEMS.registerSimpleItem("cucumber_seeds");
 
     // ==================================================================
     // 调味料

@@ -2,16 +2,19 @@ package com.ctf.chinese_traditional_food.common.item;
 
 import com.ctf.chinese_traditional_food.common.food.ServeEffect;
 import java.util.List;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * 菜品物品。
@@ -59,7 +62,9 @@ public class DishItem extends Item {
                 }
             }
         }
-        level.playSound(null, player.blockPosition(), SoundEvents.GENERIC_EAT, SoundSource.PLAYERS,
+        // 26.1 起 GENERIC_EAT 是 Holder.Reference<SoundEvent>，要 .value() 取出本体。
+        // （ITEM_FRAME_ADD_ITEM / WOOD_HIT / ITEM_PICKUP 等仍是普通 SoundEvent）
+        level.playSound(null, player.blockPosition(), SoundEvents.GENERIC_EAT.value(), SoundSource.PLAYERS,
                 0.8F, 0.9F + level.getRandom().nextFloat() * 0.2F);
         return true;
     }
@@ -68,5 +73,54 @@ public class DishItem extends Item {
     public static boolean isPlaceable(ItemStack stack) {
         return stack.has(DataComponents.FOOD)
                 || stack.is(com.ctf.chinese_traditional_food.registry.ModTags.ItemTags.PLACEABLE_DISHES);
+    }
+
+    /**
+     * 对着地面右键：把这道菜<b>直接摆在地上</b>（不需要盘子）。
+     *
+     * <p>规则（尽量贴近原版放置方块的直觉）：</p>
+     * <ul>
+     *   <li>点的是方块的<b>顶面</b>，且上方那一格可以替换；</li>
+     *   <li>踩着的方块要有稳固的上表面（不能悬空放在草上）；</li>
+     *   <li>潜行时不摆放 —— 把右键让给"往餐盘上放"等其它逻辑。</li>
+     * </ul>
+     *
+     * <p>能摆的器型来自生成出来的 {@code DishPlacement}（不是每道菜一个方块）。</p>
+     */
+    @Override
+    public InteractionResult useOn(net.minecraft.world.item.context.UseOnContext context) {
+        Player player = context.getPlayer();
+        if (player != null && player.isShiftKeyDown()) {
+            return InteractionResult.PASS;
+        }
+        if (context.getClickedFace() != net.minecraft.core.Direction.UP) {
+            return InteractionResult.PASS;
+        }
+
+        net.minecraft.world.level.Level level = context.getLevel();
+        BlockPos supportPos = context.getClickedPos();
+        BlockPos target = supportPos.above();
+
+        if (!com.ctf.chinese_traditional_food.common.block.PlacedDishBlock.canPlaceItem(context.getItemInHand())) {
+            return InteractionResult.PASS;
+        }
+        if (!level.getBlockState(supportPos).isFaceSturdy(level, supportPos,
+                net.minecraft.core.Direction.UP)) {
+            return InteractionResult.PASS;
+        }
+        if (!level.getBlockState(target).canBeReplaced()) {
+            return InteractionResult.PASS;
+        }
+
+        if (!level.isClientSide()) {
+            if (!com.ctf.chinese_traditional_food.common.block.PlacedDishBlock.place(
+                    level, target, context.getItemInHand())) {
+                return InteractionResult.FAIL;
+            }
+            if (player == null || !player.hasInfiniteMaterials()) {
+                context.getItemInHand().shrink(1);
+            }
+        }
+        return InteractionResult.SUCCESS;
     }
 }

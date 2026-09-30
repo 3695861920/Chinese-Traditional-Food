@@ -4,6 +4,7 @@ import com.ctf.chinese_traditional_food.registry.ModBlockEntities;
 import com.ctf.chinese_traditional_food.registry.ModBlocks;
 import com.ctf.chinese_traditional_food.registry.ModCreativeTabs;
 import com.ctf.chinese_traditional_food.registry.ModItems;
+import com.ctf.chinese_traditional_food.registry.ModMenus;
 import com.ctf.chinese_traditional_food.registry.ModMobEffects;
 import com.mojang.logging.LogUtils;
 import net.minecraft.resources.Identifier;
@@ -15,11 +16,9 @@ import org.slf4j.Logger;
 /**
  * 国风·传统食物 —— 主模组入口。
  *
- * <p>本模组新增：食材、调味料、八大菜系菜品、传统节日食物、
- * 厨具餐具（物品与方块）、以及可把菜品<b>摆放出来</b>的餐盘 / 大拼盘。</p>
- *
- * <p>参考代码只写到"能跑通的地基"为止：注册表 + 餐盘摆放系统 + 一道示例菜（麻婆豆腐）。
- * 后续按 <code>docs/物品清单.md</code> 逐个补齐即可。</p>
+ * <p>本模组新增：食材、调味料、水果、蔬菜、厨具餐具、八大菜系菜品与传统节日食物，
+ * 以及五件自有装置：餐盘 / 大拼盘（把菜摆出来）、案板（用刀切）、
+ * 水磨（磨粉）、脱壳机（脱壳）。</p>
  */
 @Mod(ChineseTraditionalFood.MOD_ID)
 public class ChineseTraditionalFood {
@@ -34,11 +33,14 @@ public class ChineseTraditionalFood {
         ModBlocks.register(modBus);
         ModBlockEntities.register(modBus);
         ModItems.register(modBus);
+        ModMenus.register(modBus);
         ModMobEffects.register(modBus);
         ModCreativeTabs.register(modBus);
 
         // 把我们的条目追加进原版创造模式标签页
         modBus.addListener(ModCreativeTabs::addToVanillaTabs);
+        // 给装置挂上物品能力，让漏斗与其它模组的管道能和它们交互
+        modBus.addListener(ModCapabilities::registerCapabilities);
     }
 
     /** 生成 {@code chinese_traditional_food:<path>} 形式的资源路径。 */

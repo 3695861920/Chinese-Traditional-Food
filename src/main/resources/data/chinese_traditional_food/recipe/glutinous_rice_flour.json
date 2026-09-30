@@ -1,9 +1,7 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    {
-      "item": "chinese_traditional_food:glutinous_rice"
-    }
+    "chinese_traditional_food:glutinous_rice"
   ],
   "result": {
     "id": "chinese_traditional_food:glutinous_rice_flour",

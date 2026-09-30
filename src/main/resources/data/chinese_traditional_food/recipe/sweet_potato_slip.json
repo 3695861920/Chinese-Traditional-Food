@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "chinese_traditional_food:sweet_potato"
+  ],
+  "result": {
+    "id": "chinese_traditional_food:sweet_potato_slip",
+    "count": 2
+  }
+}

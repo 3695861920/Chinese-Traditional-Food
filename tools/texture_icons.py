@@ -17,8 +17,15 @@ import math
 
 from PIL import Image
 
-SIZE = 64
+SIZE = 16
 U = SIZE / 16.0
+
+
+def set_size(size):
+    """由 build_textures 调用。16 = 原版分辨率（默认），64 = 精细。"""
+    global SIZE, U
+    SIZE = size
+    U = SIZE / 16.0
 
 # 由 build_textures.py 注入（避免循环 import）
 _noise = None
@@ -272,14 +279,140 @@ def icon_crystal(img, pal, seed):
 # 豆类 / 颗粒
 # ======================================================================
 
+def _bean_mask(cx, cy, rx, ry, deg):
+    """旋转椭圆的像素集合，附带归一化坐标 (u, v) 与半径比 d，供着色用。
+
+    u/v 是把像素中心转回"豆子自身坐标"后的结果（u 沿长轴，v 沿短轴），
+    范围 ±1。有了它才能做"左上受光"的球面着色与豆子的凹口。
+    """
+    a = math.radians(deg)
+    ca, sa = math.cos(a), math.sin(a)
+    out = {}
+    R = (max(rx, ry) + 1) * U
+    for y in range(max(0, int(cy * U - R)), min(SIZE, int(cy * U + R + 1))):
+        for x in range(max(0, int(cx * U - R)), min(SIZE, int(cx * U + R + 1))):
+            dx = (x + 0.5 - cx * U) / U
+            dy = (y + 0.5 - cy * U) / U
+            u = dx * ca + dy * sa
+            v = -dx * sa + dy * ca
+            d = (u / rx) ** 2 + (v / ry) ** 2
+            if d <= 1.0:
+                out[(x, y)] = (u / rx, v / ry, d)
+    return out
+
+
+def _draw_bean(img, cx, cy, rx, ry, deg, pal, seed=0, pinch=0.0,
+               hilum=0.30, shade=1.0):
+    """画一颗可辨认的豆子。
+
+    和原来"随机撒一堆圆点"的区别在于：
+    * 形状是**旋转椭圆**，能做出豆子的长宽比；
+    * `pinch` 在长边中央咬掉一块 —— 红豆的肾形就靠它；
+    * 明暗按**椭球面**算（左上受光），所以看着是鼓起来的而不是一块色斑；
+    * 种脐（hilum）画成一小块浅色，这是分辨各种豆子最关键的特征。
+    """
+    main, dark, light, accent = pal
+    mask = _bean_mask(cx, cy, rx, ry, deg)
+    if pinch > 0.0:
+        # 沿长边中央咬一口：|u| 小、v 大的一带削掉
+        mask = {p: v for p, v in mask.items()
+                if not (v[1] > 1.0 - pinch * 1.9 and abs(v[0]) < 0.62)}
+
+    # --- 主体：椭球面着色 ---
+    for (x, y), (u, v, d) in mask.items():
+        # 光源在左上（-u,-v 方向）
+        lx, ly = u - (-0.55), v - (-0.55)
+        lit = 0.94 - 0.80 * min(1.0, math.hypot(lx, ly) / 2.05)
+        lit *= shade
+        lit += (_noise(x, y, seed) - 0.5) * 0.085
+        lit -= 0.10 * (d ** 2)          # 边缘压暗，体积感更强
+        idx = _quantize(lit, 4, x, y)
+        px(img, x, y, (dark, main, light, accent)[idx], 255)
+
+    # --- 种脐：长边侧面的一小块浅色 ---
+    ca, sa = math.cos(math.radians(deg)), math.sin(math.radians(deg))
+    hx = cx - sa * (ry * hilum)
+    hy = cy + ca * (ry * hilum)
+    for (x, y) in oval_pts(hx, hy, max(0.30, rx * 0.28), max(0.24, ry * 0.26)):
+        if (x, y) in mask:
+            px(img, x, y, light, 255)
+    # 种脐中心：比亮部再提亮一档，但不用纯白（纯白会看着像"穿孔"）
+    core = _shade(light, 0.30)
+    for (x, y) in oval_pts(hx, hy, max(0.15, rx * 0.13), max(0.12, ry * 0.12)):
+        if (x, y) in mask:
+            px(img, x, y, core, 255)
+
+    # --- 描边：右下半圈压暗，把轮廓交代清楚 ---
+    for (x, y) in mask:
+        nb = ((x + 1, y) in mask, (x - 1, y) in mask,
+              (x, y + 1) in mask, (x, y - 1) in mask)
+        if not all(nb):
+            u, v, _ = mask[(x, y)]
+            if u + v > -0.15:
+                px(img, x, y, dark, 255)
+    return mask
+
+
+def icon_bean_kidney(img, pal, seed):
+    """红豆 / 赤小豆：肾形，一侧有明显的凹口。"""
+    ground_shadow(img, 8, 13.3, 5.2, 1.5, 60)
+    _draw_bean(img, 6.2, 7.4, 2.6, 1.7, -22, pal, seed, pinch=0.30)
+    _draw_bean(img, 10.8, 9.4, 2.4, 1.6, -12, pal, seed + 3, pinch=0.26)
+    _draw_bean(img, 6.6, 11.0, 2.2, 1.5, -34, pal, seed + 7, pinch=0.28)
+
+
+def icon_bean_mung(img, pal, seed):
+    """绿豆：细长的橄榄形，颜色偏暗黄绿，种脐是一条白线。"""
+    ground_shadow(img, 8, 13.3, 5.0, 1.4, 60)
+    spots = ((5.6, 6.4, -30), (9.4, 6.0, 18), (12.0, 8.6, -8),
+             (7.4, 9.4, 8), (10.4, 11.2, -24), (6.0, 11.6, 26))
+    for i, (bx, by, ang) in enumerate(spots):
+        _draw_bean(img, bx, by, 1.75, 1.05, ang, pal, seed + i * 5, hilum=0.34)
+
+
+def icon_bean_round(img, pal, seed):
+    """黄豆 / 黑豆 / 豌豆：圆鼓鼓的球，侧面一个小种脐。"""
+    ground_shadow(img, 8, 13.3, 5.2, 1.5, 60)
+    _draw_bean(img, 5.9, 7.2, 2.0, 1.9, 0, pal, seed)
+    _draw_bean(img, 9.9, 6.6, 1.85, 1.75, 0, pal, seed + 3)
+    _draw_bean(img, 11.5, 10.2, 1.7, 1.6, 0, pal, seed + 6)
+    _draw_bean(img, 7.0, 10.6, 1.85, 1.75, 0, pal, seed + 9)
+
+
+def icon_bean_flat(img, pal, seed):
+    """蚕豆：又大又扁，种脐是一条明显的黑线。"""
+    main, dark, light, accent = pal
+    ground_shadow(img, 8, 13.4, 5.6, 1.5, 60)
+    for i, (bx, by, ang) in enumerate(((6.4, 7.4, -16), (10.6, 8.2, 12),
+                                       (7.8, 11.2, -6))):
+        _draw_bean(img, bx, by, 3.0, 1.9, ang, pal, seed + i * 4, hilum=0.42)
+        # 种脐加深成一条黑线
+        a = math.radians(ang)
+        hx = bx - math.sin(a) * 1.5
+        hy = by + math.cos(a) * 1.5
+        for (x, y) in oval_pts(hx, hy, 0.85, 0.30):
+            px(img, x, y, dark, 255)
+    return None
+
+
 def icon_beans(img, pal, seed):
-    ground_shadow(img, 8, 13.2, 5.0, 1.4, 55)
-    scatter(img, 8, 8.6, 4.6, 22, pal, seed, size=0.95, squash=0.75)
+    """通用豆子（兼容旧数据）：交给圆豆画法。"""
+    icon_bean_round(img, pal, seed)
 
 
 def icon_seeds(img, pal, seed):
-    ground_shadow(img, 8, 13.0, 4.4, 1.3, 50)
-    scatter(img, 8, 8.6, 4.2, 34, pal, seed, size=0.52, squash=0.78)
+    """种子：一小堆水滴形的籽，尖端朝外，比圆点好认得多。"""
+    main, dark, light, accent = pal
+    ground_shadow(img, 8, 13.2, 4.6, 1.4, 55)
+    import random
+    rnd = random.Random(seed)
+    for i in range(16):
+        a = rnd.uniform(0, math.tau)
+        d = rnd.uniform(0.4, 4.3)
+        sx = 8 + math.cos(a) * d
+        sy = 8.6 + math.sin(a) * d * 0.78
+        ang = math.degrees(a) + 90.0
+        _draw_bean(img, sx, sy, 0.88, 0.74, ang, pal, seed + i, hilum=0.26)
 
 
 def icon_nuts(img, pal, seed):
@@ -553,6 +686,182 @@ def icon_fruit_round(img, pal, seed):
     main, dark, light, accent = pal
     paint(img, poly_pts([(7.6, 4.8), (8.6, 4.8), (8.1, 2.8)]), accent)
     paint(img, oval_pts(9.6, 3.4, 1.5, 0.7), accent)
+
+
+def _shade_pts(img, pts, pal, seed, bb, light=(-0.55, -0.55)):
+    """给任意像素集合按"椭球面"着色，并压一圈右下的暗边。
+
+    有了它，上面那些"梨 / 桃 / 橘子 / 柿子"就都能共用同一套光影，
+    只把**剪影**换掉 —— 形状不同才是区分水果的关键，明暗方式应当一致。
+    """
+    main, dark, light_c, accent = pal
+    cx, cy, rx, ry = bb
+    for (x, y) in pts:
+        dx = (x + 0.5 - cx * U) / (rx * U)
+        dy = (y + 0.5 - cy * U) / (ry * U)
+        d = math.hypot(dx - light[0], dy - light[1]) / 1.7
+        v = 0.92 - 0.85 * min(1.0, d)
+        v += (_noise(x, y, seed) - 0.5) * 0.10
+        idx = _quantize(v, 4, x, y)
+        px(img, x, y, (dark, main, light_c, accent)[idx], 255)
+    s = set(pts)
+    for (x, y) in s:
+        if (x + 1, y) not in s or (x, y + 1) not in s:
+            if (x + 0.5 - cx * U) + (y + 0.5 - cy * U) > 0:
+                px(img, x, y, dark, 255)
+
+
+def icon_fruit_pear(img, pal, seed):
+    """梨：上窄下宽的葫芦形，顶端一根短柄。"""
+    main, dark, light, accent = pal
+    ground_shadow(img, 8, 13.2, 4.4, 1.4, 60)
+    pts = set(oval_pts(8, 10.0, 4.4, 3.8))            # 下部球
+    pts |= set(oval_pts(8, 6.4, 2.7, 2.9))            # 上部球
+    _shade_pts(img, pts, pal, seed, (8, 9.2, 4.4, 4.6))
+    # 顶上的柄
+    paint(img, poly_pts([(7.5, 4.4), (8.4, 4.4), (8.2, 2.2), (7.7, 2.2)]), accent)
+    paint(img, oval_pts(9.3, 3.0, 1.3, 0.6), accent)
+
+
+def icon_fruit_peach(img, pal, seed):
+    """桃：圆润，正面一道纵向的沟，旁边一片叶子。"""
+    main, dark, light, accent = pal
+    ground_shadow(img, 8, 13.4, 4.6, 1.4, 60)
+    pts = set(oval_pts(8, 9.0, 4.7, 4.6))
+    _shade_pts(img, pts, pal, seed, (8, 9.0, 4.7, 4.6))
+    # 纵向的沟（桃最明显的特征）
+    for y in range(int(5.6 * U), int(13.2 * U)):
+        t = (y / U - 5.6) / 7.6
+        dx = math.sin(t * math.pi * 0.55) * 1.0
+        for k in range(2):
+            px(img, (8.0 + dx + k * 0.9) * U, y, _shade(dark, -0.05), 210)
+    # 叶 + 柄
+    paint(img, poly_pts([(7.6, 4.6), (8.6, 4.6), (8.1, 2.4)]), accent)
+    paint(img, poly_pts([(9.4, 3.0), (12.4, 2.0), (12.0, 3.6), (9.2, 4.0)]), accent)
+
+
+def icon_fruit_citrus(img, pal, seed):
+    """橘 / 柚：扁圆，顶上带叶，底部一个小脐。"""
+    main, dark, light, accent = pal
+    ground_shadow(img, 8, 13.0, 4.8, 1.4, 60)
+    pts = set(oval_pts(8, 9.2, 5.0, 4.1))
+    _shade_pts(img, pts, pal, seed, (8, 9.2, 5.0, 4.1))
+    # 底部的脐（凹进去的一点）
+    paint(img, oval_pts(8, 12.6, 0.9, 0.7), _shade(dark, -0.10))
+    # 顶上的叶
+    paint(img, poly_pts([(7.6, 5.4), (8.6, 5.4), (8.1, 3.2)]), accent)
+    paint(img, poly_pts([(9.0, 3.6), (12.0, 2.6), (11.6, 4.2), (8.8, 4.6)]), accent)
+
+
+def icon_fruit_persimmon(img, pal, seed):
+    """柿子：扁圆，顶上四片萼（这是柿子最好认的地方）。"""
+    main, dark, light, accent = pal
+    ground_shadow(img, 8, 12.8, 4.8, 1.4, 60)
+    pts = set(oval_pts(8, 9.4, 4.9, 3.9))
+    _shade_pts(img, pts, pal, seed, (8, 9.4, 4.9, 3.9))
+    # 四片萼
+    for dx, dy in ((0, -1), (-1, 0), (1, 0), (0, 1)):
+        paint(img, poly_pts([(8 + dx * 0.6, 5.6 + dy * 0.6),
+                             (8 + dx * 3.4 - dy * 1.1, 5.6 + dy * 3.4 - dx * 1.1),
+                             (8 + dx * 3.4 + dy * 1.1, 5.6 + dy * 3.4 + dx * 1.1)]),
+              accent)
+    paint(img, oval_pts(8, 5.6, 1.1, 1.1), dark)
+
+
+def icon_fruit_pomegranate(img, pal, seed):
+    """石榴：圆球 + 顶上的花萼冠（和橘子区分开）。"""
+    main, dark, light, accent = pal
+    ground_shadow(img, 8, 13.4, 4.6, 1.4, 60)
+    pts = set(oval_pts(8, 9.4, 4.7, 4.5))
+    _shade_pts(img, pts, pal, seed, (8, 9.4, 4.7, 4.5))
+    # 顶上的花萼冠：三根小尖
+    for (x0, x1) in ((6.4, 7.4), (7.5, 8.5), (8.6, 9.6)):
+        paint(img, poly_pts([(x0, 5.4), (x1, 5.4), ((x0 + x1) / 2, 3.2)]), accent)
+    paint(img, oval_pts(8, 5.6, 2.0, 0.8), dark)
+    # 果皮上的一点斑
+    for (px_, py_) in ((6.4, 9.0), (9.8, 7.6), (8.2, 11.6)):
+        paint(img, oval_pts(px_, py_, 0.6, 0.5), _shade(dark, -0.06))
+
+
+# 叶子 / 果蒂用的固定色（原版的番茄、草莓图标也都是固定绿色，
+# 不跟着物品配色走 —— 否则"番茄红"会把萼片也染成红的，就认不出来了）
+LEAF_GREEN = ((62, 108, 40), (48, 84, 30), (92, 138, 60), (34, 62, 22))
+
+
+def icon_tomato(img, pal, seed):
+    """西红柿：略扁的圆，顶上五片绿色的萼 + 一小截果柄。"""
+    main, dark, light, accent = pal
+    ground_shadow(img, 8, 12.9, 4.7, 1.4, 60)
+    pts = set(oval_pts(8, 9.6, 4.8, 4.0))
+    _shade_pts(img, pts, pal, seed, (8, 9.6, 4.8, 4.0))
+    # 果面两道浅浅的分瓣沟
+    for dx in (-2.6, 2.6):
+        for y in range(int(6.4 * U), int(12.6 * U)):
+            px(img, (8 + dx * 0.55) * U, y, _shade(dark, -0.04), 150)
+    # 五片萼
+    for i in range(5):
+        a = -math.pi / 2 + i * (math.tau / 5.0)
+        tipx = 8 + math.cos(a) * 3.2
+        tipy = 5.8 + math.sin(a) * 2.0
+        sidex = 8 + math.cos(a + 0.55) * 1.5
+        sidey = 5.8 + math.sin(a + 0.55) * 1.0
+        paint(img, poly_pts([(8.0, 5.4), (sidex, sidey), (tipx, tipy)]), LEAF_GREEN[1])
+    paint(img, oval_pts(8, 5.6, 1.0, 1.0), LEAF_GREEN[0])
+    # 果柄
+    paint(img, poly_pts([(7.6, 5.2), (8.4, 5.2), (8.2, 3.4), (7.8, 3.4)]), LEAF_GREEN[0])
+
+
+def icon_strawberry(img, pal, seed):
+    """草莓：上宽下尖的心形 + 绿色果冠 + 表面的小籽。"""
+    main, dark, light, accent = pal
+    ground_shadow(img, 8, 13.4, 4.4, 1.4, 55)
+    # 心形：上部一个大圆、下部收成尖
+    pts = set(oval_pts(8, 8.4, 4.6, 3.6))
+    pts |= set(poly_pts([(3.6, 9.4), (12.4, 9.4), (8.0, 14.0)]))
+    _shade_pts(img, pts, pal, seed, (8, 9.0, 4.6, 4.8))
+    # 表面的籽
+    for (sx, sy) in ((6.0, 7.6), (8.0, 6.8), (10.0, 7.6), (5.2, 9.8),
+                     (7.0, 10.0), (9.2, 10.2), (11.0, 9.6), (6.2, 11.8),
+                     (8.2, 12.0), (9.8, 11.6)):
+        paint(img, oval_pts(sx, sy, 0.34, 0.44), light)
+    # 绿色果冠
+    for i in range(5):
+        a = -math.pi / 2 + i * (math.tau / 5.0)
+        tipx = 8 + math.cos(a) * 3.0
+        tipy = 5.2 + math.sin(a) * 1.7
+        sidex = 8 + math.cos(a + 0.5) * 1.4
+        sidey = 5.2 + math.sin(a + 0.5) * 0.9
+        paint(img, poly_pts([(8.0, 5.0), (sidex, sidey), (tipx, tipy)]), LEAF_GREEN[1])
+    paint(img, poly_pts([(7.6, 5.0), (8.4, 5.0), (8.2, 3.2), (7.8, 3.2)]), LEAF_GREEN[0])
+
+
+def icon_chili(img, pal, seed):
+    """辣椒：细长弯曲的椒身 + 绿色椒蒂（和圆椒、豆角区分开）。"""
+    main, dark, light, accent = pal
+    # 椒身：沿一条弧线扫过
+    pts = {}
+    for t in range(0, 90):
+        f = t / 89.0
+        cx = 5.4 + f * 4.6
+        cy = 4.4 + f * 7.4
+        r = 1.55 - 0.55 * f
+        for (x, y) in oval_pts(cx, cy, r, r):
+            pts[(x, y)] = f
+    for (x, y), f in pts.items():
+        dx = (x + 0.5) / U - (5.4 + f * 4.6)
+        v = 0.92 - 0.55 * max(0.0, (dx + 0.6) / 1.6)
+        v += (_noise(x, y, seed) - 0.5) * 0.10
+        idx = _quantize(v, 4, x, y)
+        px(img, x, y, (dark, main, light, accent)[idx], 255)
+    for (x, y), f in pts.items():
+        if (x + 1, y) not in pts or (x, y + 1) not in pts:
+            if f > 0.35:
+                px(img, x, y, dark, 255)
+    # 尖
+    paint(img, poly_pts([(9.6, 11.2), (11.4, 12.6), (10.0, 12.4)]), accent)
+    # 绿色椒蒂
+    paint(img, poly_pts([(3.6, 3.2), (6.6, 2.4), (6.8, 5.0), (4.4, 5.4)]), LEAF_GREEN[1])
+    paint(img, poly_pts([(4.6, 1.6), (6.4, 1.6), (6.2, 2.8), (4.8, 2.8)]), LEAF_GREEN[0])
 
 
 def icon_banana(img, pal, seed):
@@ -1557,7 +1866,10 @@ PAINTERS = {
     "powder": icon_powder, "crystal": icon_crystal,
     # 豆 / 颗粒
     "beans": icon_beans, "seeds": icon_seeds, "nuts": icon_nuts,
+    "bean_kidney": icon_bean_kidney, "bean_mung": icon_bean_mung,
+    "bean_round": icon_bean_round, "bean_flat": icon_bean_flat,
     "berries": icon_berries, "cherries": icon_cherries, "flowers": icon_flowers,
+    "tomato": icon_tomato, "strawberry": icon_strawberry, "chili": icon_chili,
     "paste_ball": icon_paste_ball,
     # 根茎
     "tuber": icon_tuber, "ginger": icon_ginger, "garlic": icon_garlic, "shoot": icon_shoot,
@@ -1567,6 +1879,9 @@ PAINTERS = {
     "bulb": icon_bulb, "fungus": icon_fungus,
     # 水果
     "fruit_round": icon_fruit_round, "banana": icon_banana, "grape": icon_grape,
+    "fruit_pear": icon_fruit_pear, "fruit_peach": icon_fruit_peach,
+    "fruit_citrus": icon_fruit_citrus, "fruit_persimmon": icon_fruit_persimmon,
+    "fruit_pomegranate": icon_fruit_pomegranate,
     "kiwi": icon_kiwi, "mango": icon_mango, "pineapple": icon_pineapple,
     # 调味料容器
     "bottle": icon_bottle, "jar": icon_jar, "sachet": icon_sachet, "star": icon_star,

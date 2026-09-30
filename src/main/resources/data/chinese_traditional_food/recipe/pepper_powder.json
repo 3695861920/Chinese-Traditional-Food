@@ -1,9 +1,7 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    {
-      "item": "chinese_traditional_food:sichuan_peppercorn"
-    }
+    "chinese_traditional_food:sichuan_peppercorn"
   ],
   "result": {
     "id": "chinese_traditional_food:pepper_powder",

@@ -44,6 +44,9 @@ PALETTES = {
     "darkgreen": ((74, 116, 52), (46, 78, 34), (104, 148, 72), (34, 58, 26)),
     "yellow":   ((228, 200, 92), (176, 146, 54), (246, 226, 142), (150, 118, 40)),
     "black":    ((74, 66, 60), (42, 36, 32), (104, 94, 86), (28, 24, 22)),
+    # 绿豆专用：现实中的绿豆是发暗的橄榄黄绿，不是草绿 ——
+    # 用草绿会看起来像青豆，看不出是绿豆
+    "mung":     ((124, 142, 74), (86, 102, 48), (154, 172, 100), (62, 76, 34)),
     # 根茎
     "orange":   ((226, 132, 48), (172, 92, 30), (246, 170, 86), (140, 72, 24)),
     "brown":    ((160, 112, 62), (112, 74, 38), (192, 146, 92), (86, 54, 28)),
@@ -96,6 +99,8 @@ PALETTES = {
 INGREDIENTS = [
     # --- 谷物 ---
     ("paddy",                 "稻谷",     "Paddy",              "ear",    "wheat",    0, 0),
+    ("millet_grass",          "谷子",     "Foxtail Millet Grass", "ear",  "gold",     0, 0),
+    ("rice_bran",             "米糠",     "Rice Bran",          "powder", "wheat",    0, 0),
     ("rice",                  "大米",     "Rice",               "grain",  "white",    1, 0.2),
     ("glutinous_rice",        "糯米",     "Glutinous Rice",     "grain",  "white",    1, 0.2),
     ("millet",                "小米",     "Millet",             "grain",  "gold",     1, 0.2),
@@ -107,12 +112,12 @@ INGREDIENTS = [
     ("corn_flour",            "玉米面",   "Cornmeal",           "powder", "yellow",   0, 0),
     ("starch",                "淀粉",     "Starch",             "powder", "white",    0, 0),
     # --- 豆类 ---
-    ("red_bean",              "红豆",     "Red Bean",           "beans",  "red",      1, 0.1),
-    ("mung_bean",             "绿豆",     "Mung Bean",          "beans",  "green",    1, 0.1),
-    ("soybean",               "黄豆",     "Soybean",            "beans",  "cream",    1, 0.1),
-    ("black_bean",            "黑豆",     "Black Bean",         "beans",  "black",    1, 0.1),
-    ("pea",                   "豌豆",     "Pea",                "beans",  "palegreen", 1, 0.1),
-    ("broad_bean",            "蚕豆",     "Broad Bean",         "beans",  "palegreen", 1, 0.1),
+    ("red_bean",              "红豆",     "Red Bean",           "bean_kidney", "red",    1, 0.1),
+    ("mung_bean",             "绿豆",     "Mung Bean",          "bean_mung", "mung",     1, 0.1),
+    ("soybean",               "黄豆",     "Soybean",            "bean_round", "cream",  1, 0.1),
+    ("black_bean",            "黑豆",     "Black Bean",         "bean_round", "black",  1, 0.1),
+    ("pea",                   "豌豆",     "Pea",                "bean_round", "palegreen", 1, 0.1),
+    ("broad_bean",            "蚕豆",     "Broad Bean",         "bean_flat", "palegreen", 1, 0.1),
     ("bean_paste",            "豆沙",     "Red Bean Paste",     "paste_ball", "paste", 2, 0.2),
     ("dou_ya",                "豆芽",     "Bean Sprouts",       "sprout", "white",    1, 0.2),
     # --- 薯类 ---
@@ -139,22 +144,49 @@ INGREDIENTS = [
 ]
 
 # ======================================================================
+# 作物种子（可播种；本阶段先作为“留种”物品，种植系统见阶段 5）
+# ======================================================================
+# 每行同 INGREDIENTS。营养值一律为 0：种子不是食物，
+# 所以它们会注册成普通 Item 而不是可摆放的 DishItem。
+SEEDS = [
+    # --- 谷物 ---
+    ("rice_seeds",         "稻种",     "Rice Seeds",         "seeds",  "wheat",    0, 0),
+    ("millet_seeds",       "谷种",     "Millet Seeds",       "seeds",  "gold",     0, 0),
+    ("sorghum_seeds",      "高粱种",   "Sorghum Seeds",      "seeds",  "red",      0, 0),
+    ("corn_seeds",         "玉米种",   "Corn Kernels",       "seeds",  "yellow",   0, 0),
+    # --- 豆类 ---
+    ("soybean_seeds",      "黄豆种",   "Soybean Seeds",      "bean_round",  "cream",    0, 0),
+    ("mung_bean_seeds",    "绿豆种",   "Mung Bean Seeds",    "bean_mung",   "mung",     0, 0),
+    ("red_bean_seeds",     "红豆种",   "Red Bean Seeds",     "bean_kidney", "red",      0, 0),
+    ("peanut_seeds",       "花生种",   "Peanut Seeds",       "nuts",   "tan",      0, 0),
+    ("sesame_seeds",       "芝麻种",   "Sesame Seeds",       "seeds",  "cream",    0, 0),
+    # --- 薯类 ---
+    ("taro_seeds",         "芋种",     "Taro Corms",         "tuber",  "purple",   0, 0),
+    ("sweet_potato_slip",  "红薯秧",   "Sweet Potato Slips", "sprout", "green",    0, 0),
+    # --- 菜类 ---
+    ("napa_cabbage_seeds", "白菜种",   "Napa Cabbage Seeds", "seeds",  "cabbage",  0, 0),
+    ("radish_seeds",       "萝卜种",   "Radish Seeds",       "seeds",  "white",    0, 0),
+    ("chili_seeds",        "辣椒种",   "Chili Seeds",        "seeds",  "chili",    0, 0),
+    ("cucumber_seeds",     "黄瓜种",   "Cucumber Seeds",     "seeds",  "leaf",     0, 0),
+]
+
+# ======================================================================
 # 常见水果
 # ======================================================================
 FRUITS = [
-    ("pear",        "梨",     "Pear",        "fruit_round",  "palegreen", 4, 0.3),
-    ("peach",       "桃",     "Peach",       "fruit_round",  "orange",    4, 0.3),
+    ("pear",        "梨",     "Pear",        "fruit_pear",   "palegreen", 4, 0.3),
+    ("peach",       "桃",     "Peach",       "fruit_peach",  "orange",    4, 0.3),
     ("plum",        "李子",   "Plum",        "fruit_round",  "purple",    3, 0.3),
-    ("apricot",     "杏",     "Apricot",     "fruit_round",  "gold",      3, 0.3),
+    ("apricot",     "杏",     "Apricot",     "fruit_peach",  "gold",      3, 0.3),
     ("jujube",      "枣",     "Jujube",      "berries",      "red",       3, 0.3),
-    ("persimmon",   "柿子",   "Persimmon",   "fruit_round",  "orange",    4, 0.3),
-    ("mandarin",    "橘子",   "Mandarin",    "fruit_round",  "orange",    4, 0.3),
-    ("pomelo",      "柚子",   "Pomelo",      "fruit_round",  "palegreen", 5, 0.3),
+    ("persimmon",   "柿子",   "Persimmon",   "fruit_persimmon", "orange", 4, 0.3),
+    ("mandarin",    "橘子",   "Mandarin",    "fruit_citrus", "orange",    4, 0.3),
+    ("pomelo",      "柚子",   "Pomelo",      "fruit_citrus", "palegreen", 5, 0.3),
     ("banana",      "香蕉",   "Banana",      "banana",       "yellow",    5, 0.4),
     ("grape",       "葡萄",   "Grape",       "grape",        "purple",    2, 0.3),
-    ("strawberry",  "草莓",   "Strawberry",  "berries",      "red",       3, 0.4),
+    ("strawberry",  "草莓",   "Strawberry",  "strawberry",   "red",       3, 0.4),
     ("cherry",      "樱桃",   "Cherry",      "cherries",     "red",       2, 0.3),
-    ("pomegranate", "石榴",   "Pomegranate", "fruit_round",  "red",       4, 0.3),
+    ("pomegranate", "石榴",   "Pomegranate", "fruit_pomegranate", "red", 4, 0.3),
     ("kiwi",        "猕猴桃", "Kiwi",        "kiwi",         "brown",     3, 0.3),
     ("mango",       "芒果",   "Mango",       "mango",        "gold",      5, 0.4),
     ("pineapple",   "菠萝",   "Pineapple",   "pineapple",    "gold",      5, 0.4),
@@ -176,8 +208,8 @@ VEGETABLES = [
     ("luffa",            "丝瓜",     "Luffa",            "long_veg", "green",   2, 0.3),
     ("bitter_melon",     "苦瓜",     "Bitter Melon",     "long_veg", "palegreen", 2, 0.2),
     ("green_bean",       "豆角",     "Green Bean",       "pod",    "green",     1, 0.2),
-    ("tomato",           "西红柿",   "Tomato",           "round_veg", "tomato",  3, 0.4),
-    ("chili",            "辣椒",     "Chili Pepper",     "round_veg", "chili",   2, 0.3),
+    ("tomato",           "西红柿",   "Tomato",           "tomato",  "tomato",  3, 0.4),
+    ("chili",            "辣椒",     "Chili Pepper",     "chili",   "chili",   2, 0.3),
     ("scallion",         "葱",       "Scallion",         "bulb",   "leaf",      1, 0.2),
     ("ginger",           "姜",       "Ginger",           "ginger", "tan",       1, 0.2),
     ("garlic",           "蒜",       "Garlic",           "garlic", "white",     1, 0.2),
@@ -239,7 +271,7 @@ VANILLA = {
     "iron_ingot": "minecraft:iron_ingot",
     "clay_ball": "minecraft:clay_ball",
     "glass": "minecraft:glass",
-    "planks": "minecraft:planks",
+    "planks": "#minecraft:planks",
     "bowl": "minecraft:bowl",
     "water_bucket": "minecraft:water_bucket",
     "milk_bucket": "minecraft:milk_bucket",
@@ -431,6 +463,40 @@ RECIPES = {
     "pickled_vegetable": ("shapeless", ["chinese_traditional_food:napa_cabbage", "chinese_traditional_food:salt", "chinese_traditional_food:salt"], 2),
     # 稻谷：暂时用小麦代替"未脱壳的谷物"（后续做作物种植时改为草丛掉落）
     "paddy": ("shapeless", ["minecraft:wheat", "minecraft:wheat"], 2),
+    # 谷子同理；米糠现在只能靠脱壳机副产，合成上先不解
+
+    # ---------------- 留种：作物 -> 种子 ----------------
+    # 现实里种子就是从成熟作物里留出来的。这里每一行都是"拿一份作物留种"，
+    # 等阶段 5 的种植系统上线后，种子另会有"下地播种"的用法。
+    "rice_seeds": ("shapeless", ["chinese_traditional_food:paddy"], 2),
+    "millet_seeds": ("shapeless", ["chinese_traditional_food:millet_grass"], 2),
+    "sorghum_seeds": ("shapeless", ["chinese_traditional_food:sorghum"], 2),
+    "corn_seeds": ("shapeless", ["chinese_traditional_food:corn"], 2),
+    "soybean_seeds": ("shapeless", ["chinese_traditional_food:soybean"], 2),
+    "mung_bean_seeds": ("shapeless", ["chinese_traditional_food:mung_bean"], 2),
+    "red_bean_seeds": ("shapeless", ["chinese_traditional_food:red_bean"], 2),
+    "peanut_seeds": ("shapeless", ["chinese_traditional_food:peanut"], 2),
+    "sesame_seeds": ("shapeless", ["chinese_traditional_food:sesame"], 2),
+    "taro_seeds": ("shapeless", ["chinese_traditional_food:taro"], 2),
+    "sweet_potato_slip": ("shapeless", ["chinese_traditional_food:sweet_potato"], 2),
+    "napa_cabbage_seeds": ("shapeless", ["chinese_traditional_food:napa_cabbage"], 2),
+    "radish_seeds": ("shapeless", ["chinese_traditional_food:radish"], 2),
+    "chili_seeds": ("shapeless", ["chinese_traditional_food:chili"], 2),
+    "cucumber_seeds": ("shapeless", ["chinese_traditional_food:cucumber"], 2),
+
+    # ---------------- 自研装置 ----------------
+    "water_mill": ("shaped", {"pattern": ["SSS", "SWS", "III"],
+                               "key": {"S": "minecraft:stone_bricks",
+                                       "W": "minecraft:water_bucket",
+                                       "I": "minecraft:iron_ingot"}}, 1),
+    "grain_sheller": ("shaped", {"pattern": ["PSP", "PIP", "PPP"],
+                                  "key": {"P": "#minecraft:planks",
+                                          "S": "minecraft:stone",
+                                          "I": "minecraft:iron_ingot"}}, 1),
+    # 料斗：叠在脱壳机正上方，进料上限 1 → 16（多方块部件）
+    "grain_sheller_hopper": ("shaped", {"pattern": ["P P", "PIP", " I "],
+                                         "key": {"P": "#minecraft:planks",
+                                                 "I": "minecraft:iron_ingot"}}, 1),
 
     # ---------------- 调味料 ----------------
     "salt": ("smelting", ["minecraft:dried_kelp"], 1),
@@ -459,7 +525,7 @@ RECIPES = {
 
     # ---------------- 餐具 / 厨具 ----------------
     "plate": ("shaped", {"pattern": ["C C", " C "], "key": {"C": "minecraft:clay_ball"}}, 1),
-    "serving_platter": ("shaped", {"pattern": ["PPP", "P P"], "key": {"P": "minecraft:planks"}}, 1),
+    "serving_platter": ("shaped", {"pattern": ["PPP", "P P"], "key": {"P": "#minecraft:planks"}}, 1),
     "cutting_board": ("shaped", {"pattern": ["PPP", "P P"], "key": {"P": "minecraft:stick"}}, 1),
     "chopsticks": ("shaped", {"pattern": ["S", "S"], "key": {"S": "minecraft:stick"}}, 2),
     "rolling_pin": ("shaped", {"pattern": ["S  ", " S ", "  S"], "key": {"S": "minecraft:stick"}}, 1),
@@ -521,6 +587,35 @@ DISH_RECIPE_MATERIALS = {
 }
 
 # ======================================================================
+# 自研装置的处理表
+# ======================================================================
+# 每行 = (输入, 产出, 产出数量, 副产物, 副产物概率, 耗时 tick)
+# 输入以 # 开头表示标签，否则是具体物品 id。按顺序匹配，先具体物品后标签。
+#
+# 水磨：把谷物磨成粉。需要紧邻水源，不需红石（水轮一直在转）。
+MILLING = [
+    ("minecraft:wheat",                            "flour",                2, "", 0.0, 100),
+    ("chinese_traditional_food:rice",               "rice_flour",           2, "", 0.0, 100),
+    ("chinese_traditional_food:glutinous_rice",     "glutinous_rice_flour", 2, "", 0.0, 100),
+    ("chinese_traditional_food:corn",               "corn_flour",           2, "", 0.0, 100),
+    ("minecraft:potato",                            "starch",               2, "", 0.0, 100),
+    ("chinese_traditional_food:sichuan_peppercorn", "pepper_powder",        2, "", 0.0, 80),
+    ("chinese_traditional_food:dried_chili",        "chili_powder",         2, "", 0.0, 80),
+    ("chinese_traditional_food:sesame",             "sesame_oil",           1,
+     "chinese_traditional_food:sesame_paste", 0.35, 120),
+    ("chinese_traditional_food:red_bean",           "bean_paste",           1, "", 0.0, 140),
+    ("chinese_traditional_food:soybean",            "soybean",              1, "", 0.0, 0),
+]
+
+# 脱壳机：把带壳谷物脱壳。需要红石信号。
+SHELLING = [
+    ("chinese_traditional_food:paddy",         "rice",     1,
+     "chinese_traditional_food:rice_bran", 0.45, 120),
+    ("chinese_traditional_food:millet_grass",  "millet",   1,
+     "chinese_traditional_food:rice_bran", 0.30, 100),
+]
+
+# ======================================================================
 # 案板切割表
 # ======================================================================
 # 每行 = (输入标签或物品, 输出物品, 需要“刀”与否, 额外耗时 tick)
@@ -571,8 +666,7 @@ C_TAGS = {
                       "minecraft:mutton", "minecraft:rabbit"],
     "raw_fish":      ["minecraft:cod", "minecraft:salmon"],
     "mushrooms":     ["chinese_traditional_food:wood_ear", "minecraft:brown_mushroom",
-                      "minecraft:red_mushroom"],
-    "crops":         ["chinese_traditional_food:napa_cabbage", "chinese_traditional_food:bok_choy",
+                      "minecraft:red_mushroom"],    "crops":         ["chinese_traditional_food:napa_cabbage", "chinese_traditional_food:bok_choy",
                       "chinese_traditional_food:radish", "chinese_traditional_food:tomato",
                       "chinese_traditional_food:chili", "chinese_traditional_food:eggplant"],
     "crops/chili":   ["chinese_traditional_food:chili"],
@@ -589,6 +683,16 @@ OWN_TAGS = {
     "tofu": ["chinese_traditional_food:tofu", "chinese_traditional_food:fermented_tofu"],
     "prepared": ["chinese_traditional_food:shredded_vegetable", "chinese_traditional_food:shredded_meat",
                  "chinese_traditional_food:fish_fillet", "chinese_traditional_food:shredded_tofu"],
+    "husked_grain": ["chinese_traditional_food:paddy", "chinese_traditional_food:millet_grass"],
+    "bran": ["chinese_traditional_food:rice_bran"],
+    "seeds": ["chinese_traditional_food:rice_seeds", "chinese_traditional_food:millet_seeds",
+              "chinese_traditional_food:sorghum_seeds", "chinese_traditional_food:corn_seeds",
+              "chinese_traditional_food:soybean_seeds", "chinese_traditional_food:mung_bean_seeds",
+              "chinese_traditional_food:red_bean_seeds", "chinese_traditional_food:peanut_seeds",
+              "chinese_traditional_food:sesame_seeds", "chinese_traditional_food:taro_seeds",
+              "chinese_traditional_food:sweet_potato_slip", "chinese_traditional_food:napa_cabbage_seeds",
+              "chinese_traditional_food:radish_seeds", "chinese_traditional_food:chili_seeds",
+              "chinese_traditional_food:cucumber_seeds", "minecraft:wheat_seeds"],
     "seasonings": ["chinese_traditional_food:salt", "chinese_traditional_food:soy_sauce",
                    "chinese_traditional_food:vinegar", "chinese_traditional_food:cooking_wine",
                    "chinese_traditional_food:sichuan_peppercorn", "chinese_traditional_food:star_anise",

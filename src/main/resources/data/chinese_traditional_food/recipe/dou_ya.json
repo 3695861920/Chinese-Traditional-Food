@@ -1,12 +1,8 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    {
-      "item": "chinese_traditional_food:soybean"
-    },
-    {
-      "item": "minecraft:water_bucket"
-    }
+    "chinese_traditional_food:soybean",
+    "minecraft:water_bucket"
   ],
   "result": {
     "id": "chinese_traditional_food:dou_ya",

@@ -43,6 +43,13 @@ def write(path, text):
     print("wrote " + os.path.relpath(path, ROOT))
 
 
+def drop_if_exists(path):
+    """删掉被取代的旧生成文件（重命名时要记得改这里）。"""
+    if os.path.exists(path):
+        os.remove(path)
+        print("removed stale " + os.path.relpath(path, ROOT))
+
+
 def write_json(path, obj):
     write(path, json.dumps(obj, ensure_ascii=False, indent=2) + "\n")
 
@@ -64,6 +71,8 @@ def collect():
 
     for row in DATA.INGREDIENTS:
         add(row, "ingredient")
+    for row in DATA.SEEDS:
+        add(row, "seed")
     for row in DATA.SEASONINGS:
         add(row, "seasoning")
     for row in DATA.FRUITS:
@@ -88,6 +97,7 @@ def collect():
 
 CATEGORY_TITLE = {
     "ingredient": "基础食材",
+    "seed": "作物种子",
     "seasoning": "调味料",
     "fruit": "常见水果",
     "vegetable": "常见蔬菜",
@@ -141,6 +151,18 @@ public final class ModItems {
     /** 案板，放上食材后用刀切。 */
     public static final DeferredItem<BlockItem> CUTTING_BOARD =
             ITEMS.registerSimpleBlockItem(ModBlocks.CUTTING_BOARD);
+
+    /** 水磨，谷物磨粉。 */
+    public static final DeferredItem<BlockItem> WATER_MILL =
+            ITEMS.registerSimpleBlockItem(ModBlocks.WATER_MILL);
+
+    /** 脱壳机，手摇式，无界面。 */
+    public static final DeferredItem<BlockItem> GRAIN_SHELLER =
+            ITEMS.registerSimpleBlockItem(ModBlocks.GRAIN_SHELLER);
+
+    /** 脱壳机料斗（多方块部件）。 */
+    public static final DeferredItem<BlockItem> GRAIN_SHELLER_HOPPER =
+            ITEMS.registerSimpleBlockItem(ModBlocks.GRAIN_SHELLER_HOPPER);
 """
 
 FOOTER = """
@@ -206,6 +228,7 @@ def gen_mod_items(items, dishes):
     # --- 按类别分组 ---
     sections = [
         ("基础食材", [i for i in items if i["category"] == "ingredient"]),
+        ("作物种子", [i for i in items if i["category"] == "seed"]),
         ("调味料", [i for i in items if i["category"] == "seasoning"]),
         ("常见水果", [i for i in items if i["category"] == "fruit"]),
         ("常见蔬菜", [i for i in items if i["category"] == "vegetable"]),
@@ -281,10 +304,13 @@ public final class ModCreativeTabs {
                     .title(Component.translatable("itemGroup.chinese_traditional_food.main"))
                     .icon(() -> new ItemStack(ModItems.MAPO_TOFU.get()))
                     .displayItems((params, output) -> {
-                        // 餐具与摆放 / 加工方块
+                        // 餐具与功能方块
                         output.accept(ModItems.PLATE.get());
                         output.accept(ModItems.SERVING_PLATTER.get());
                         output.accept(ModItems.CUTTING_BOARD.get());
+                        output.accept(ModItems.WATER_MILL.get());
+                        output.accept(ModItems.GRAIN_SHELLER.get());
+                        output.accept(ModItems.GRAIN_SHELLER_HOPPER.get());
                         // 其余全部内容（食材 / 调味料 / 水果 / 蔬菜 / 厨具 / 菜品）
                         for (var item : ModItems.allFoods()) {
                             output.accept(item.get());
@@ -305,6 +331,9 @@ CREATIVE_FOOTER = """
             event.accept(ModItems.PLATE.get());
             event.accept(ModItems.SERVING_PLATTER.get());
             event.accept(ModItems.CUTTING_BOARD.get());
+            event.accept(ModItems.WATER_MILL.get());
+            event.accept(ModItems.GRAIN_SHELLER.get());
+            event.accept(ModItems.GRAIN_SHELLER_HOPPER.get());
         }
         if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
             for (var item : ModItems.allFoods()) {
@@ -318,6 +347,9 @@ CREATIVE_FOOTER = """
             event.accept(ModItems.PLATE.get());
             event.accept(ModItems.SERVING_PLATTER.get());
             event.accept(ModItems.CUTTING_BOARD.get());
+            event.accept(ModItems.WATER_MILL.get());
+            event.accept(ModItems.GRAIN_SHELLER.get());
+            event.accept(ModItems.GRAIN_SHELLER_HOPPER.get());
         }
     }
 
@@ -341,46 +373,241 @@ def gen_creative_tabs():
 
 CUTTING_HEADER = '''package com.ctf.chinese_traditional_food.common.recipe;
 
-import com.ctf.chinese_traditional_food.ChineseTraditionalFood;
 import java.util.List;
 
 /**
- * 案板切割表。
+ * 本模组自研装置与工具的硬编码处理表。
  *
  * <p><b>本文件由 {@code tools/gen_content.py} 生成，请不要手改。</b>
- * 要改配方请编辑 {@code tools/content_data.py} 的 CUTTING 表。</p>
+ * 要改配方请编辑 {@code tools/content_data.py}。</p>
  *
- * <p>输入写法：{@code "chinese_traditional_food:tofu"} 或 {@code "#c:raw_meat"}（标签）。
- * 匹配时<strong>先具体物品、后标签</strong>，所以表的顺序有意义。</p>
+ * <p>为什么用代码表而不是自定义 {@code RecipeType}：
+ * 一来这些装置被要求"配方独立于其它模组、始终可用"，代码表最直接；
+ * 二来不受数据包加载顺序影响。将来若要支持数据包自定义，
+ * 把下面的 List 换成读 JSON 即可，{@link ProcessRecipes} / {@link CuttingRecipes}
+ * 这些调用方不用改。</p>
  */
-public final class ModCutting {
-    /** 一条切割规则。
+public final class ModRecipes {
+    /** 一条"进料 -> 出料"规则。
+     *
+     * @param input           输入（物品 id 或 {@code #命名空间:标签路径}）
+     * @param output          产出物品 id
+     * @param outputCount     产出数量
+     * @param byproduct       副产物物品 id，空字符串表示没有
+     * @param byproductChance 副产物概率（0~1）
+     * @param ticks           耗时（tick）
+     */
+    public record Entry(String input, String output, int outputCount,
+                        String byproduct, float byproductChance, int ticks) {}
+
+    /** 一条案板切割规则。
      *
      * @param input      输入（物品 id 或 {@code #命名空间:标签路径}）
-     * @param output     产出物品的路径（命名空间固定为本模组）
+     * @param output     产出物品 id
      * @param needsKnife 是否需要手持刀类工具
      * @param extraTime  额外耗时（tick），0 表示瞬间完成
      */
-    public record Entry(String input, String output, boolean needsKnife, int extraTime) {}
+    public record CuttingEntry(String input, String output, boolean needsKnife, int extraTime) {}
 
-    public static final List<Entry> ENTRIES = List.of(
+    /** 水磨：谷物 -> 粉末。需要紧邻水源。 */
+    public static final List<Entry> MILLING = List.of(
+'''
+
+CUTTING_MID = '''    );
+
+    /** 脱壳机：带壳谷物 -> 米。需要红石信号。 */
+    public static final List<Entry> SHELLING = List.of(
 '''
 
 CUTTING_FOOTER = '''    );
 
-    private ModCutting() {}
+    /** 案板切割。先匹配具体物品、再匹配标签，所以顺序有意义。 */
+    public static final List<CuttingEntry> CUTTING = List.of(
+'''
+
+CUTTING_END = '''    );
+
+    private ModRecipes() {}
 }
 '''
 
 
-def gen_cutting():
+def _bare(item_id):
+    """把本模组命名空间前缀去掉。
+
+    产出 / 副产物统一写成本模组的裸 id（由 ProcessRecipes 解析时补命名空间），
+    这样生成出来的表更短，也不会出现"有的带前缀、有的不带"的不一致。
+    """
+    prefix = NAMESPACE + ":"
+    return item_id[len(prefix):] if item_id.startswith(prefix) else item_id
+
+
+def _entry_lines(entries):
     lines = []
-    for (input, output, needs_knife, extra) in DATA.CUTTING:
-        lines.append('            new Entry("%s", "%s", %s, %d),'
-                     % (input, output, "true" if needs_knife else "false", extra))
-    body = CUTTING_HEADER + "\n".join(lines) + "\n" + CUTTING_FOOTER
-    write(os.path.join(JAVA, "common", "recipe", "ModCutting.java"), body)
-    print("cutting entries: %d" % len(DATA.CUTTING))
+    for (inp, out, count, by, chance, ticks) in entries:
+        lines.append('            new Entry("%s", "%s", %d, "%s", %.2fF, %d)'
+                     % (inp, _bare(out), count, _bare(by), chance, ticks))
+    return lines
+
+
+def gen_recipes_table():
+    # 注意：List.of(...) 的实参列表不能有尾随逗号（数组初始化才行），
+    # 所以用 ",\n".join 而不是给每行都加逗号。
+    parts = [CUTTING_HEADER,
+             ",\n".join(_entry_lines(DATA.MILLING)), "\n",
+             CUTTING_MID,
+             ",\n".join(_entry_lines(DATA.SHELLING)), "\n",
+             CUTTING_FOOTER,
+             ",\n".join('            new CuttingEntry("%s", "%s", %s, %d)'
+                        % (i, o, "true" if k else "false", t)
+                        for (i, o, k, t) in DATA.CUTTING), "\n",
+             CUTTING_END]
+    write(os.path.join(JAVA, "common", "recipe", "ModRecipes.java"), "".join(parts))
+    # 早期版本叫 ModCutting，现已合并进 ModRecipes；留着会编译进旧表
+    drop_if_exists(os.path.join(JAVA, "common", "recipe", "ModCutting.java"))
+    print("machine recipes: milling=%d shelling=%d cutting=%d"
+          % (len(DATA.MILLING), len(DATA.SHELLING), len(DATA.CUTTING)))
+
+
+# ======================================================================
+# 菜品摆放：器型表 + 配色表（给「直接摆在地上的菜」用）
+# ======================================================================
+
+DISH_PLACEMENT_HEADER = '''package com.ctf.chinese_traditional_food.common.block;
+
+import com.ctf.chinese_traditional_food.registry.ModItems;
+import java.util.HashMap;
+import java.util.Map;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.item.Item;
+import org.jetbrains.annotations.Nullable;
+
+/**
+ * 菜品 -> 三维器型 / 配色 的查表。
+ *
+ * <p><b>本文件由 {@code tools/gen_content.py} 生成，请不要手改。</b>
+ * 要调整请编辑 {@code tools/content_data.py}（配色）
+ * 与 {@code tools/dish_models.py}（器型）。</p>
+ *
+ * <p>摆在地上的菜是<b>一个方块 + 一个方块状态属性</b>（原版蛋糕 / 南瓜派
+ * 也是这个路子）：属性选三维几何，颜色由方块着色（BlockTintSource）按这里的配色染。
+ * 所以不需要给每道菜写渲染器。</p>
+ */
+public final class DishPlacement {
+    /** 器型，顺序必须与 {@code tools/dish_models.py} 的 SHAPE_ORDER 一致。
+     *  实现 {@link StringRepresentable} 是 {@code EnumProperty} 的要求，
+     *  序列化出来的名字就是方块状态 JSON 里的键。 */
+    public enum Shape implements StringRepresentable {
+'''
+
+DISH_PLACEMENT_MID = '''        ;
+
+        private final int id;
+
+        Shape(int id) {
+            this.id = id;
+        }
+
+        public int id() {
+            return this.id;
+        }
+
+        @Override
+        public String getSerializedName() {
+            return this.name().toLowerCase(java.util.Locale.ROOT);
+        }
+    }
+
+    /**
+     * 每种器型的包围盒：<b>minX, minY, minZ, maxX, maxY, maxZ</b>（方块坐标系，0~16）。
+     *
+     * <p>这些数字不是拍脑袋写的，而是 {@code tools/dish_models.py} 从模型元素
+     * 的极值实测出来的 —— 所以落在地上时是"<b>模型多大就占多大</b>"：
+     * 盘子只有薄薄一层，粽子占地很小，酒盏不会挡住整格。</p>
+     */
+    private static final float[][] BOUNDS = {
+'''
+
+DISH_PLACEMENT_MID_B = '''    };
+
+    private static final Map<Item, Shape> SHAPE_BY_ITEM = new HashMap<>();
+    private static final Map<Item, Integer> COLOR_BY_ITEM = new HashMap<>();
+
+    static {
+'''
+
+DISH_PLACEMENT_FOOTER = '''    }
+
+    /** 这道菜的器型；不在表里返回 {@code null}（表示不能摆）。 */
+    @Nullable
+    public static Shape shapeOf(Item item) {
+        return SHAPE_BY_ITEM.get(item);
+    }
+
+    /** 这道菜的主色（0xRRGGBB）；不在表里返回白色。 */
+    public static int colorOf(Item item) {
+        Integer c = COLOR_BY_ITEM.get(item);
+        return c == null ? 0xFFFFFF : c;
+    }
+
+    /** 汤汁 / 汁水的颜色：主色压暗一档。 */
+    public static int liquidColorOf(Item item) {
+        int c = colorOf(item);
+        int r = (c >> 16 & 0xFF) * 3 / 4;
+        int g = (c >> 8 & 0xFF) * 3 / 4;
+        int b = (c & 0xFF) * 3 / 4;
+        return r << 16 | g << 8 | b;
+    }
+
+    /**
+     * 器型的包围盒，顺序是 {@code [minX, minY, minZ, maxX, maxY, maxZ]}。
+     *
+     * <p>拿它直接建 {@code VoxelShape}，就能做到"模型多大就占多大"。</p>
+     */
+    public static float[] boundsOf(Shape shape) {
+        return BOUNDS[shape.id()];
+    }
+
+    private DishPlacement() {}
+}
+'''
+
+
+def gen_dish_placement(dishes):
+    """生成 DishPlacement.java：器型枚举 + 两张查表。"""
+    import dish_models as DM
+
+    enum_lines = []
+    for i, shape in enumerate(DM.SHAPE_ORDER):
+        enum_lines.append("        %s(%d)" % (shape.upper(), i))
+    enum_body = ",\n".join(enum_lines) + "\n"
+
+    # 包围盒：直接从 dish_models 的模型元素实测，保证模型与碰撞箱一致
+    bounds_lines = []
+    for shape in DM.SHAPE_ORDER:
+        b = DM.bounds(shape)
+        bounds_lines.append("            {%s}," % ", ".join("%.2fF" % v for v in b))
+    bounds_body = "\n".join(bounds_lines) + "\n"
+
+    shape_lines = []
+    color_lines = []
+    for dish in dishes:
+        shape = DM.shape_for(dish["kind"])
+        if shape is None:
+            continue
+        const = const_name(dish["id"])
+        shape_lines.append("        SHAPE_BY_ITEM.put(ModItems.%s.get(), Shape.%s);"
+                           % (const, shape.upper()))
+        main = DATA.PALETTES[dish["palette"]][0]
+        color_lines.append("        COLOR_BY_ITEM.put(ModItems.%s.get(), 0x%02X%02X%02X);"
+                           % (const, main[0], main[1], main[2]))
+
+    body = (DISH_PLACEMENT_HEADER + enum_body + DISH_PLACEMENT_MID + bounds_body
+            + DISH_PLACEMENT_MID_B
+            + "\n".join(shape_lines) + "\n\n" + "\n".join(color_lines) + "\n"
+            + DISH_PLACEMENT_FOOTER)
+    write(os.path.join(JAVA, "common", "block", "DishPlacement.java"), body)
+    print("dish placement: %d 道菜可摆，器型 %d 种" % (len(shape_lines), len(DM.SHAPE_ORDER)))
 
 
 # ======================================================================
@@ -396,11 +623,37 @@ def gen_lang(items, dishes):
         "block.chinese_traditional_food.plate": "餐盘",
         "block.chinese_traditional_food.serving_platter": "大拼盘",
         "block.chinese_traditional_food.cutting_board": "案板",
+        "block.chinese_traditional_food.water_mill": "水磨",
+        "block.chinese_traditional_food.grain_sheller": "手摇脱壳机",
+        "block.chinese_traditional_food.grain_sheller_hopper": "脱壳机料斗",
+        "container.chinese_traditional_food.water_mill": "水磨",
+        "tooltip.chinese_traditional_food.water_mill": "紧邻水源即可自动研磨（无需红石）",
+        "tooltip.chinese_traditional_food.grain_sheller":
+            "带壳谷物右键倒入 · 潜行空手摇柄 · 空手取出米糠",
+        "tooltip.chinese_traditional_food.grain_sheller_hopper":
+            "叠在脱壳机正上方，进料上限从 1 升到 16",
+        "tooltip.chinese_traditional_food.sheller_full": "装不下了，先摇几圈再倒",
+        "tooltip.chinese_traditional_food.sheller_empty": "里面没有带壳谷物",
+        "tooltip.chinese_traditional_food.sheller_output_full": "出料口堵住了，先把米取走",
+        "tooltip.chinese_traditional_food.machine_progress": "进度",
     })
     en.update({
         "block.chinese_traditional_food.plate": "Plate",
         "block.chinese_traditional_food.serving_platter": "Serving Platter",
         "block.chinese_traditional_food.cutting_board": "Cutting Board",
+        "block.chinese_traditional_food.water_mill": "Water Mill",
+        "block.chinese_traditional_food.grain_sheller": "Hand-cranked Grain Sheller",
+        "block.chinese_traditional_food.grain_sheller_hopper": "Grain Sheller Hopper",
+        "container.chinese_traditional_food.water_mill": "Water Mill",
+        "tooltip.chinese_traditional_food.water_mill": "Runs automatically when placed next to water (no redstone needed)",
+        "tooltip.chinese_traditional_food.grain_sheller":
+            "Right-click with grain to pour in -- sneak + empty hand to crank -- empty hand to take the rice",
+        "tooltip.chinese_traditional_food.grain_sheller_hopper":
+            "Stack on top of a grain sheller to raise the input limit from 1 to 16",
+        "tooltip.chinese_traditional_food.sheller_full": "It's full -- crank a few times before pouring more",
+        "tooltip.chinese_traditional_food.sheller_empty": "No unhusked grain inside",
+        "tooltip.chinese_traditional_food.sheller_output_full": "The outlet is blocked -- take the rice out first",
+        "tooltip.chinese_traditional_food.machine_progress": "Progress",
     })
 
     # 按类别写注释分组（JSON 不支持注释，用顺序 + 分组标题的键值对不可行，
@@ -453,14 +706,61 @@ def gen_item_assets(items, dishes):
 
 
 # ======================================================================
+# 手写功能方块的「方块物品」客户端资源
+# ======================================================================
+
+# id -> 物品模型指向。写成 "block/<id>" 就是用**三维方块模型**当物品图标
+# （像原版的台阶、栅栏那样有立体感），写成 "item/<id>" 就是用 2D 图标。
+BLOCK_ITEM_MODELS = {
+    # 餐具类：三维模型本身就很精致，直接拿来做物品图标最有立体感
+    "plate": "block/plate",
+    "serving_platter": "block/serving_platter",
+    "cutting_board": "block/cutting_board",
+    # 机器类：结构复杂，包里用 2D 图标更好认
+    "water_mill": "item/water_mill",
+    "grain_sheller": "item/grain_sheller",
+    "grain_sheller_hopper": "item/grain_sheller_hopper",
+}
+
+
+def gen_block_item_assets():
+    """给手写方块生成客户端物品定义（26.1 起物品模型改由 items/*.json 指定）。"""
+    base_items = os.path.join(RES, "assets", NAMESPACE, "items")
+    base_models = os.path.join(RES, "assets", NAMESPACE, "models", "item")
+
+    count = 0
+    for block_id, target in BLOCK_ITEM_MODELS.items():
+        write_json(os.path.join(base_items, "%s.json" % block_id), {
+            "model": {
+                "type": "minecraft:model",
+                "model": "%s:%s" % (NAMESPACE, target),
+            }
+        })
+        if target.startswith("item/"):
+            # 2D 图标：还需要一张 models/item 的生成模型
+            write_json(os.path.join(base_models, "%s.json" % block_id), {
+                "parent": "minecraft:item/generated",
+                "textures": {"layer0": "%s:item/%s" % (NAMESPACE, block_id)},
+            })
+        count += 1
+    print("block item assets: %d" % count)
+
+
+# ======================================================================
 # 配方
 # ======================================================================
 
 def ingredient_json(token):
-    """把材料写法转成配方 JSON。"""
-    if token.startswith("#"):
-        return {"tag": token[1:]}
-    return {"item": token}
+    """26.1 起 Ingredient 的 JSON 就是**纯字符串**：
+
+       具体物品 -> {"minecraft:wheat"}
+       标签     -> {"#c:flour"}
+
+    老版本的 {"item": ...} / {"tag": ...} 对象形式已经不用了。
+    这一点是跑客户端时从日志里发现的（List is too short: 0, expected range [1-9]），
+    对照原版 data/minecraft/recipe/*.json 才确认。
+    """
+    return token
 
 
 def recipe_object(recipe_id, spec):
@@ -495,7 +795,8 @@ def recipe_object(recipe_id, spec):
 def gen_recipes(items, dishes):
     base = os.path.join(RES, "data", NAMESPACE, "recipe")
     known = ({i["id"] for i in items} | {d["id"] for d in dishes}
-             | {"plate", "serving_platter", "cutting_board"})
+             | {"plate", "serving_platter", "cutting_board", "water_mill", "grain_sheller",
+                "grain_sheller_hopper", "placed_dish"})
 
     written = 0
     for recipe_id, spec in DATA.RECIPES.items():
@@ -561,9 +862,11 @@ def main():
 
     gen_mod_items(items, dishes)
     gen_creative_tabs()
-    gen_cutting()
+    gen_recipes_table()
+    gen_dish_placement(dishes)
     gen_lang(items, dishes)
     gen_item_assets(items, dishes)
+    gen_block_item_assets()
     gen_recipes(items, dishes)
     gen_tags(dishes)
 

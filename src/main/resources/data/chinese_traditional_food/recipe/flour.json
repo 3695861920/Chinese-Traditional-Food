@@ -1,9 +1,7 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    {
-      "item": "minecraft:wheat"
-    }
+    "minecraft:wheat"
   ],
   "result": {
     "id": "chinese_traditional_food:flour",

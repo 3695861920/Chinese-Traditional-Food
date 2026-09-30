@@ -23,6 +23,13 @@ run-data/
 # 下载的第三方素材（体积大、可用 tools/fetch_cc0_assets.ps1 随时重新拉取）
 tools/downloads/
 
+# 构建 / 运行日志（工具生成的，不入库）
+tools/*_log.txt
+tools/build_log.txt
+tools/run_client.log
+tools/validate.txt
+tools/tex_log.txt
+
 # OS
 Thumbs.db
 Desktop.ini

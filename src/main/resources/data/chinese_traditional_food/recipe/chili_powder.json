@@ -1,9 +1,7 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    {
-      "item": "chinese_traditional_food:dried_chili"
-    }
+    "chinese_traditional_food:dried_chili"
   ],
   "result": {
     "id": "chinese_traditional_food:chili_powder",

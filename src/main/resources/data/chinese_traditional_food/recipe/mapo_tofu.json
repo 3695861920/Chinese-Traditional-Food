@@ -1,18 +1,10 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    {
-      "item": "chinese_traditional_food:tofu"
-    },
-    {
-      "item": "chinese_traditional_food:doubanjiang"
-    },
-    {
-      "item": "chinese_traditional_food:sichuan_peppercorn"
-    },
-    {
-      "item": "chinese_traditional_food:chili_powder"
-    }
+    "chinese_traditional_food:tofu",
+    "chinese_traditional_food:doubanjiang",
+    "chinese_traditional_food:sichuan_peppercorn",
+    "chinese_traditional_food:chili_powder"
   ],
   "result": {
     "id": "chinese_traditional_food:mapo_tofu",
