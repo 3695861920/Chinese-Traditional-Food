@@ -493,10 +493,18 @@ RECIPES = {
                                   "key": {"P": "#minecraft:planks",
                                           "S": "minecraft:stone",
                                           "I": "minecraft:iron_ingot"}}, 1),
-    # 料斗：叠在脱壳机正上方，进料上限 1 → 16（多方块部件）
-    "grain_sheller_hopper": ("shaped", {"pattern": ["P P", "PIP", " I "],
-                                         "key": {"P": "#minecraft:planks",
-                                                 "I": "minecraft:iron_ingot"}}, 1),
+    # 机器部件：大型水磨 / 碾米机缺件时用它补。
+    # 一次做 4 个：一台机器分别要 14 / 17 个，拆一次也不会卡住。
+    "water_mill_part": ("shaped", {"pattern": ["SSS", "SIS", "SSS"],
+                                     "key": {"S": "minecraft:stone_bricks",
+                                             "I": "minecraft:iron_ingot"}}, 4),
+    "grain_sheller_part": ("shaped", {"pattern": ["PPP", "PIP", "PPP"],
+                                        "key": {"P": "#minecraft:planks",
+                                                "I": "minecraft:iron_ingot"}}, 4),
+    # 水车：装在水磨两侧接口的外侧，需要泡水
+    "water_wheel": ("shaped", {"pattern": ["PIP", "I I", "PIP"],
+                                "key": {"P": "#minecraft:planks",
+                                        "I": "minecraft:iron_ingot"}}, 1),
 
     # ---------------- 调味料 ----------------
     "salt": ("smelting", ["minecraft:dried_kelp"], 1),

@@ -30,8 +30,10 @@ public final class ModCreativeTabs {
                         output.accept(ModItems.SERVING_PLATTER.get());
                         output.accept(ModItems.CUTTING_BOARD.get());
                         output.accept(ModItems.WATER_MILL.get());
+                        output.accept(ModItems.WATER_MILL_PART.get());
+                        output.accept(ModItems.WATER_WHEEL.get());
                         output.accept(ModItems.GRAIN_SHELLER.get());
-                        output.accept(ModItems.GRAIN_SHELLER_HOPPER.get());
+                        output.accept(ModItems.GRAIN_SHELLER_PART.get());
                         // 其余全部内容（食材 / 调味料 / 水果 / 蔬菜 / 厨具 / 菜品）
                         for (var item : ModItems.allFoods()) {
                             output.accept(item.get());
@@ -51,8 +53,10 @@ public final class ModCreativeTabs {
             event.accept(ModItems.SERVING_PLATTER.get());
             event.accept(ModItems.CUTTING_BOARD.get());
             event.accept(ModItems.WATER_MILL.get());
+            event.accept(ModItems.WATER_MILL_PART.get());
+            event.accept(ModItems.WATER_WHEEL.get());
             event.accept(ModItems.GRAIN_SHELLER.get());
-            event.accept(ModItems.GRAIN_SHELLER_HOPPER.get());
+            event.accept(ModItems.GRAIN_SHELLER_PART.get());
         }
         if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
             for (var item : ModItems.allFoods()) {
@@ -67,8 +71,10 @@ public final class ModCreativeTabs {
             event.accept(ModItems.SERVING_PLATTER.get());
             event.accept(ModItems.CUTTING_BOARD.get());
             event.accept(ModItems.WATER_MILL.get());
+            event.accept(ModItems.WATER_MILL_PART.get());
+            event.accept(ModItems.WATER_WHEEL.get());
             event.accept(ModItems.GRAIN_SHELLER.get());
-            event.accept(ModItems.GRAIN_SHELLER_HOPPER.get());
+            event.accept(ModItems.GRAIN_SHELLER_PART.get());
         }
     }
 

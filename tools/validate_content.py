@@ -110,7 +110,8 @@ def collect_declared():
 # 手写的功能方块：它们注册的是 BlockItem，语言键走 block. 前缀，
 # 且模型 / 方块状态都是手写或由 display_models.py 生成的。
 HAND_WRITTEN_BLOCKS = ("plate", "serving_platter", "cutting_board",
-                       "water_mill", "grain_sheller", "grain_sheller_hopper")
+                       "water_mill", "grain_sheller",
+                       "water_mill_part", "grain_sheller_part", "water_wheel")
 
 
 def check_assets(ids):
@@ -391,6 +392,7 @@ def check_model_refs():
     # 3) 模型里的 textures 段 -> 贴图文件
     for path in walk(model_dir, ".json"):
         obj = load_json(path) or {}
+        declared = set(obj.get("textures", {}).keys())
         for key, ref in obj.get("textures", {}).items():
             if not isinstance(ref, str):
                 continue
@@ -398,6 +400,17 @@ def check_model_refs():
             target = resolve_texture(ref)
             if target is not None and not os.path.exists(target):
                 fail("%s 的贴图 %s 不存在" % (os.path.relpath(path, ROOT), ref))
+
+        # 4) 元素面里的 "#键" 必须在本模型的 textures 段里定义过。
+        #    漏一个键的后果是那一面没有贴图 —— 进游戏只会打一行
+        #    "Missing texture references in model"，编译期完全看不出来。
+        for element in obj.get("elements", []):
+            for face_name, face in (element.get("faces") or {}).items():
+                ref = face.get("texture")
+                n += 1
+                if isinstance(ref, str) and ref.startswith("#") and ref[1:] not in declared:
+                    fail("%s 的面 %s 引用了未定义的纹理键 %s"
+                         % (os.path.relpath(path, ROOT), face_name, ref))
 
     return n
 

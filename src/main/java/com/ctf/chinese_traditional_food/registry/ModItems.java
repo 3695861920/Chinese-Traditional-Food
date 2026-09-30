@@ -48,9 +48,17 @@ public final class ModItems {
     public static final DeferredItem<BlockItem> GRAIN_SHELLER =
             ITEMS.registerSimpleBlockItem(ModBlocks.GRAIN_SHELLER);
 
-    /** 脱壳机料斗（多方块部件）。 */
-    public static final DeferredItem<BlockItem> GRAIN_SHELLER_HOPPER =
-            ITEMS.registerSimpleBlockItem(ModBlocks.GRAIN_SHELLER_HOPPER);
+    /** 水磨部件（石台 / 水轮 / 传动箱）。 */
+    public static final DeferredItem<BlockItem> WATER_MILL_PART =
+            ITEMS.registerSimpleBlockItem(ModBlocks.WATER_MILL_PART);
+
+    /** 碾米机部件（木架 / 机箱板 / 立柱 / 料斗）。 */
+    public static final DeferredItem<BlockItem> GRAIN_SHELLER_PART =
+            ITEMS.registerSimpleBlockItem(ModBlocks.GRAIN_SHELLER_PART);
+
+    /** 水车：装在水磨两侧接口的外侧，泡在水里转，给水磨提供动力。 */
+    public static final DeferredItem<BlockItem> WATER_WHEEL =
+            ITEMS.registerSimpleBlockItem(ModBlocks.WATER_WHEEL);
 
     // ==================================================================
     // 基础食材

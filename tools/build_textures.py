@@ -669,12 +669,20 @@ def main():
     global SIZE, U
     parser = argparse.ArgumentParser(description="生成 Minecraft 风格纹理")
     parser.add_argument("--size", type=int, default=16,
-                        help="纹理边长，默认 16（原版分辨率）；想要精细可传 64")
+                        help="纹理边长，默认 16（原版分辨率）；最大 64")
     parser.add_argument("--only",
                         choices=["displays", "content", "utilities", "machines", "all"],
                         default="all",
                         help="只生成器皿 / 只生成内容图标 / 只生成工具方块 / 只生成机器与界面 / 全部")
     args = parser.parse_args()
+
+    # 必须拦住离谱的 --size：所有画法都是**逐像素**的 Python 循环，
+    # 单张图的耗时大致与边长平方成正比，而且每种图标要画好几遍。
+    # 传个 512 的话就是 16 倍的像素量 x 222 个图标 —— 机器会直接假死，
+    # 而 Minecraft 本身也只接受 2 的幂的方形贴图，所以 16~64 完全够用。
+    if args.size < 16 or args.size > 64 or (args.size & (args.size - 1)) != 0:
+        parser.error("--size 必须是 16~64 之间的 2 的幂（原版是 16；64 已是像素画的极限）")
+
     SIZE = args.size
     U = SIZE / 16.0
 
@@ -751,6 +759,10 @@ def main():
             img = ICONS.draw(kind, palette, seed)
             save(img, ITEM_DIR, "%s.png" % item_id)
             count += 1
+            # 打印进度：逐像素画法本来就慢，没有进度输出时很容易
+            # 被误当成“卡死了”，进而把进程/整个终端一起杀掉。
+            if count % 40 == 0:
+                print("  ... %d/%d" % (count, len(entries)), flush=True)
 
         print("content icons: %d" % count)
         if missing_kinds:

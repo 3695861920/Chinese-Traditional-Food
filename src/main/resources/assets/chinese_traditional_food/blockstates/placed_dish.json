@@ -1,39 +1,1695 @@
 {
   "variants": {
-    "shape=bowl": {
+    "shape=bowl,palette=white": {
       "model": "chinese_traditional_food:block/placed_dish_bowl"
     },
-    "shape=plate": {
+    "shape=bowl,palette=cream": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=bowl,palette=wheat": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=bowl,palette=gold": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=bowl,palette=red": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=bowl,palette=green": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=bowl,palette=palegreen": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=bowl,palette=darkgreen": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=bowl,palette=yellow": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=bowl,palette=black": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=bowl,palette=mung": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=bowl,palette=orange": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=bowl,palette=brown": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=bowl,palette=tan": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=bowl,palette=purple": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=bowl,palette=leaf": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=bowl,palette=cabbage": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=bowl,palette=silver": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=bowl,palette=tomato": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=bowl,palette=chili": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=bowl,palette=eggplant": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=bowl,palette=fungus": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=bowl,palette=dried": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=bowl,palette=soy": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=bowl,palette=vinegar": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=bowl,palette=wine": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=bowl,palette=oil": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=bowl,palette=chili_oil": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=bowl,palette=paste": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=bowl,palette=sauce": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=bowl,palette=spice": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=bowl,palette=star": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=bowl,palette=sichuan": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=bowl,palette=iron": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=bowl,palette=wood": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=bowl,palette=porcelain": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=bowl,palette=bamboo": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=bowl,palette=stone": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=bowl,palette=clay": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=bowl,palette=braised": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=bowl,palette=redbraised": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=bowl,palette=steamed": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=bowl,palette=soup": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=bowl,palette=stirfry": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=bowl,palette=greendish": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=bowl,palette=pastry": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=bowl,palette=cake": {
+      "model": "chinese_traditional_food:block/placed_dish_bowl"
+    },
+    "shape=plate,palette=white": {
       "model": "chinese_traditional_food:block/placed_dish_plate"
     },
-    "shape=platter": {
+    "shape=plate,palette=cream": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=plate,palette=wheat": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=plate,palette=gold": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=plate,palette=red": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=plate,palette=green": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=plate,palette=palegreen": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=plate,palette=darkgreen": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=plate,palette=yellow": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=plate,palette=black": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=plate,palette=mung": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=plate,palette=orange": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=plate,palette=brown": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=plate,palette=tan": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=plate,palette=purple": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=plate,palette=leaf": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=plate,palette=cabbage": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=plate,palette=silver": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=plate,palette=tomato": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=plate,palette=chili": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=plate,palette=eggplant": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=plate,palette=fungus": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=plate,palette=dried": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=plate,palette=soy": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=plate,palette=vinegar": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=plate,palette=wine": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=plate,palette=oil": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=plate,palette=chili_oil": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=plate,palette=paste": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=plate,palette=sauce": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=plate,palette=spice": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=plate,palette=star": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=plate,palette=sichuan": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=plate,palette=iron": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=plate,palette=wood": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=plate,palette=porcelain": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=plate,palette=bamboo": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=plate,palette=stone": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=plate,palette=clay": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=plate,palette=braised": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=plate,palette=redbraised": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=plate,palette=steamed": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=plate,palette=soup": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=plate,palette=stirfry": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=plate,palette=greendish": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=plate,palette=pastry": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=plate,palette=cake": {
+      "model": "chinese_traditional_food:block/placed_dish_plate"
+    },
+    "shape=platter,palette=white": {
       "model": "chinese_traditional_food:block/placed_dish_platter"
     },
-    "shape=pot": {
+    "shape=platter,palette=cream": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=platter,palette=wheat": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=platter,palette=gold": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=platter,palette=red": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=platter,palette=green": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=platter,palette=palegreen": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=platter,palette=darkgreen": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=platter,palette=yellow": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=platter,palette=black": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=platter,palette=mung": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=platter,palette=orange": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=platter,palette=brown": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=platter,palette=tan": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=platter,palette=purple": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=platter,palette=leaf": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=platter,palette=cabbage": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=platter,palette=silver": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=platter,palette=tomato": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=platter,palette=chili": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=platter,palette=eggplant": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=platter,palette=fungus": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=platter,palette=dried": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=platter,palette=soy": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=platter,palette=vinegar": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=platter,palette=wine": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=platter,palette=oil": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=platter,palette=chili_oil": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=platter,palette=paste": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=platter,palette=sauce": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=platter,palette=spice": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=platter,palette=star": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=platter,palette=sichuan": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=platter,palette=iron": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=platter,palette=wood": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=platter,palette=porcelain": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=platter,palette=bamboo": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=platter,palette=stone": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=platter,palette=clay": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=platter,palette=braised": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=platter,palette=redbraised": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=platter,palette=steamed": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=platter,palette=soup": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=platter,palette=stirfry": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=platter,palette=greendish": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=platter,palette=pastry": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=platter,palette=cake": {
+      "model": "chinese_traditional_food:block/placed_dish_platter"
+    },
+    "shape=pot,palette=white": {
       "model": "chinese_traditional_food:block/placed_dish_pot"
     },
-    "shape=fish_plate": {
+    "shape=pot,palette=cream": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=pot,palette=wheat": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=pot,palette=gold": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=pot,palette=red": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=pot,palette=green": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=pot,palette=palegreen": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=pot,palette=darkgreen": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=pot,palette=yellow": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=pot,palette=black": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=pot,palette=mung": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=pot,palette=orange": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=pot,palette=brown": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=pot,palette=tan": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=pot,palette=purple": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=pot,palette=leaf": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=pot,palette=cabbage": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=pot,palette=silver": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=pot,palette=tomato": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=pot,palette=chili": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=pot,palette=eggplant": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=pot,palette=fungus": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=pot,palette=dried": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=pot,palette=soy": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=pot,palette=vinegar": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=pot,palette=wine": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=pot,palette=oil": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=pot,palette=chili_oil": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=pot,palette=paste": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=pot,palette=sauce": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=pot,palette=spice": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=pot,palette=star": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=pot,palette=sichuan": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=pot,palette=iron": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=pot,palette=wood": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=pot,palette=porcelain": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=pot,palette=bamboo": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=pot,palette=stone": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=pot,palette=clay": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=pot,palette=braised": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=pot,palette=redbraised": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=pot,palette=steamed": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=pot,palette=soup": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=pot,palette=stirfry": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=pot,palette=greendish": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=pot,palette=pastry": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=pot,palette=cake": {
+      "model": "chinese_traditional_food:block/placed_dish_pot"
+    },
+    "shape=fish_plate,palette=white": {
       "model": "chinese_traditional_food:block/placed_dish_fish_plate"
     },
-    "shape=dumpling": {
+    "shape=fish_plate,palette=cream": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=fish_plate,palette=wheat": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=fish_plate,palette=gold": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=fish_plate,palette=red": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=fish_plate,palette=green": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=fish_plate,palette=palegreen": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=fish_plate,palette=darkgreen": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=fish_plate,palette=yellow": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=fish_plate,palette=black": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=fish_plate,palette=mung": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=fish_plate,palette=orange": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=fish_plate,palette=brown": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=fish_plate,palette=tan": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=fish_plate,palette=purple": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=fish_plate,palette=leaf": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=fish_plate,palette=cabbage": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=fish_plate,palette=silver": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=fish_plate,palette=tomato": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=fish_plate,palette=chili": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=fish_plate,palette=eggplant": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=fish_plate,palette=fungus": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=fish_plate,palette=dried": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=fish_plate,palette=soy": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=fish_plate,palette=vinegar": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=fish_plate,palette=wine": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=fish_plate,palette=oil": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=fish_plate,palette=chili_oil": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=fish_plate,palette=paste": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=fish_plate,palette=sauce": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=fish_plate,palette=spice": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=fish_plate,palette=star": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=fish_plate,palette=sichuan": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=fish_plate,palette=iron": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=fish_plate,palette=wood": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=fish_plate,palette=porcelain": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=fish_plate,palette=bamboo": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=fish_plate,palette=stone": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=fish_plate,palette=clay": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=fish_plate,palette=braised": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=fish_plate,palette=redbraised": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=fish_plate,palette=steamed": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=fish_plate,palette=soup": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=fish_plate,palette=stirfry": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=fish_plate,palette=greendish": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=fish_plate,palette=pastry": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=fish_plate,palette=cake": {
+      "model": "chinese_traditional_food:block/placed_dish_fish_plate"
+    },
+    "shape=dumpling,palette=white": {
       "model": "chinese_traditional_food:block/placed_dish_dumpling"
     },
-    "shape=mooncake": {
+    "shape=dumpling,palette=cream": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=dumpling,palette=wheat": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=dumpling,palette=gold": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=dumpling,palette=red": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=dumpling,palette=green": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=dumpling,palette=palegreen": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=dumpling,palette=darkgreen": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=dumpling,palette=yellow": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=dumpling,palette=black": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=dumpling,palette=mung": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=dumpling,palette=orange": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=dumpling,palette=brown": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=dumpling,palette=tan": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=dumpling,palette=purple": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=dumpling,palette=leaf": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=dumpling,palette=cabbage": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=dumpling,palette=silver": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=dumpling,palette=tomato": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=dumpling,palette=chili": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=dumpling,palette=eggplant": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=dumpling,palette=fungus": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=dumpling,palette=dried": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=dumpling,palette=soy": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=dumpling,palette=vinegar": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=dumpling,palette=wine": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=dumpling,palette=oil": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=dumpling,palette=chili_oil": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=dumpling,palette=paste": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=dumpling,palette=sauce": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=dumpling,palette=spice": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=dumpling,palette=star": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=dumpling,palette=sichuan": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=dumpling,palette=iron": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=dumpling,palette=wood": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=dumpling,palette=porcelain": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=dumpling,palette=bamboo": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=dumpling,palette=stone": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=dumpling,palette=clay": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=dumpling,palette=braised": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=dumpling,palette=redbraised": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=dumpling,palette=steamed": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=dumpling,palette=soup": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=dumpling,palette=stirfry": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=dumpling,palette=greendish": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=dumpling,palette=pastry": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=dumpling,palette=cake": {
+      "model": "chinese_traditional_food:block/placed_dish_dumpling"
+    },
+    "shape=mooncake,palette=white": {
       "model": "chinese_traditional_food:block/placed_dish_mooncake"
     },
-    "shape=zongzi": {
+    "shape=mooncake,palette=cream": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=mooncake,palette=wheat": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=mooncake,palette=gold": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=mooncake,palette=red": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=mooncake,palette=green": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=mooncake,palette=palegreen": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=mooncake,palette=darkgreen": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=mooncake,palette=yellow": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=mooncake,palette=black": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=mooncake,palette=mung": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=mooncake,palette=orange": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=mooncake,palette=brown": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=mooncake,palette=tan": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=mooncake,palette=purple": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=mooncake,palette=leaf": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=mooncake,palette=cabbage": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=mooncake,palette=silver": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=mooncake,palette=tomato": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=mooncake,palette=chili": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=mooncake,palette=eggplant": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=mooncake,palette=fungus": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=mooncake,palette=dried": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=mooncake,palette=soy": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=mooncake,palette=vinegar": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=mooncake,palette=wine": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=mooncake,palette=oil": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=mooncake,palette=chili_oil": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=mooncake,palette=paste": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=mooncake,palette=sauce": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=mooncake,palette=spice": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=mooncake,palette=star": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=mooncake,palette=sichuan": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=mooncake,palette=iron": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=mooncake,palette=wood": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=mooncake,palette=porcelain": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=mooncake,palette=bamboo": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=mooncake,palette=stone": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=mooncake,palette=clay": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=mooncake,palette=braised": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=mooncake,palette=redbraised": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=mooncake,palette=steamed": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=mooncake,palette=soup": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=mooncake,palette=stirfry": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=mooncake,palette=greendish": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=mooncake,palette=pastry": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=mooncake,palette=cake": {
+      "model": "chinese_traditional_food:block/placed_dish_mooncake"
+    },
+    "shape=zongzi,palette=white": {
       "model": "chinese_traditional_food:block/placed_dish_zongzi"
     },
-    "shape=cake_slice": {
+    "shape=zongzi,palette=cream": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=zongzi,palette=wheat": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=zongzi,palette=gold": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=zongzi,palette=red": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=zongzi,palette=green": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=zongzi,palette=palegreen": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=zongzi,palette=darkgreen": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=zongzi,palette=yellow": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=zongzi,palette=black": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=zongzi,palette=mung": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=zongzi,palette=orange": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=zongzi,palette=brown": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=zongzi,palette=tan": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=zongzi,palette=purple": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=zongzi,palette=leaf": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=zongzi,palette=cabbage": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=zongzi,palette=silver": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=zongzi,palette=tomato": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=zongzi,palette=chili": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=zongzi,palette=eggplant": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=zongzi,palette=fungus": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=zongzi,palette=dried": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=zongzi,palette=soy": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=zongzi,palette=vinegar": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=zongzi,palette=wine": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=zongzi,palette=oil": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=zongzi,palette=chili_oil": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=zongzi,palette=paste": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=zongzi,palette=sauce": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=zongzi,palette=spice": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=zongzi,palette=star": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=zongzi,palette=sichuan": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=zongzi,palette=iron": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=zongzi,palette=wood": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=zongzi,palette=porcelain": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=zongzi,palette=bamboo": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=zongzi,palette=stone": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=zongzi,palette=clay": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=zongzi,palette=braised": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=zongzi,palette=redbraised": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=zongzi,palette=steamed": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=zongzi,palette=soup": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=zongzi,palette=stirfry": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=zongzi,palette=greendish": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=zongzi,palette=pastry": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=zongzi,palette=cake": {
+      "model": "chinese_traditional_food:block/placed_dish_zongzi"
+    },
+    "shape=cake_slice,palette=white": {
       "model": "chinese_traditional_food:block/placed_dish_cake_slice"
     },
-    "shape=cup": {
+    "shape=cake_slice,palette=cream": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cake_slice,palette=wheat": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cake_slice,palette=gold": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cake_slice,palette=red": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cake_slice,palette=green": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cake_slice,palette=palegreen": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cake_slice,palette=darkgreen": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cake_slice,palette=yellow": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cake_slice,palette=black": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cake_slice,palette=mung": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cake_slice,palette=orange": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cake_slice,palette=brown": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cake_slice,palette=tan": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cake_slice,palette=purple": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cake_slice,palette=leaf": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cake_slice,palette=cabbage": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cake_slice,palette=silver": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cake_slice,palette=tomato": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cake_slice,palette=chili": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cake_slice,palette=eggplant": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cake_slice,palette=fungus": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cake_slice,palette=dried": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cake_slice,palette=soy": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cake_slice,palette=vinegar": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cake_slice,palette=wine": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cake_slice,palette=oil": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cake_slice,palette=chili_oil": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cake_slice,palette=paste": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cake_slice,palette=sauce": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cake_slice,palette=spice": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cake_slice,palette=star": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cake_slice,palette=sichuan": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cake_slice,palette=iron": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cake_slice,palette=wood": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cake_slice,palette=porcelain": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cake_slice,palette=bamboo": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cake_slice,palette=stone": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cake_slice,palette=clay": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cake_slice,palette=braised": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cake_slice,palette=redbraised": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cake_slice,palette=steamed": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cake_slice,palette=soup": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cake_slice,palette=stirfry": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cake_slice,palette=greendish": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cake_slice,palette=pastry": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cake_slice,palette=cake": {
+      "model": "chinese_traditional_food:block/placed_dish_cake_slice"
+    },
+    "shape=cup,palette=white": {
       "model": "chinese_traditional_food:block/placed_dish_cup"
     },
-    "shape=jar": {
+    "shape=cup,palette=cream": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=cup,palette=wheat": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=cup,palette=gold": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=cup,palette=red": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=cup,palette=green": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=cup,palette=palegreen": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=cup,palette=darkgreen": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=cup,palette=yellow": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=cup,palette=black": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=cup,palette=mung": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=cup,palette=orange": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=cup,palette=brown": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=cup,palette=tan": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=cup,palette=purple": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=cup,palette=leaf": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=cup,palette=cabbage": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=cup,palette=silver": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=cup,palette=tomato": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=cup,palette=chili": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=cup,palette=eggplant": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=cup,palette=fungus": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=cup,palette=dried": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=cup,palette=soy": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=cup,palette=vinegar": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=cup,palette=wine": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=cup,palette=oil": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=cup,palette=chili_oil": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=cup,palette=paste": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=cup,palette=sauce": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=cup,palette=spice": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=cup,palette=star": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=cup,palette=sichuan": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=cup,palette=iron": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=cup,palette=wood": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=cup,palette=porcelain": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=cup,palette=bamboo": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=cup,palette=stone": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=cup,palette=clay": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=cup,palette=braised": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=cup,palette=redbraised": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=cup,palette=steamed": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=cup,palette=soup": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=cup,palette=stirfry": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=cup,palette=greendish": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=cup,palette=pastry": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=cup,palette=cake": {
+      "model": "chinese_traditional_food:block/placed_dish_cup"
+    },
+    "shape=jar,palette=white": {
       "model": "chinese_traditional_food:block/placed_dish_jar"
     },
-    "shape=cube": {
+    "shape=jar,palette=cream": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=jar,palette=wheat": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=jar,palette=gold": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=jar,palette=red": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=jar,palette=green": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=jar,palette=palegreen": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=jar,palette=darkgreen": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=jar,palette=yellow": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=jar,palette=black": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=jar,palette=mung": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=jar,palette=orange": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=jar,palette=brown": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=jar,palette=tan": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=jar,palette=purple": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=jar,palette=leaf": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=jar,palette=cabbage": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=jar,palette=silver": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=jar,palette=tomato": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=jar,palette=chili": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=jar,palette=eggplant": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=jar,palette=fungus": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=jar,palette=dried": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=jar,palette=soy": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=jar,palette=vinegar": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=jar,palette=wine": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=jar,palette=oil": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=jar,palette=chili_oil": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=jar,palette=paste": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=jar,palette=sauce": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=jar,palette=spice": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=jar,palette=star": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=jar,palette=sichuan": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=jar,palette=iron": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=jar,palette=wood": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=jar,palette=porcelain": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=jar,palette=bamboo": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=jar,palette=stone": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=jar,palette=clay": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=jar,palette=braised": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=jar,palette=redbraised": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=jar,palette=steamed": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=jar,palette=soup": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=jar,palette=stirfry": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=jar,palette=greendish": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=jar,palette=pastry": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=jar,palette=cake": {
+      "model": "chinese_traditional_food:block/placed_dish_jar"
+    },
+    "shape=cube,palette=white": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=cream": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=wheat": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=gold": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=red": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=green": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=palegreen": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=darkgreen": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=yellow": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=black": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=mung": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=orange": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=brown": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=tan": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=purple": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=leaf": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=cabbage": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=silver": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=tomato": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=chili": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=eggplant": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=fungus": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=dried": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=soy": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=vinegar": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=wine": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=oil": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=chili_oil": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=paste": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=sauce": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=spice": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=star": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=sichuan": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=iron": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=wood": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=porcelain": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=bamboo": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=stone": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=clay": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=braised": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=redbraised": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=steamed": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=soup": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=stirfry": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=greendish": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=pastry": {
+      "model": "chinese_traditional_food:block/placed_dish_cube"
+    },
+    "shape=cube,palette=cake": {
       "model": "chinese_traditional_food:block/placed_dish_cube"
     }
   }

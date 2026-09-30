@@ -1,6 +1,5 @@
 package com.ctf.chinese_traditional_food.common.block.entity;
 
-import com.ctf.chinese_traditional_food.common.block.GrainShellerBlock;
 import com.ctf.chinese_traditional_food.common.recipe.ProcessRecipes;
 import com.ctf.chinese_traditional_food.common.recipe.ProcessRecipes.Kind;
 import com.ctf.chinese_traditional_food.registry.ModBlockEntities;
@@ -35,10 +34,13 @@ import org.jetbrains.annotations.Nullable;
  * 那个基类是给"有动力、按进度自动跑"的水磨用的，两者只有配方表是共用的。</p>
  */
 public class GrainShellerBlockEntity extends BlockEntity {
-    /** 裸机进料上限。 */
-    public static final int CAPACITY_BARE = 1;
-    /** 装上料斗后的进料上限。 */
-    public static final int CAPACITY_WITH_HOPPER = 16;
+    /**
+     * 进料上限。
+     *
+     * <p>机器做成了 3×3×3 的大型碾米机、顶部自带料斗，所以不需要再分
+     * "裸机 / 加料斗"两种容量 —— 一次就是一把谷子（16 个）。</p>
+     */
+    public static final int CAPACITY = 16;
     /** 出料上限（米和糠都堆在这一格里）。 */
     public static final int OUTPUT_LIMIT = 64;
 
@@ -78,12 +80,9 @@ public class GrainShellerBlockEntity extends BlockEntity {
         return this.cranks;
     }
 
-    /** 当前进料上限（受料斗影响）。 */
+    /** 当前进料上限。 */
     public int inputCapacity() {
-        if (this.level == null) {
-            return CAPACITY_BARE;
-        }
-        return GrainShellerBlock.capacityOf(this.level, this.worldPosition);
+        return CAPACITY;
     }
 
     /** 还能再放几个。 */

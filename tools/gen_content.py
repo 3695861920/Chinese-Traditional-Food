@@ -160,9 +160,17 @@ public final class ModItems {
     public static final DeferredItem<BlockItem> GRAIN_SHELLER =
             ITEMS.registerSimpleBlockItem(ModBlocks.GRAIN_SHELLER);
 
-    /** 脱壳机料斗（多方块部件）。 */
-    public static final DeferredItem<BlockItem> GRAIN_SHELLER_HOPPER =
-            ITEMS.registerSimpleBlockItem(ModBlocks.GRAIN_SHELLER_HOPPER);
+    /** 水磨部件（石台 / 水轮 / 传动箱）。 */
+    public static final DeferredItem<BlockItem> WATER_MILL_PART =
+            ITEMS.registerSimpleBlockItem(ModBlocks.WATER_MILL_PART);
+
+    /** 碾米机部件（木架 / 机箱板 / 立柱 / 料斗）。 */
+    public static final DeferredItem<BlockItem> GRAIN_SHELLER_PART =
+            ITEMS.registerSimpleBlockItem(ModBlocks.GRAIN_SHELLER_PART);
+
+    /** 水车：装在水磨两侧接口的外侧，泡在水里转，给水磨提供动力。 */
+    public static final DeferredItem<BlockItem> WATER_WHEEL =
+            ITEMS.registerSimpleBlockItem(ModBlocks.WATER_WHEEL);
 """
 
 FOOTER = """
@@ -309,8 +317,10 @@ public final class ModCreativeTabs {
                         output.accept(ModItems.SERVING_PLATTER.get());
                         output.accept(ModItems.CUTTING_BOARD.get());
                         output.accept(ModItems.WATER_MILL.get());
+                        output.accept(ModItems.WATER_MILL_PART.get());
+                        output.accept(ModItems.WATER_WHEEL.get());
                         output.accept(ModItems.GRAIN_SHELLER.get());
-                        output.accept(ModItems.GRAIN_SHELLER_HOPPER.get());
+                        output.accept(ModItems.GRAIN_SHELLER_PART.get());
                         // 其余全部内容（食材 / 调味料 / 水果 / 蔬菜 / 厨具 / 菜品）
                         for (var item : ModItems.allFoods()) {
                             output.accept(item.get());
@@ -332,8 +342,10 @@ CREATIVE_FOOTER = """
             event.accept(ModItems.SERVING_PLATTER.get());
             event.accept(ModItems.CUTTING_BOARD.get());
             event.accept(ModItems.WATER_MILL.get());
+            event.accept(ModItems.WATER_MILL_PART.get());
+            event.accept(ModItems.WATER_WHEEL.get());
             event.accept(ModItems.GRAIN_SHELLER.get());
-            event.accept(ModItems.GRAIN_SHELLER_HOPPER.get());
+            event.accept(ModItems.GRAIN_SHELLER_PART.get());
         }
         if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
             for (var item : ModItems.allFoods()) {
@@ -348,8 +360,10 @@ CREATIVE_FOOTER = """
             event.accept(ModItems.SERVING_PLATTER.get());
             event.accept(ModItems.CUTTING_BOARD.get());
             event.accept(ModItems.WATER_MILL.get());
+            event.accept(ModItems.WATER_MILL_PART.get());
+            event.accept(ModItems.WATER_WHEEL.get());
             event.accept(ModItems.GRAIN_SHELLER.get());
-            event.accept(ModItems.GRAIN_SHELLER_HOPPER.get());
+            event.accept(ModItems.GRAIN_SHELLER_PART.get());
         }
     }
 
@@ -489,9 +503,10 @@ import org.jetbrains.annotations.Nullable;
  * 要调整请编辑 {@code tools/content_data.py}（配色）
  * 与 {@code tools/dish_models.py}（器型）。</p>
  *
- * <p>摆在地上的菜是<b>一个方块 + 一个方块状态属性</b>（原版蛋糕 / 南瓜派
- * 也是这个路子）：属性选三维几何，颜色由方块着色（BlockTintSource）按这里的配色染。
- * 所以不需要给每道菜写渲染器。</p>
+ * <p>摆在地上的菜是<b>一个方块 + 两个方块状态属性</b>（原版蛋糕 / 南瓜派
+ * 也是这个路子）：{@code shape} 选三维几何，{@code palette} 决定颜色。
+ * 颜色被方块着色（BlockTintSource）读出来 —— 但它<b>必须</b>放在方块状态里，
+ * 原因见下面 {@link Palette} 的注释。所以不需要给每道菜写渲染器。</p>
  */
 public final class DishPlacement {
     /** 器型，顺序必须与 {@code tools/dish_models.py} 的 SHAPE_ORDER 一致。
@@ -530,8 +545,60 @@ DISH_PLACEMENT_MID = '''        ;
 
 DISH_PLACEMENT_MID_B = '''    };
 
+    /**
+     * 配色（取值就是 {@code content_data.PALETTES} 的键）。
+     *
+     * <h2>为什么颜色要放进方块状态</h2>
+     * 26.1 的方块模型着色走 {@code BlockStateModelWrapper#updateTints}，
+     * 它<b>只调用 {@code BlockTintSource#color(BlockState)}</b>：
+     * {@code update()} 里传给模型的上下文是 {@code BlockAndTintGetter.EMPTY}
+     * 与 {@code BlockPos.ZERO}，整条路径上既没有世界也没有方块实体，
+     * {@code colorInWorld} <b>永远不会被调用</b>。
+     *
+     * <p>所以原先"从方块实体查颜色"的做法只会拿到常量白 —— 菜全是白的。
+     * 把颜色做成方块状态属性之后，区块烘焙、物品栏、破坏粒子
+     * 拿到的都是同一个正确颜色（顺便也不再需要方块实体参与渲染）。</p>
+     */
+    public enum Palette implements StringRepresentable {
+'''
+
+DISH_PLACEMENT_PALETTE_TAIL = '''        ;
+
+        private final int id;
+        private final int color;
+        private final int liquidColor;
+
+        Palette(int id, int color) {
+            this.id = id;
+            this.color = color;
+            int r = (color >> 16 & 0xFF) * 3 / 4;
+            int g = (color >> 8 & 0xFF) * 3 / 4;
+            int b = (color & 0xFF) * 3 / 4;
+            this.liquidColor = r << 16 | g << 8 | b;
+        }
+
+        public int id() {
+            return this.id;
+        }
+
+        /** 食物主体色（0xRRGGBB）。 */
+        public int color() {
+            return this.color;
+        }
+
+        /** 汤汁 / 汁水色：主色压暗一档。 */
+        public int liquidColor() {
+            return this.liquidColor;
+        }
+
+        @Override
+        public String getSerializedName() {
+            return this.name().toLowerCase(java.util.Locale.ROOT);
+        }
+    }
+
     private static final Map<Item, Shape> SHAPE_BY_ITEM = new HashMap<>();
-    private static final Map<Item, Integer> COLOR_BY_ITEM = new HashMap<>();
+    private static final Map<Item, Palette> PALETTE_BY_ITEM = new HashMap<>();
 
     static {
 '''
@@ -544,19 +611,10 @@ DISH_PLACEMENT_FOOTER = '''    }
         return SHAPE_BY_ITEM.get(item);
     }
 
-    /** 这道菜的主色（0xRRGGBB）；不在表里返回白色。 */
-    public static int colorOf(Item item) {
-        Integer c = COLOR_BY_ITEM.get(item);
-        return c == null ? 0xFFFFFF : c;
-    }
-
-    /** 汤汁 / 汁水的颜色：主色压暗一档。 */
-    public static int liquidColorOf(Item item) {
-        int c = colorOf(item);
-        int r = (c >> 16 & 0xFF) * 3 / 4;
-        int g = (c >> 8 & 0xFF) * 3 / 4;
-        int b = (c & 0xFF) * 3 / 4;
-        return r << 16 | g << 8 | b;
+    /** 这道菜的配色；不在表里返回 {@code null}。 */
+    @Nullable
+    public static Palette paletteOf(Item item) {
+        return PALETTE_BY_ITEM.get(item);
     }
 
     /**
@@ -574,13 +632,22 @@ DISH_PLACEMENT_FOOTER = '''    }
 
 
 def gen_dish_placement(dishes):
-    """生成 DishPlacement.java：器型枚举 + 两张查表。"""
+    """生成 DishPlacement.java：器型枚举 + 配色枚举 + 两张查表 + 实测包围盒。"""
     import dish_models as DM
 
     enum_lines = []
     for i, shape in enumerate(DM.SHAPE_ORDER):
         enum_lines.append("        %s(%d)" % (shape.upper(), i))
     enum_body = ",\n".join(enum_lines) + "\n"
+
+    # 配色枚举：顺序与 content_data.PALETTES 的插入顺序一致
+    palette_lines = []
+    palette_color = {}
+    for i, (name, ramp) in enumerate(DATA.PALETTES.items()):
+        main = ramp[0]
+        palette_color[name] = main
+        palette_lines.append("        %s(%d, 0x%02X%02X%02X)" % (name.upper(), i, main[0], main[1], main[2]))
+    palette_body = ",\n".join(palette_lines) + "\n"
 
     # 包围盒：直接从 dish_models 的模型元素实测，保证模型与碰撞箱一致
     bounds_lines = []
@@ -590,7 +657,7 @@ def gen_dish_placement(dishes):
     bounds_body = "\n".join(bounds_lines) + "\n"
 
     shape_lines = []
-    color_lines = []
+    palette_puts = []
     for dish in dishes:
         shape = DM.shape_for(dish["kind"])
         if shape is None:
@@ -598,16 +665,16 @@ def gen_dish_placement(dishes):
         const = const_name(dish["id"])
         shape_lines.append("        SHAPE_BY_ITEM.put(ModItems.%s.get(), Shape.%s);"
                            % (const, shape.upper()))
-        main = DATA.PALETTES[dish["palette"]][0]
-        color_lines.append("        COLOR_BY_ITEM.put(ModItems.%s.get(), 0x%02X%02X%02X);"
-                           % (const, main[0], main[1], main[2]))
+        palette_puts.append("        PALETTE_BY_ITEM.put(ModItems.%s.get(), Palette.%s);"
+                            % (const, dish["palette"].upper()))
 
     body = (DISH_PLACEMENT_HEADER + enum_body + DISH_PLACEMENT_MID + bounds_body
-            + DISH_PLACEMENT_MID_B
-            + "\n".join(shape_lines) + "\n\n" + "\n".join(color_lines) + "\n"
+            + DISH_PLACEMENT_MID_B + palette_body + DISH_PLACEMENT_PALETTE_TAIL
+            + "\n".join(shape_lines) + "\n\n" + "\n".join(palette_puts) + "\n"
             + DISH_PLACEMENT_FOOTER)
     write(os.path.join(JAVA, "common", "block", "DishPlacement.java"), body)
-    print("dish placement: %d 道菜可摆，器型 %d 种" % (len(shape_lines), len(DM.SHAPE_ORDER)))
+    print("dish placement: %d 道菜可摆，器型 %d 种，配色 %d 种"
+          % (len(shape_lines), len(DM.SHAPE_ORDER), len(DATA.PALETTES)))
 
 
 # ======================================================================
@@ -624,36 +691,58 @@ def gen_lang(items, dishes):
         "block.chinese_traditional_food.serving_platter": "大拼盘",
         "block.chinese_traditional_food.cutting_board": "案板",
         "block.chinese_traditional_food.water_mill": "水磨",
-        "block.chinese_traditional_food.grain_sheller": "手摇脱壳机",
-        "block.chinese_traditional_food.grain_sheller_hopper": "脱壳机料斗",
+        "block.chinese_traditional_food.water_mill_part": "水磨部件",
+        "block.chinese_traditional_food.water_wheel": "水车",
+        "tooltip.chinese_traditional_food.water_wheel":
+            "装在水磨两侧接口的外侧一格；泡到水里就会转，水磨随之开工",
+        "block.chinese_traditional_food.grain_sheller": "手摇碾米机",
+        "block.chinese_traditional_food.grain_sheller_part": "碾米机部件",
         "container.chinese_traditional_food.water_mill": "水磨",
-        "tooltip.chinese_traditional_food.water_mill": "紧邻水源即可自动研磨（无需红石）",
+        "tooltip.chinese_traditional_food.water_mill":
+            "放下后自动展开成 3×3×3 的大型水磨，紧邻水源即可自动研磨",
+        "tooltip.chinese_traditional_food.water_mill_part":
+            "水磨的石台 / 水轮 / 传动箱，补在缺件的位置即可修复水磨",
         "tooltip.chinese_traditional_food.grain_sheller":
-            "带壳谷物右键倒入 · 潜行空手摇柄 · 空手取出米糠",
-        "tooltip.chinese_traditional_food.grain_sheller_hopper":
-            "叠在脱壳机正上方，进料上限从 1 升到 16",
+            "3×3×3 手摇碾米机：带壳谷物右键倒入 · 潜行空手摇柄 · 空手取出米糗",
+        "tooltip.chinese_traditional_food.grain_sheller_part":
+            "碾米机的木架 / 机箱板 / 立柱 / 料斗，补在缺件的位置即可修复机器",
+        "tooltip.chinese_traditional_food.machine_incomplete":
+            "机器结构不完整，先把缺的部件补上",
         "tooltip.chinese_traditional_food.sheller_full": "装不下了，先摇几圈再倒",
         "tooltip.chinese_traditional_food.sheller_empty": "里面没有带壳谷物",
         "tooltip.chinese_traditional_food.sheller_output_full": "出料口堵住了，先把米取走",
         "tooltip.chinese_traditional_food.machine_progress": "进度",
+        "tooltip.chinese_traditional_food.machine_crank_ok": "摇了一圈，出了东西",
+        "tooltip.chinese_traditional_food.machine_crank_fail": "里面没东西可处理",
     })
     en.update({
         "block.chinese_traditional_food.plate": "Plate",
         "block.chinese_traditional_food.serving_platter": "Serving Platter",
         "block.chinese_traditional_food.cutting_board": "Cutting Board",
         "block.chinese_traditional_food.water_mill": "Water Mill",
-        "block.chinese_traditional_food.grain_sheller": "Hand-cranked Grain Sheller",
-        "block.chinese_traditional_food.grain_sheller_hopper": "Grain Sheller Hopper",
+        "block.chinese_traditional_food.water_mill_part": "Water Mill Part",
+        "block.chinese_traditional_food.water_wheel": "Water Wheel",
+        "tooltip.chinese_traditional_food.water_wheel":
+            "Mount outside a mill's axle socket; submerge it in water to power the mill",
+        "block.chinese_traditional_food.grain_sheller": "Hand-cranked Rice Mill",
+        "block.chinese_traditional_food.grain_sheller_part": "Rice Mill Part",
         "container.chinese_traditional_food.water_mill": "Water Mill",
-        "tooltip.chinese_traditional_food.water_mill": "Runs automatically when placed next to water (no redstone needed)",
+        "tooltip.chinese_traditional_food.water_mill":
+            "Unfolds into a 3x3x3 mill; runs automatically next to water",
+        "tooltip.chinese_traditional_food.water_mill_part":
+            "Frame, wheel or gearbox -- put it back to repair the mill",
         "tooltip.chinese_traditional_food.grain_sheller":
-            "Right-click with grain to pour in -- sneak + empty hand to crank -- empty hand to take the rice",
-        "tooltip.chinese_traditional_food.grain_sheller_hopper":
-            "Stack on top of a grain sheller to raise the input limit from 1 to 16",
+            "3x3x3 hand mill: right-click with grain, sneak + empty hand to crank, empty hand to collect",
+        "tooltip.chinese_traditional_food.grain_sheller_part":
+            "Frame, panel, pillar or hopper -- put it back to repair the machine",
+        "tooltip.chinese_traditional_food.machine_incomplete":
+            "The machine is incomplete -- put the missing parts back",
         "tooltip.chinese_traditional_food.sheller_full": "It's full -- crank a few times before pouring more",
         "tooltip.chinese_traditional_food.sheller_empty": "No unhusked grain inside",
         "tooltip.chinese_traditional_food.sheller_output_full": "The outlet is blocked -- take the rice out first",
         "tooltip.chinese_traditional_food.machine_progress": "Progress",
+        "tooltip.chinese_traditional_food.machine_crank_ok": "Cranked once -- something came out",
+        "tooltip.chinese_traditional_food.machine_crank_fail": "There is nothing to process inside",
     })
 
     # 按类别写注释分组（JSON 不支持注释，用顺序 + 分组标题的键值对不可行，
@@ -716,10 +805,14 @@ BLOCK_ITEM_MODELS = {
     "plate": "block/plate",
     "serving_platter": "block/serving_platter",
     "cutting_board": "block/cutting_board",
-    # 机器类：结构复杂，包里用 2D 图标更好认
+    # 机器核心：结构太复杂，用 2D 图标更好认
     "water_mill": "item/water_mill",
     "grain_sheller": "item/grain_sheller",
-    "grain_sheller_hopper": "item/grain_sheller_hopper",
+    # 机器部件：就拿其中一格的三维模型当图标（原版方块物品的做法）
+    "water_mill_part": "block/water_mill_base",
+    "grain_sheller_part": "block/grain_sheller_frame",
+    # 水车：三维模型当图标，侧着看就是个大轮子
+    "water_wheel": "block/water_wheel_x_0",
 }
 
 
@@ -796,7 +889,7 @@ def gen_recipes(items, dishes):
     base = os.path.join(RES, "data", NAMESPACE, "recipe")
     known = ({i["id"] for i in items} | {d["id"] for d in dishes}
              | {"plate", "serving_platter", "cutting_board", "water_mill", "grain_sheller",
-                "grain_sheller_hopper", "placed_dish"})
+                "water_mill_part", "grain_sheller_part", "water_wheel", "placed_dish"})
 
     written = 0
     for recipe_id, spec in DATA.RECIPES.items():

@@ -14,9 +14,10 @@ import org.jetbrains.annotations.Nullable;
  * 要调整请编辑 {@code tools/content_data.py}（配色）
  * 与 {@code tools/dish_models.py}（器型）。</p>
  *
- * <p>摆在地上的菜是<b>一个方块 + 一个方块状态属性</b>（原版蛋糕 / 南瓜派
- * 也是这个路子）：属性选三维几何，颜色由方块着色（BlockTintSource）按这里的配色染。
- * 所以不需要给每道菜写渲染器。</p>
+ * <p>摆在地上的菜是<b>一个方块 + 两个方块状态属性</b>（原版蛋糕 / 南瓜派
+ * 也是这个路子）：{@code shape} 选三维几何，{@code palette} 决定颜色。
+ * 颜色被方块着色（BlockTintSource）读出来 —— 但它<b>必须</b>放在方块状态里，
+ * 原因见下面 {@link Palette} 的注释。所以不需要给每道菜写渲染器。</p>
  */
 public final class DishPlacement {
     /** 器型，顺序必须与 {@code tools/dish_models.py} 的 SHAPE_ORDER 一致。
@@ -75,8 +76,105 @@ public final class DishPlacement {
             {2.50F, 0.00F, 2.60F, 13.30F, 5.60F, 13.30F},
     };
 
+    /**
+     * 配色（取值就是 {@code content_data.PALETTES} 的键）。
+     *
+     * <h2>为什么颜色要放进方块状态</h2>
+     * 26.1 的方块模型着色走 {@code BlockStateModelWrapper#updateTints}，
+     * 它<b>只调用 {@code BlockTintSource#color(BlockState)}</b>：
+     * {@code update()} 里传给模型的上下文是 {@code BlockAndTintGetter.EMPTY}
+     * 与 {@code BlockPos.ZERO}，整条路径上既没有世界也没有方块实体，
+     * {@code colorInWorld} <b>永远不会被调用</b>。
+     *
+     * <p>所以原先"从方块实体查颜色"的做法只会拿到常量白 —— 菜全是白的。
+     * 把颜色做成方块状态属性之后，区块烘焙、物品栏、破坏粒子
+     * 拿到的都是同一个正确颜色（顺便也不再需要方块实体参与渲染）。</p>
+     */
+    public enum Palette implements StringRepresentable {
+        WHITE(0, 0xF0EEE2),
+        CREAM(1, 0xE8D6AC),
+        WHEAT(2, 0xCEA860),
+        GOLD(3, 0xE2B044),
+        RED(4, 0xB23E32),
+        GREEN(5, 0x6A9C40),
+        PALEGREEN(6, 0x96BA60),
+        DARKGREEN(7, 0x4A7434),
+        YELLOW(8, 0xE4C85C),
+        BLACK(9, 0x4A423C),
+        MUNG(10, 0x7C8E4A),
+        ORANGE(11, 0xE28430),
+        BROWN(12, 0xA0703E),
+        TAN(13, 0xC4A476),
+        PURPLE(14, 0x804E8C),
+        LEAF(15, 0x58943C),
+        CABBAGE(16, 0xBAD08C),
+        SILVER(17, 0xBAC2AC),
+        TOMATO(18, 0xC63E2C),
+        CHILI(19, 0xBA2E26),
+        EGGPLANT(20, 0x68488A),
+        FUNGUS(21, 0x684C3C),
+        DRIED(22, 0x966C46),
+        SOY(23, 0x5C341C),
+        VINEGAR(24, 0x7A542C),
+        WINE(25, 0xD4BE8A),
+        OIL(26, 0xE8C860),
+        CHILI_OIL(27, 0xB03E1E),
+        PASTE(28, 0x803422),
+        SAUCE(29, 0x462818),
+        SPICE(30, 0x8E6034),
+        STAR(31, 0x7A4E2C),
+        SICHUAN(32, 0xA8362E),
+        IRON(33, 0xC4C8D0),
+        WOOD(34, 0xB07E4A),
+        PORCELAIN(35, 0xE8ECF2),
+        BAMBOO(36, 0xBAC476),
+        STONE(37, 0x969490),
+        CLAY(38, 0xAA6C4C),
+        BRAISED(39, 0x804226),
+        REDBRAISED(40, 0x9C3A20),
+        STEAMED(41, 0xEEE8D6),
+        SOUP(42, 0xD8BE8C),
+        STIRFRY(43, 0xB08A4E),
+        GREENDISH(44, 0x769E4A),
+        PASTRY(45, 0xEEE0BE),
+        CAKE(46, 0xD6B276)
+        ;
+
+        private final int id;
+        private final int color;
+        private final int liquidColor;
+
+        Palette(int id, int color) {
+            this.id = id;
+            this.color = color;
+            int r = (color >> 16 & 0xFF) * 3 / 4;
+            int g = (color >> 8 & 0xFF) * 3 / 4;
+            int b = (color & 0xFF) * 3 / 4;
+            this.liquidColor = r << 16 | g << 8 | b;
+        }
+
+        public int id() {
+            return this.id;
+        }
+
+        /** 食物主体色（0xRRGGBB）。 */
+        public int color() {
+            return this.color;
+        }
+
+        /** 汤汁 / 汁水色：主色压暗一档。 */
+        public int liquidColor() {
+            return this.liquidColor;
+        }
+
+        @Override
+        public String getSerializedName() {
+            return this.name().toLowerCase(java.util.Locale.ROOT);
+        }
+    }
+
     private static final Map<Item, Shape> SHAPE_BY_ITEM = new HashMap<>();
-    private static final Map<Item, Integer> COLOR_BY_ITEM = new HashMap<>();
+    private static final Map<Item, Palette> PALETTE_BY_ITEM = new HashMap<>();
 
     static {
         SHAPE_BY_ITEM.put(ModItems.JIUZHUAN_DACHANG.get(), Shape.PLATE);
@@ -176,102 +274,102 @@ public final class DishPlacement {
         SHAPE_BY_ITEM.put(ModItems.LABA_ZHOU.get(), Shape.BOWL);
         SHAPE_BY_ITEM.put(ModItems.YANGROU_TANG.get(), Shape.BOWL);
 
-        COLOR_BY_ITEM.put(ModItems.JIUZHUAN_DACHANG.get(), 0x9C3A20);
-        COLOR_BY_ITEM.put(ModItems.CONGSAO_HAISHEN.get(), 0x804226);
-        COLOR_BY_ITEM.put(ModItems.TANGCU_LIYU.get(), 0x9C3A20);
-        COLOR_BY_ITEM.put(ModItems.YOUBAO_SHUANGCUI.get(), 0xB08A4E);
-        COLOR_BY_ITEM.put(ModItems.GUOTA_DOUFU.get(), 0xEEE8D6);
-        COLOR_BY_ITEM.put(ModItems.NAITANG_PUCAI.get(), 0xD8BE8C);
-        COLOR_BY_ITEM.put(ModItems.DEZHOU_PAJI.get(), 0x804226);
-        COLOR_BY_ITEM.put(ModItems.SIXI_WANZI.get(), 0x804226);
-        COLOR_BY_ITEM.put(ModItems.ZAOLIU_YUPIAN.get(), 0xEEE8D6);
-        COLOR_BY_ITEM.put(ModItems.KONGFU_YIPINGUO.get(), 0x804226);
-        COLOR_BY_ITEM.put(ModItems.MAPO_TOFU.get(), 0xB03E1E);
-        COLOR_BY_ITEM.put(ModItems.HUIGUO_ROU.get(), 0x9C3A20);
-        COLOR_BY_ITEM.put(ModItems.SHUIZHU_YU.get(), 0xB03E1E);
-        COLOR_BY_ITEM.put(ModItems.FUQI_FEIPIAN.get(), 0xB03E1E);
-        COLOR_BY_ITEM.put(ModItems.GONGBAO_JIDING.get(), 0x9C3A20);
-        COLOR_BY_ITEM.put(ModItems.YUXIANG_ROUSI.get(), 0x9C3A20);
-        COLOR_BY_ITEM.put(ModItems.MAOXUE_WANG.get(), 0xB03E1E);
-        COLOR_BY_ITEM.put(ModItems.LAZIJI.get(), 0xBA2E26);
-        COLOR_BY_ITEM.put(ModItems.DONGPO_ZHOUZI.get(), 0x9C3A20);
-        COLOR_BY_ITEM.put(ModItems.KAISHUI_BAICAI.get(), 0xEEE8D6);
-        COLOR_BY_ITEM.put(ModItems.BAIQIE_JI.get(), 0xEEE8D6);
-        COLOR_BY_ITEM.put(ModItems.MIZHI_CHASHAO.get(), 0x9C3A20);
-        COLOR_BY_ITEM.put(ModItems.QINGZHENG_SHIBANYU.get(), 0xEEE8D6);
-        COLOR_BY_ITEM.put(ModItems.LAOHUO_LIANGTANG.get(), 0xD8BE8C);
-        COLOR_BY_ITEM.put(ModItems.SHAOE.get(), 0x9C3A20);
-        COLOR_BY_ITEM.put(ModItems.XIAJIAO_HUANG.get(), 0xEEE8D6);
-        COLOR_BY_ITEM.put(ModItems.GANCHAO_NIUHE.get(), 0xB08A4E);
-        COLOR_BY_ITEM.put(ModItems.BAOZHI_LIAOSHEN.get(), 0x804226);
-        COLOR_BY_ITEM.put(ModItems.ZEZE_BAO.get(), 0x804226);
-        COLOR_BY_ITEM.put(ModItems.YUNTUN_MIAN.get(), 0xD8BE8C);
-        COLOR_BY_ITEM.put(ModItems.SONGSHU_GUIYU.get(), 0x9C3A20);
-        COLOR_BY_ITEM.put(ModItems.DAZHAXIE.get(), 0xBA2E26);
-        COLOR_BY_ITEM.put(ModItems.YANGZHOU_SHIZITOU.get(), 0x804226);
-        COLOR_BY_ITEM.put(ModItems.JINLING_YANSHUIYA.get(), 0xEEE8D6);
-        COLOR_BY_ITEM.put(ModItems.DAZHU_GANSI.get(), 0xEEE8D6);
-        COLOR_BY_ITEM.put(ModItems.WUXI_JIANGPAIGU.get(), 0x9C3A20);
-        COLOR_BY_ITEM.put(ModItems.QINGZHENG_SHIYU.get(), 0xEEE8D6);
-        COLOR_BY_ITEM.put(ModItems.SHUIJING_YAOROU.get(), 0xEEE8D6);
-        COLOR_BY_ITEM.put(ModItems.BILUO_XIAREN.get(), 0x769E4A);
-        COLOR_BY_ITEM.put(ModItems.WENSI_DOUFU.get(), 0xEEE8D6);
-        COLOR_BY_ITEM.put(ModItems.FOTIAOQIANG.get(), 0x804226);
-        COLOR_BY_ITEM.put(ModItems.LIZHI_ROU.get(), 0x9C3A20);
-        COLOR_BY_ITEM.put(ModItems.ZUI_PAIGU.get(), 0x9C3A20);
-        COLOR_BY_ITEM.put(ModItems.BABAO_HONGXUN_FAN.get(), 0xE28430);
-        COLOR_BY_ITEM.put(ModItems.JITANG_TUN_HAIBANG.get(), 0xD8BE8C);
-        COLOR_BY_ITEM.put(ModItems.ZHAN_HETIANJI.get(), 0xEEE8D6);
-        COLOR_BY_ITEM.put(ModItems.WUYI_XUNE.get(), 0x966C46);
-        COLOR_BY_ITEM.put(ModItems.XIANGNAN_RIBAO.get(), 0x804226);
-        COLOR_BY_ITEM.put(ModItems.XIHU_CUYU.get(), 0x9C3A20);
-        COLOR_BY_ITEM.put(ModItems.DONGPO_ROU.get(), 0x9C3A20);
-        COLOR_BY_ITEM.put(ModItems.LONGJING_XIAREN.get(), 0x769E4A);
-        COLOR_BY_ITEM.put(ModItems.XUECAI_HUANGYU.get(), 0xD8BE8C);
-        COLOR_BY_ITEM.put(ModItems.QINGTANG_YUEJI.get(), 0xEEE8D6);
-        COLOR_BY_ITEM.put(ModItems.GANCAI_MENROU.get(), 0x804226);
-        COLOR_BY_ITEM.put(ModItems.WUWEI_JIANXIE.get(), 0xBA2E26);
-        COLOR_BY_ITEM.put(ModItems.DUOJIAO_YUTOU.get(), 0xBA2E26);
-        COLOR_BY_ITEM.put(ModItems.MAOSHI_HONGSHAOROU.get(), 0x9C3A20);
-        COLOR_BY_ITEM.put(ModItems.LAJIAO_CHAOROU.get(), 0xBA2E26);
-        COLOR_BY_ITEM.put(ModItems.DONGAN_ZIJI.get(), 0xBA2E26);
-        COLOR_BY_ITEM.put(ModItems.LAWEI_HEZHENG.get(), 0x966C46);
-        COLOR_BY_ITEM.put(ModItems.XIANGXI_WAIPOCAI.get(), 0x4A7434);
-        COLOR_BY_ITEM.put(ModItems.JIANGBANYA.get(), 0x966C46);
-        COLOR_BY_ITEM.put(ModItems.YONGZHOU_XUEYA.get(), 0xB03E1E);
-        COLOR_BY_ITEM.put(ModItems.ZUAN_YUCHI.get(), 0x804226);
-        COLOR_BY_ITEM.put(ModItems.ZHUXUE_WANZI.get(), 0x966C46);
-        COLOR_BY_ITEM.put(ModItems.CHOU_GUIYU.get(), 0x804226);
-        COLOR_BY_ITEM.put(ModItems.HUIZHOU_YIPINGUO.get(), 0x804226);
-        COLOR_BY_ITEM.put(ModItems.HUMAO_DOUFU.get(), 0xB08A4E);
-        COLOR_BY_ITEM.put(ModItems.HUANGSHAN_DUNGE.get(), 0x804226);
-        COLOR_BY_ITEM.put(ModItems.WENZHENG_SHANSUN.get(), 0x769E4A);
-        COLOR_BY_ITEM.put(ModItems.FANGLA_YU.get(), 0x9C3A20);
-        COLOR_BY_ITEM.put(ModItems.MIZHI_HONGYU.get(), 0xE28430);
-        COLOR_BY_ITEM.put(ModItems.QINGZHENG_SHIJI.get(), 0xEEE8D6);
-        COLOR_BY_ITEM.put(ModItems.JIAOZI.get(), 0xEEE0BE);
-        COLOR_BY_ITEM.put(ModItems.NIAN_GAO.get(), 0xEEE0BE);
-        COLOR_BY_ITEM.put(ModItems.CHUN_JUAN.get(), 0xE2B044);
-        COLOR_BY_ITEM.put(ModItems.TANG_YUAN.get(), 0xF0EEE2);
-        COLOR_BY_ITEM.put(ModItems.LA_ROU.get(), 0x966C46);
-        COLOR_BY_ITEM.put(ModItems.ZHIMA_TANGYUAN.get(), 0xF0EEE2);
-        COLOR_BY_ITEM.put(ModItems.DOUSHA_TANGYUAN.get(), 0xE8D6AC);
-        COLOR_BY_ITEM.put(ModItems.HUASHENG_TANGYUAN.get(), 0xC4A476);
-        COLOR_BY_ITEM.put(ModItems.QING_TUAN.get(), 0x4A7434);
-        COLOR_BY_ITEM.put(ModItems.AI_JIAO.get(), 0x4A7434);
-        COLOR_BY_ITEM.put(ModItems.ROU_ZONG.get(), 0x4A7434);
-        COLOR_BY_ITEM.put(ModItems.ZAO_ZONG.get(), 0x4A7434);
-        COLOR_BY_ITEM.put(ModItems.DOUSHA_ZONG.get(), 0x4A7434);
-        COLOR_BY_ITEM.put(ModItems.QIAO_GUO.get(), 0xEEE0BE);
-        COLOR_BY_ITEM.put(ModItems.QIAOYA_MIAN.get(), 0xD8BE8C);
-        COLOR_BY_ITEM.put(ModItems.LIANRONG_YUEBING.get(), 0xD6B276);
-        COLOR_BY_ITEM.put(ModItems.DOUSHA_YUEBING.get(), 0xD6B276);
-        COLOR_BY_ITEM.put(ModItems.WUREN_YUEBING.get(), 0xD6B276);
-        COLOR_BY_ITEM.put(ModItems.DANYUE_YUEBING.get(), 0xD6B276);
-        COLOR_BY_ITEM.put(ModItems.CHONGYANG_GAO.get(), 0xD6B276);
-        COLOR_BY_ITEM.put(ModItems.JUHUA_JIU.get(), 0xD4BE8A);
-        COLOR_BY_ITEM.put(ModItems.LABA_ZHOU.get(), 0xD8BE8C);
-        COLOR_BY_ITEM.put(ModItems.YANGROU_TANG.get(), 0xD8BE8C);
+        PALETTE_BY_ITEM.put(ModItems.JIUZHUAN_DACHANG.get(), Palette.REDBRAISED);
+        PALETTE_BY_ITEM.put(ModItems.CONGSAO_HAISHEN.get(), Palette.BRAISED);
+        PALETTE_BY_ITEM.put(ModItems.TANGCU_LIYU.get(), Palette.REDBRAISED);
+        PALETTE_BY_ITEM.put(ModItems.YOUBAO_SHUANGCUI.get(), Palette.STIRFRY);
+        PALETTE_BY_ITEM.put(ModItems.GUOTA_DOUFU.get(), Palette.STEAMED);
+        PALETTE_BY_ITEM.put(ModItems.NAITANG_PUCAI.get(), Palette.SOUP);
+        PALETTE_BY_ITEM.put(ModItems.DEZHOU_PAJI.get(), Palette.BRAISED);
+        PALETTE_BY_ITEM.put(ModItems.SIXI_WANZI.get(), Palette.BRAISED);
+        PALETTE_BY_ITEM.put(ModItems.ZAOLIU_YUPIAN.get(), Palette.STEAMED);
+        PALETTE_BY_ITEM.put(ModItems.KONGFU_YIPINGUO.get(), Palette.BRAISED);
+        PALETTE_BY_ITEM.put(ModItems.MAPO_TOFU.get(), Palette.CHILI_OIL);
+        PALETTE_BY_ITEM.put(ModItems.HUIGUO_ROU.get(), Palette.REDBRAISED);
+        PALETTE_BY_ITEM.put(ModItems.SHUIZHU_YU.get(), Palette.CHILI_OIL);
+        PALETTE_BY_ITEM.put(ModItems.FUQI_FEIPIAN.get(), Palette.CHILI_OIL);
+        PALETTE_BY_ITEM.put(ModItems.GONGBAO_JIDING.get(), Palette.REDBRAISED);
+        PALETTE_BY_ITEM.put(ModItems.YUXIANG_ROUSI.get(), Palette.REDBRAISED);
+        PALETTE_BY_ITEM.put(ModItems.MAOXUE_WANG.get(), Palette.CHILI_OIL);
+        PALETTE_BY_ITEM.put(ModItems.LAZIJI.get(), Palette.CHILI);
+        PALETTE_BY_ITEM.put(ModItems.DONGPO_ZHOUZI.get(), Palette.REDBRAISED);
+        PALETTE_BY_ITEM.put(ModItems.KAISHUI_BAICAI.get(), Palette.STEAMED);
+        PALETTE_BY_ITEM.put(ModItems.BAIQIE_JI.get(), Palette.STEAMED);
+        PALETTE_BY_ITEM.put(ModItems.MIZHI_CHASHAO.get(), Palette.REDBRAISED);
+        PALETTE_BY_ITEM.put(ModItems.QINGZHENG_SHIBANYU.get(), Palette.STEAMED);
+        PALETTE_BY_ITEM.put(ModItems.LAOHUO_LIANGTANG.get(), Palette.SOUP);
+        PALETTE_BY_ITEM.put(ModItems.SHAOE.get(), Palette.REDBRAISED);
+        PALETTE_BY_ITEM.put(ModItems.XIAJIAO_HUANG.get(), Palette.STEAMED);
+        PALETTE_BY_ITEM.put(ModItems.GANCHAO_NIUHE.get(), Palette.STIRFRY);
+        PALETTE_BY_ITEM.put(ModItems.BAOZHI_LIAOSHEN.get(), Palette.BRAISED);
+        PALETTE_BY_ITEM.put(ModItems.ZEZE_BAO.get(), Palette.BRAISED);
+        PALETTE_BY_ITEM.put(ModItems.YUNTUN_MIAN.get(), Palette.SOUP);
+        PALETTE_BY_ITEM.put(ModItems.SONGSHU_GUIYU.get(), Palette.REDBRAISED);
+        PALETTE_BY_ITEM.put(ModItems.DAZHAXIE.get(), Palette.CHILI);
+        PALETTE_BY_ITEM.put(ModItems.YANGZHOU_SHIZITOU.get(), Palette.BRAISED);
+        PALETTE_BY_ITEM.put(ModItems.JINLING_YANSHUIYA.get(), Palette.STEAMED);
+        PALETTE_BY_ITEM.put(ModItems.DAZHU_GANSI.get(), Palette.STEAMED);
+        PALETTE_BY_ITEM.put(ModItems.WUXI_JIANGPAIGU.get(), Palette.REDBRAISED);
+        PALETTE_BY_ITEM.put(ModItems.QINGZHENG_SHIYU.get(), Palette.STEAMED);
+        PALETTE_BY_ITEM.put(ModItems.SHUIJING_YAOROU.get(), Palette.STEAMED);
+        PALETTE_BY_ITEM.put(ModItems.BILUO_XIAREN.get(), Palette.GREENDISH);
+        PALETTE_BY_ITEM.put(ModItems.WENSI_DOUFU.get(), Palette.STEAMED);
+        PALETTE_BY_ITEM.put(ModItems.FOTIAOQIANG.get(), Palette.BRAISED);
+        PALETTE_BY_ITEM.put(ModItems.LIZHI_ROU.get(), Palette.REDBRAISED);
+        PALETTE_BY_ITEM.put(ModItems.ZUI_PAIGU.get(), Palette.REDBRAISED);
+        PALETTE_BY_ITEM.put(ModItems.BABAO_HONGXUN_FAN.get(), Palette.ORANGE);
+        PALETTE_BY_ITEM.put(ModItems.JITANG_TUN_HAIBANG.get(), Palette.SOUP);
+        PALETTE_BY_ITEM.put(ModItems.ZHAN_HETIANJI.get(), Palette.STEAMED);
+        PALETTE_BY_ITEM.put(ModItems.WUYI_XUNE.get(), Palette.DRIED);
+        PALETTE_BY_ITEM.put(ModItems.XIANGNAN_RIBAO.get(), Palette.BRAISED);
+        PALETTE_BY_ITEM.put(ModItems.XIHU_CUYU.get(), Palette.REDBRAISED);
+        PALETTE_BY_ITEM.put(ModItems.DONGPO_ROU.get(), Palette.REDBRAISED);
+        PALETTE_BY_ITEM.put(ModItems.LONGJING_XIAREN.get(), Palette.GREENDISH);
+        PALETTE_BY_ITEM.put(ModItems.XUECAI_HUANGYU.get(), Palette.SOUP);
+        PALETTE_BY_ITEM.put(ModItems.QINGTANG_YUEJI.get(), Palette.STEAMED);
+        PALETTE_BY_ITEM.put(ModItems.GANCAI_MENROU.get(), Palette.BRAISED);
+        PALETTE_BY_ITEM.put(ModItems.WUWEI_JIANXIE.get(), Palette.CHILI);
+        PALETTE_BY_ITEM.put(ModItems.DUOJIAO_YUTOU.get(), Palette.CHILI);
+        PALETTE_BY_ITEM.put(ModItems.MAOSHI_HONGSHAOROU.get(), Palette.REDBRAISED);
+        PALETTE_BY_ITEM.put(ModItems.LAJIAO_CHAOROU.get(), Palette.CHILI);
+        PALETTE_BY_ITEM.put(ModItems.DONGAN_ZIJI.get(), Palette.CHILI);
+        PALETTE_BY_ITEM.put(ModItems.LAWEI_HEZHENG.get(), Palette.DRIED);
+        PALETTE_BY_ITEM.put(ModItems.XIANGXI_WAIPOCAI.get(), Palette.DARKGREEN);
+        PALETTE_BY_ITEM.put(ModItems.JIANGBANYA.get(), Palette.DRIED);
+        PALETTE_BY_ITEM.put(ModItems.YONGZHOU_XUEYA.get(), Palette.CHILI_OIL);
+        PALETTE_BY_ITEM.put(ModItems.ZUAN_YUCHI.get(), Palette.BRAISED);
+        PALETTE_BY_ITEM.put(ModItems.ZHUXUE_WANZI.get(), Palette.DRIED);
+        PALETTE_BY_ITEM.put(ModItems.CHOU_GUIYU.get(), Palette.BRAISED);
+        PALETTE_BY_ITEM.put(ModItems.HUIZHOU_YIPINGUO.get(), Palette.BRAISED);
+        PALETTE_BY_ITEM.put(ModItems.HUMAO_DOUFU.get(), Palette.STIRFRY);
+        PALETTE_BY_ITEM.put(ModItems.HUANGSHAN_DUNGE.get(), Palette.BRAISED);
+        PALETTE_BY_ITEM.put(ModItems.WENZHENG_SHANSUN.get(), Palette.GREENDISH);
+        PALETTE_BY_ITEM.put(ModItems.FANGLA_YU.get(), Palette.REDBRAISED);
+        PALETTE_BY_ITEM.put(ModItems.MIZHI_HONGYU.get(), Palette.ORANGE);
+        PALETTE_BY_ITEM.put(ModItems.QINGZHENG_SHIJI.get(), Palette.STEAMED);
+        PALETTE_BY_ITEM.put(ModItems.JIAOZI.get(), Palette.PASTRY);
+        PALETTE_BY_ITEM.put(ModItems.NIAN_GAO.get(), Palette.PASTRY);
+        PALETTE_BY_ITEM.put(ModItems.CHUN_JUAN.get(), Palette.GOLD);
+        PALETTE_BY_ITEM.put(ModItems.TANG_YUAN.get(), Palette.WHITE);
+        PALETTE_BY_ITEM.put(ModItems.LA_ROU.get(), Palette.DRIED);
+        PALETTE_BY_ITEM.put(ModItems.ZHIMA_TANGYUAN.get(), Palette.WHITE);
+        PALETTE_BY_ITEM.put(ModItems.DOUSHA_TANGYUAN.get(), Palette.CREAM);
+        PALETTE_BY_ITEM.put(ModItems.HUASHENG_TANGYUAN.get(), Palette.TAN);
+        PALETTE_BY_ITEM.put(ModItems.QING_TUAN.get(), Palette.DARKGREEN);
+        PALETTE_BY_ITEM.put(ModItems.AI_JIAO.get(), Palette.DARKGREEN);
+        PALETTE_BY_ITEM.put(ModItems.ROU_ZONG.get(), Palette.DARKGREEN);
+        PALETTE_BY_ITEM.put(ModItems.ZAO_ZONG.get(), Palette.DARKGREEN);
+        PALETTE_BY_ITEM.put(ModItems.DOUSHA_ZONG.get(), Palette.DARKGREEN);
+        PALETTE_BY_ITEM.put(ModItems.QIAO_GUO.get(), Palette.PASTRY);
+        PALETTE_BY_ITEM.put(ModItems.QIAOYA_MIAN.get(), Palette.SOUP);
+        PALETTE_BY_ITEM.put(ModItems.LIANRONG_YUEBING.get(), Palette.CAKE);
+        PALETTE_BY_ITEM.put(ModItems.DOUSHA_YUEBING.get(), Palette.CAKE);
+        PALETTE_BY_ITEM.put(ModItems.WUREN_YUEBING.get(), Palette.CAKE);
+        PALETTE_BY_ITEM.put(ModItems.DANYUE_YUEBING.get(), Palette.CAKE);
+        PALETTE_BY_ITEM.put(ModItems.CHONGYANG_GAO.get(), Palette.CAKE);
+        PALETTE_BY_ITEM.put(ModItems.JUHUA_JIU.get(), Palette.WINE);
+        PALETTE_BY_ITEM.put(ModItems.LABA_ZHOU.get(), Palette.SOUP);
+        PALETTE_BY_ITEM.put(ModItems.YANGROU_TANG.get(), Palette.SOUP);
     }
 
     /** 这道菜的器型；不在表里返回 {@code null}（表示不能摆）。 */
@@ -280,19 +378,10 @@ public final class DishPlacement {
         return SHAPE_BY_ITEM.get(item);
     }
 
-    /** 这道菜的主色（0xRRGGBB）；不在表里返回白色。 */
-    public static int colorOf(Item item) {
-        Integer c = COLOR_BY_ITEM.get(item);
-        return c == null ? 0xFFFFFF : c;
-    }
-
-    /** 汤汁 / 汁水的颜色：主色压暗一档。 */
-    public static int liquidColorOf(Item item) {
-        int c = colorOf(item);
-        int r = (c >> 16 & 0xFF) * 3 / 4;
-        int g = (c >> 8 & 0xFF) * 3 / 4;
-        int b = (c & 0xFF) * 3 / 4;
-        return r << 16 | g << 8 | b;
+    /** 这道菜的配色；不在表里返回 {@code null}。 */
+    @Nullable
+    public static Palette paletteOf(Item item) {
+        return PALETTE_BY_ITEM.get(item);
     }
 
     /**

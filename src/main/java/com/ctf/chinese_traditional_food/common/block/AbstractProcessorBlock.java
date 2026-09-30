@@ -10,7 +10,6 @@ import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -19,17 +18,19 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * 自研装置（水磨 / 脱壳机）的公共方块。
+ * 自研装置（水磨）的公共方块。
  *
  * <h2>交互约定</h2>
  * <ul>
  *   <li><b>空手右键</b> —— 打开界面（放原料、取出成品）。</li>
- *   <li><b>潜行 + 空手右键</b> —— 手摇一轮（脱壳机专用；水磨也允许，方便测试）。</li>
+ *   <li><b>潜行 + 空手右键</b> —— 手摇一轮（方便没水的时候也能先用）。</li>
  * </ul>
  *
- * <p>机器的动力由子类的方块实体决定：水磨要邻水，脱壳机要红石信号。</p>
+ * <p>继承 {@link AbstractMachineCoreBlock}，所以机器必须先
+ * <b>结构完整</b>才会工作；缺零件时只给一句提示，不开界面。
+ * 对着机身任意一个部件右键也一样能开 —— 交互由部件转发过来。</p>
  */
-public abstract class AbstractProcessorBlock extends Block implements EntityBlock {
+public abstract class AbstractProcessorBlock extends AbstractMachineCoreBlock {
     protected AbstractProcessorBlock(Properties properties) {
         super(properties);
     }
@@ -45,6 +46,14 @@ public abstract class AbstractProcessorBlock extends Block implements EntityBloc
                                                Player player, BlockHitResult hit) {
         if (!(level.getBlockEntity(pos) instanceof AbstractProcessorBlockEntity machine)) {
             return InteractionResult.PASS;
+        }
+
+        // 结构不完整就不干活：先提示，别让玩家对着半台机器白贳力气
+        if (!state.getValue(FORMED)) {
+            if (!level.isClientSide()) {
+                warnIncomplete(player);
+            }
+            return InteractionResult.FAIL;
         }
 
         // 潜行 -> 手摇一轮
@@ -89,6 +98,10 @@ public abstract class AbstractProcessorBlock extends Block implements EntityBloc
             return null;    // 机器逻辑只在服务端跑
         }
         return (lvl, pos, st, be) -> {
+            // 结构不完整的机器不转 —— 缺零件就该停着，而不是照旧默默干活
+            if (!st.getValue(FORMED)) {
+                return;
+            }
             if (be instanceof AbstractProcessorBlockEntity machine) {
                 AbstractProcessorBlockEntity.serverTick(lvl, pos, st, machine);
             }

@@ -1,5 +1,10 @@
 {
   "variants": {
-    "": { "model": "chinese_traditional_food:block/water_mill" }
+    "formed=false": {
+      "model": "chinese_traditional_food:block/water_mill_core_bare"
+    },
+    "formed=true": {
+      "model": "chinese_traditional_food:block/water_mill_core"
+    }
   }
 }

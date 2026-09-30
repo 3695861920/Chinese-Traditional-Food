@@ -42,13 +42,25 @@ import org.jetbrains.annotations.Nullable;
  * <h2>交互</h2>
  * <ul>
  *   <li>拿菜对着<b>地面或方块顶面</b>右键 → 摆在地上；</li>
- *   <li><b>空手右键</b> → 端起来放回背包（方便收拾）。</li>
+ *   <li><b>空手右键</b> → 就地夹一口吃（和餐盘上一致）；</li>
+ *   <li><b>潜行 + 空手右键</b> → 端起来放回背包（方便收拾）。</li>
  * </ul>
  */
 public class PlacedDishBlock extends Block implements EntityBlock {
     /** 选三维模型用的属性。取值顺序与 {@code tools/dish_models.py} 的 SHAPE_ORDER 一致。 */
     public static final EnumProperty<DishPlacement.Shape> SHAPE =
             EnumProperty.create("shape", DishPlacement.Shape.class);
+
+    /**
+     * 配色属性。
+     *
+     * <p>颜色必须随<b>方块状态</b>走，不能从方块实体查 —— 26.1 的方块模型
+     * 着色只会调用 {@code BlockTintSource#color(BlockState)}（见
+     * {@code BlockStateModelWrapper#updateTints}），那条路径上拿不到世界，
+     * 从方块实体查只会得到常量白。详见 {@link DishPlacement.Palette}。</p>
+     */
+    public static final EnumProperty<DishPlacement.Palette> PALETTE =
+            EnumProperty.create("palette", DishPlacement.Palette.class);
 
     /**
      * 每种器型的碰撞箱，下标就是 {@link DishPlacement.Shape#id()}。
@@ -66,7 +78,8 @@ public class PlacedDishBlock extends Block implements EntityBlock {
     public PlacedDishBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any()
-                .setValue(SHAPE, DishPlacement.Shape.BOWL));
+                .setValue(SHAPE, DishPlacement.Shape.BOWL)
+                .setValue(PALETTE, DishPlacement.Palette.WHITE));
     }
 
     /** 按器型取碰撞箱（首次访问时从 DishPlacement 的实测包围盒构建）。 */
@@ -83,7 +96,7 @@ public class PlacedDishBlock extends Block implements EntityBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(SHAPE);
+        builder.add(SHAPE, PALETTE);
     }
 
     @Override
@@ -106,27 +119,67 @@ public class PlacedDishBlock extends Block implements EntityBlock {
     }
 
     // ------------------------------------------------------------------
-    // 端起来
+    // 吃 / 端起来
     // ------------------------------------------------------------------
 
+    /**
+     * 空手右键：就地夹一口；潜行右键：整份端回背包。
+     *
+     * <p>这两个行为与餐盘 / 大拼盘保持一致，免得玩家形成两套肌肉记忆。</p>
+     */
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos,
                                                Player player, BlockHitResult hit) {
         if (!(level.getBlockEntity(pos) instanceof PlacedDishBlockEntity be)) {
             return InteractionResult.PASS;
         }
-        ItemStack dish = be.takeDish();
+        ItemStack dish = be.getDish(0);
         if (dish.isEmpty()) {
             return InteractionResult.PASS;
         }
+
+        if (player.isShiftKeyDown()) {
+            return pickUp(level, pos, player, be);
+        }
+        return eatOne(level, pos, player, be, dish);
+    }
+
+    /** 潜行 + 空手：把整份端起来放回背包（盘子本身不是方块物品，直接消失）。 */
+    private InteractionResult pickUp(Level level, BlockPos pos, Player player,
+                                      PlacedDishBlockEntity be) {
         if (level.isClientSide()) {
-            return InteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS_SERVER;
+        }
+        ItemStack dish = be.takeDish();
+        if (dish.isEmpty()) {
+            return InteractionResult.PASS;
         }
         if (!player.getInventory().add(dish)) {
             player.drop(dish, false);
         }
         level.removeBlock(pos, false);
         level.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 0.7F, 1.0F);
+        return InteractionResult.SUCCESS_SERVER;
+    }
+
+    /** 空手：夹一口，吃完这份就把方块一并收走。 */
+    private InteractionResult eatOne(Level level, BlockPos pos, Player player,
+                                      PlacedDishBlockEntity be, ItemStack dish) {
+        if (!DishItem.serve(level, player, dish)) {
+            return InteractionResult.PASS; // 不是能吃的东西
+        }
+        if (!level.isClientSide()) {
+            ItemStack remaining = dish.copy();
+            remaining.shrink(1);
+            if (remaining.isEmpty()) {
+                // 吃完最后一口：方块本体也一起收走，不留下一个空碗卡在地上
+                be.setDish(0, ItemStack.EMPTY);
+                level.removeBlock(pos, false);
+            } else {
+                be.setDish(0, remaining);
+                be.onDishesChanged();
+            }
+        }
         return InteractionResult.SUCCESS;
     }
 
@@ -141,12 +194,14 @@ public class PlacedDishBlock extends Block implements EntityBlock {
     /** 只有玩家拿着能摆的菜时才用得上；给 DishItem 调用的静态放置。 */
     public static boolean place(Level level, BlockPos above, ItemStack dish) {
         DishPlacement.Shape shape = DishPlacement.shapeOf(dish.getItem());
-        if (shape == null) {
+        DishPlacement.Palette palette = DishPlacement.paletteOf(dish.getItem());
+        if (shape == null || palette == null) {
             return false;
         }
         BlockState state = com.ctf.chinese_traditional_food.registry.ModBlocks.PLACED_DISH.get()
                 .defaultBlockState()
-                .setValue(SHAPE, shape);
+                .setValue(SHAPE, shape)
+                .setValue(PALETTE, palette);
         if (!level.setBlock(above, state, Block.UPDATE_ALL)) {
             return false;
         }

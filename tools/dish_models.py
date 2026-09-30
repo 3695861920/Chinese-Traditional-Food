@@ -50,6 +50,10 @@ NS = "chinese_traditional_food"
 
 # 方块状态属性的名字（要和 Java 里的 EnumProperty 一致）
 PROPERTY = "shape"
+# 第二个属性：配色（也是 EnumProperty，取值就是 content_data.PALETTES 的键）
+PALETTE_PROPERTY = "palette"
+
+ROOT_OF_TOOLS = os.path.dirname(os.path.abspath(__file__))
 
 # ======================================================================
 # 12 种器型 -> 食物图标种类
@@ -459,20 +463,40 @@ def build_models():
                  ", ".join("%.1f" % v for v in bounds(shape))))
 
 
-def build_blockstate():
-    """生成 placed_dish 的 blockstate：shape=<值> -> 模型。
+def palette_names():
+    """配色名列表（就是 content_data.PALETTES 的键，按定义顺序）。
 
-    注意变体键必须写成「属性名=取值」（这里是 shape=bowl），
-    只写取值会被判定为未知属性，模型会 Missing。
+    blockstate 要把 shape 与 palette 两个属性都列全，所以得知道有哪些配色。
+    这里从 content_data 现取，避免两边手写两份而对不上。
     """
+    import sys
+    sys.path.insert(0, ROOT_OF_TOOLS)
+    import content_data as DATA
+    return list(DATA.PALETTES.keys())
+
+
+def build_blockstate(palettes=None):
+    """生成 placed_dish 的 blockstate：shape=... , palette=... -> 模型。
+
+    两个坑都在这里：
+    * 变体键必须写成「属性名=取值」（`palette=white,shape=bowl`），
+      只写取值会被判为未知属性，模型直接 Missing；
+    * 一个方块的**所有**属性都要出现在键里，漏一个同样 Missing。
+
+    为了让颜色能用上，12 种器型 × N 种配色全都要列出来——
+    但它们只是同一个模型的别名，所以模型文件仍然只有 12 个。
+    """
+    palettes = palettes or palette_names()
     variants = {}
     for shape in SHAPE_ORDER:
-        variants["%s=%s" % (PROPERTY, shape)] = {
-            "model": "%s:block/placed_dish_%s" % (NS, shape)
-        }
+        for pal in palettes:
+            variants["%s=%s,%s=%s" % (PROPERTY, shape, PALETTE_PROPERTY, pal)] = {
+                "model": "%s:block/placed_dish_%s" % (NS, shape)
+            }
     path = os.path.join(RES, "blockstates", "placed_dish.json")
     _write(path, {"variants": variants})
-    print("blockstate placed_dish.json (%d variants)" % len(variants))
+    print("blockstate placed_dish.json (%d variants = %d shapes x %d palettes)"
+          % (len(variants), len(SHAPE_ORDER), len(palettes)))
 
 
 def build_shape_table():

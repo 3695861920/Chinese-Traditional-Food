@@ -1,16 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "P P",
+    "PPP",
     "PIP",
-    " I "
+    "PPP"
   ],
   "key": {
     "P": "#minecraft:planks",
     "I": "minecraft:iron_ingot"
   },
   "result": {
-    "id": "chinese_traditional_food:grain_sheller_hopper",
-    "count": 1
+    "id": "chinese_traditional_food:grain_sheller_part",
+    "count": 4
   }
 }
