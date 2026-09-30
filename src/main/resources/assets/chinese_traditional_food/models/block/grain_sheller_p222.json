@@ -8,28 +8,41 @@
     "iron": "chinese_traditional_food:block/machine_iron",
     "wheel": "chinese_traditional_food:block/machine_wheel",
     "millstone": "chinese_traditional_food:block/machine_millstone",
-    "hopper": "chinese_traditional_food:block/machine_hopper"
+    "hopper": "chinese_traditional_food:block/machine_hopper",
+    "axle": "chinese_traditional_food:block/machine_axle",
+    "crank": "chinese_traditional_food:block/machine_crank",
+    "hopper_top": "chinese_traditional_food:block/machine_hopper_top",
+    "outlet": "chinese_traditional_food:block/machine_outlet"
   },
   "elements": [
     {
       "from": [
-        0.0,
-        0.0,
-        0.0
+        0,
+        0,
+        0
       ],
       "to": [
-        16.0,
-        16.0,
-        16.0
+        16,
+        2.0,
+        16
       ],
       "faces": {
-        "up": {
-          "texture": "#wood",
+        "south": {
+          "texture": "#iron",
           "uv": [
             0,
             0,
-            16,
-            16
+            16.0,
+            2.0
+          ]
+        },
+        "east": {
+          "texture": "#iron",
+          "uv": [
+            0,
+            0,
+            16.0,
+            2.0
           ]
         }
       }
@@ -37,13 +50,45 @@
     {
       "from": [
         0,
-        14.2,
-        5.6
+        2.0,
+        0
       ],
       "to": [
         16,
+        12.0,
+        16
+      ],
+      "faces": {
+        "south": {
+          "texture": "#wood",
+          "uv": [
+            0,
+            0,
+            16.0,
+            10.0
+          ]
+        },
+        "east": {
+          "texture": "#wood",
+          "uv": [
+            0,
+            0,
+            16.0,
+            10.0
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        12.0,
+        0
+      ],
+      "to": [
         16,
-        10.4
+        14.0,
+        16
       ],
       "faces": {
         "up": {
@@ -51,17 +96,8 @@
           "uv": [
             0,
             0,
-            16,
-            16
-          ]
-        },
-        "north": {
-          "texture": "#iron",
-          "uv": [
-            0,
-            0,
-            16,
-            16
+            16.0,
+            16.0
           ]
         },
         "south": {
@@ -69,90 +105,17 @@
           "uv": [
             0,
             0,
-            16,
-            16
-          ]
-        }
-      }
-    },
-    {
-      "from": [
-        0,
-        12.2,
-        4.0
-      ],
-      "to": [
-        3.0,
-        16,
-        12.0
-      ],
-      "faces": {
-        "west": {
-          "texture": "#wood",
-          "uv": [
-            0,
-            0,
-            16,
-            16
+            16.0,
+            2.0
           ]
         },
         "east": {
-          "texture": "#wood",
+          "texture": "#iron",
           "uv": [
             0,
             0,
-            16,
-            16
-          ]
-        },
-        "up": {
-          "texture": "#wood",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ]
-        }
-      }
-    },
-    {
-      "from": [
-        13.0,
-        12.2,
-        4.0
-      ],
-      "to": [
-        16,
-        16,
-        12.0
-      ],
-      "faces": {
-        "west": {
-          "texture": "#wood",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ]
-        },
-        "east": {
-          "texture": "#wood",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ]
-        },
-        "up": {
-          "texture": "#wood",
-          "uv": [
-            0,
-            0,
-            16,
-            16
+            16.0,
+            2.0
           ]
         }
       }

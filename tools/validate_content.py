@@ -412,6 +412,26 @@ def check_model_refs():
                     fail("%s 的面 %s 引用了未定义的纹理键 %s"
                          % (os.path.relpath(path, ROOT), face_name, ref))
 
+    # 5) 反向检查：有没有**没人用**的贴图（孤儿）。
+    #    改设计时最容易漏掉这一步 —— 旧贴图会一直躺在资源目录里，
+    #    既没人引用、又让人以为"机器用的是那张图"，非常难查。
+    #    textures/gui 例外：界面的图是从 Java 里引用的，模型里看不到。
+    used = set()
+    for path in walk(model_dir, ".json"):
+        obj = load_json(path) or {}
+        for ref in obj.get("textures", {}).values():
+            if isinstance(ref, str) and not ref.startswith("#"):
+                target = resolve_texture(ref)
+                if target is not None:
+                    used.add(os.path.normcase(os.path.abspath(target)))
+    for path in walk(tex_dir, ".png"):
+        rel = os.path.relpath(path, ROOT).replace("\\", "/")
+        if "/textures/gui/" in rel:
+            continue
+        n += 1
+        if os.path.normcase(os.path.abspath(path)) not in used:
+            fail("贴图 %s 没有任何模型引用（孤儿贴图）" % rel)
+
     return n
 
 

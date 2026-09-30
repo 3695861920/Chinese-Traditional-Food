@@ -805,14 +805,13 @@ BLOCK_ITEM_MODELS = {
     "plate": "block/plate",
     "serving_platter": "block/serving_platter",
     "cutting_board": "block/cutting_board",
-    # 机器核心：结构太复杂，用 2D 图标更好认
+    # 机器与部件：结构复杂（还会伸到邻格），一律用 2D 图标 ——
+    # 直接拿模型当图标会被 "截断" 成看不出是什么的一角。
     "water_mill": "item/water_mill",
+    "water_mill_part": "item/water_mill_part",
     "grain_sheller": "item/grain_sheller",
-    # 机器部件：就拿其中一格的三维模型当图标（原版方块物品的做法）
-    "water_mill_part": "block/water_mill_base",
-    "grain_sheller_part": "block/grain_sheller_frame",
-    # 水车：三维模型当图标，侧着看就是个大轮子
-    "water_wheel": "block/water_wheel_x_0",
+    "grain_sheller_part": "item/grain_sheller_part",
+    "water_wheel": "item/water_wheel",
 }
 
 

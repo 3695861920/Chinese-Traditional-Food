@@ -198,16 +198,59 @@ public abstract class AbstractMachineCoreBlock extends Block implements EntityBl
     @Override
     protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos,
                                                boolean movedByPiston) {
-        for (Part part : this.structureParts()) {
-            BlockPos p = pos.offset(part.dx(), part.dy(), part.dz());
-            BlockState at = level.getBlockState(p);
-            // 只拆"确实属于本核心"的部件，而且不掉落 —— 部件是机器的一部分，
-            // 拆核心时拿回核心那一件就够了，散落一地零件只会添乱。
-            if (at.is(this.partBlock()) && MachinePartBlock.corePos(at, p).equals(pos)) {
-                level.removeBlock(p, false);
-            }
-        }
+        this.tearDown(level, pos);
         super.affectNeighborsAfterRemoval(state, level, pos, movedByPiston);
+    }
+
+    /**
+     * 正在拆除的机器（以核心位置为键）。
+     *
+     * <p>拆整机时会对每一格调 {@code destroyBlock}，而那些格子又会各自触发
+     * 自己的移除回调 —— 不加保护就会互相递归，直接把栈打爆。
+     * 所以拆之前先把核心位置登记进来，重入时直接返回。</p>
+     *
+     * <p>用 {@link ThreadLocal} 是因为方块拆除只发生在服务端线程；
+     * 即便将来有并行，也不会把两个线程搞混。</p>
+     */
+    private static final ThreadLocal<java.util.Set<BlockPos>> TEARING_DOWN =
+            ThreadLocal.withInitial(java.util.HashSet::new);
+
+    /** 这台机器是不是正在被拆。 */
+    public static boolean isTearingDown(BlockPos core) {
+        return TEARING_DOWN.get().contains(core);
+    }
+
+    /**
+     * 拆掉整台机器，每一格都按正常掉落走。
+     *
+     * <p>触发时机：核心被拆、或<b>任意一个部件被拆</b>。
+     * 用户要的就是"拆一块就整个散掉"，而不是留着半台残骸。</p>
+     *
+     * @return 是否真的执行了拆除（重入时返回 {@code false}）
+     */
+    public boolean tearDown(Level level, BlockPos core) {
+        java.util.Set<BlockPos> guard = TEARING_DOWN.get();
+        if (!guard.add(core)) {
+            return false;                  // 已经在拆了，避免递归
+        }
+        try {
+            // 先拆部件，再拆核心：这样拆到每格时核心还在，
+            // 别人看起来就是"一台机器整体崩掉"。
+            for (Part part : this.structureParts()) {
+                BlockPos p = core.offset(part.dx(), part.dy(), part.dz());
+                BlockState at = level.getBlockState(p);
+                if (at.is(this.partBlock())
+                        && MachinePartBlock.corePos(at, p).equals(core)) {
+                    level.destroyBlock(p, true);       // true = 掉落战利品
+                }
+            }
+            if (level.getBlockState(core).is(this)) {
+                level.destroyBlock(core, true);
+            }
+        } finally {
+            guard.remove(core);
+        }
+        return true;
     }
 
     // ------------------------------------------------------------------

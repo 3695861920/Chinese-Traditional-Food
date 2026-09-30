@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "chinese_traditional_food:block/grain_sheller_frame"
+    "model": "chinese_traditional_food:item/grain_sheller_part"
   }
 }

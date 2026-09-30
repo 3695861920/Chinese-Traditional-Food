@@ -1,0 +1,260 @@
+{
+  "parent": "minecraft:block/block",
+  "render_type": "cutout",
+  "textures": {
+    "particle": "chinese_traditional_food:block/machine_stone",
+    "stone": "chinese_traditional_food:block/machine_stone",
+    "wood": "chinese_traditional_food:block/machine_wood",
+    "iron": "chinese_traditional_food:block/machine_iron",
+    "wheel": "chinese_traditional_food:block/machine_wheel",
+    "millstone": "chinese_traditional_food:block/machine_millstone",
+    "hopper": "chinese_traditional_food:block/machine_hopper",
+    "axle": "chinese_traditional_food:block/machine_axle",
+    "crank": "chinese_traditional_food:block/machine_crank",
+    "hopper_top": "chinese_traditional_food:block/machine_hopper_top",
+    "outlet": "chinese_traditional_food:block/machine_outlet"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        2.0,
+        16
+      ],
+      "faces": {
+        "west": {
+          "texture": "#iron",
+          "uv": [
+            0,
+            0,
+            16.0,
+            2.0
+          ]
+        },
+        "east": {
+          "texture": "#crank",
+          "uv": [
+            0,
+            0,
+            16.0,
+            2.0
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        2.0,
+        0
+      ],
+      "to": [
+        16,
+        14.0,
+        16
+      ],
+      "faces": {
+        "west": {
+          "texture": "#wood",
+          "uv": [
+            0,
+            0,
+            16.0,
+            12.0
+          ]
+        },
+        "east": {
+          "texture": "#crank",
+          "uv": [
+            0,
+            0,
+            16.0,
+            12.0
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        14.0,
+        0
+      ],
+      "to": [
+        16,
+        16.0,
+        16
+      ],
+      "faces": {
+        "up": {
+          "texture": "#iron",
+          "uv": [
+            0,
+            0,
+            16.0,
+            16.0
+          ]
+        },
+        "west": {
+          "texture": "#iron",
+          "uv": [
+            0,
+            0,
+            16.0,
+            2.0
+          ]
+        },
+        "east": {
+          "texture": "#crank",
+          "uv": [
+            0,
+            0,
+            16.0,
+            2.0
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        12,
+        6.0,
+        7.0
+      ],
+      "to": [
+        16,
+        10.0,
+        9.0
+      ],
+      "faces": {
+        "down": {
+          "texture": "#iron",
+          "uv": [
+            0,
+            0,
+            4,
+            2.0
+          ]
+        },
+        "up": {
+          "texture": "#iron",
+          "uv": [
+            0,
+            0,
+            4,
+            2.0
+          ]
+        },
+        "north": {
+          "texture": "#iron",
+          "uv": [
+            0,
+            0,
+            4,
+            4.0
+          ]
+        },
+        "south": {
+          "texture": "#iron",
+          "uv": [
+            0,
+            0,
+            4,
+            4.0
+          ]
+        },
+        "west": {
+          "texture": "#iron",
+          "uv": [
+            0,
+            0,
+            2.0,
+            4.0
+          ]
+        },
+        "east": {
+          "texture": "#iron",
+          "uv": [
+            0,
+            0,
+            2.0,
+            4.0
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        13,
+        4.0,
+        4.5
+      ],
+      "to": [
+        16,
+        13.0,
+        11.5
+      ],
+      "faces": {
+        "down": {
+          "texture": "#wood",
+          "uv": [
+            0,
+            0,
+            3,
+            7.0
+          ]
+        },
+        "up": {
+          "texture": "#wood",
+          "uv": [
+            0,
+            0,
+            3,
+            7.0
+          ]
+        },
+        "north": {
+          "texture": "#wood",
+          "uv": [
+            0,
+            0,
+            3,
+            9.0
+          ]
+        },
+        "south": {
+          "texture": "#wood",
+          "uv": [
+            0,
+            0,
+            3,
+            9.0
+          ]
+        },
+        "west": {
+          "texture": "#wood",
+          "uv": [
+            0,
+            0,
+            7.0,
+            9.0
+          ]
+        },
+        "east": {
+          "texture": "#wood",
+          "uv": [
+            0,
+            0,
+            7.0,
+            9.0
+          ]
+        }
+      }
+    }
+  ]
+}

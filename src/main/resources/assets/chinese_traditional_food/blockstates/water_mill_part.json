@@ -1,196 +1,196 @@
 {
   "variants": {
     "dx=0,dy=0,dz=0": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_fallback"
     },
     "dx=0,dy=0,dz=1": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_fallback"
     },
     "dx=0,dy=0,dz=2": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_fallback"
     },
     "dx=0,dy=0,dz=3": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_fallback"
     },
     "dx=0,dy=1,dz=0": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_p010"
     },
     "dx=0,dy=1,dz=1": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_p011"
     },
     "dx=0,dy=1,dz=2": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_p012"
     },
     "dx=0,dy=1,dz=3": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_fallback"
     },
     "dx=0,dy=2,dz=0": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_p020"
     },
     "dx=0,dy=2,dz=1": {
-      "model": "chinese_traditional_food:block/water_mill_mount"
+      "model": "chinese_traditional_food:block/water_mill_p021"
     },
     "dx=0,dy=2,dz=2": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_p022"
     },
     "dx=0,dy=2,dz=3": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_fallback"
     },
     "dx=0,dy=3,dz=0": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_fallback"
     },
     "dx=0,dy=3,dz=1": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_fallback"
     },
     "dx=0,dy=3,dz=2": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_fallback"
     },
     "dx=0,dy=3,dz=3": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_fallback"
     },
     "dx=1,dy=0,dz=0": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_fallback"
     },
     "dx=1,dy=0,dz=1": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_fallback"
     },
     "dx=1,dy=0,dz=2": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_fallback"
     },
     "dx=1,dy=0,dz=3": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_fallback"
     },
     "dx=1,dy=1,dz=0": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_p110"
     },
     "dx=1,dy=1,dz=1": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_fallback"
     },
     "dx=1,dy=1,dz=2": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_p112"
     },
     "dx=1,dy=1,dz=3": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_fallback"
     },
     "dx=1,dy=2,dz=0": {
-      "model": "chinese_traditional_food:block/water_mill_post"
+      "model": "chinese_traditional_food:block/water_mill_p120"
     },
     "dx=1,dy=2,dz=1": {
-      "model": "chinese_traditional_food:block/water_mill_axle"
+      "model": "chinese_traditional_food:block/water_mill_fallback"
     },
     "dx=1,dy=2,dz=2": {
-      "model": "chinese_traditional_food:block/water_mill_post"
+      "model": "chinese_traditional_food:block/water_mill_p122"
     },
     "dx=1,dy=2,dz=3": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_fallback"
     },
     "dx=1,dy=3,dz=0": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_fallback"
     },
     "dx=1,dy=3,dz=1": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_p131"
     },
     "dx=1,dy=3,dz=2": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_fallback"
     },
     "dx=1,dy=3,dz=3": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_fallback"
     },
     "dx=2,dy=0,dz=0": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_fallback"
     },
     "dx=2,dy=0,dz=1": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_fallback"
     },
     "dx=2,dy=0,dz=2": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_fallback"
     },
     "dx=2,dy=0,dz=3": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_fallback"
     },
     "dx=2,dy=1,dz=0": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_p210"
     },
     "dx=2,dy=1,dz=1": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_p211"
     },
     "dx=2,dy=1,dz=2": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_p212"
     },
     "dx=2,dy=1,dz=3": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_fallback"
     },
     "dx=2,dy=2,dz=0": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_p220"
     },
     "dx=2,dy=2,dz=1": {
-      "model": "chinese_traditional_food:block/water_mill_mount"
+      "model": "chinese_traditional_food:block/water_mill_p221"
     },
     "dx=2,dy=2,dz=2": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_p222"
     },
     "dx=2,dy=2,dz=3": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_fallback"
     },
     "dx=2,dy=3,dz=0": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_fallback"
     },
     "dx=2,dy=3,dz=1": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_fallback"
     },
     "dx=2,dy=3,dz=2": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_fallback"
     },
     "dx=2,dy=3,dz=3": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_fallback"
     },
     "dx=3,dy=0,dz=0": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_fallback"
     },
     "dx=3,dy=0,dz=1": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_fallback"
     },
     "dx=3,dy=0,dz=2": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_fallback"
     },
     "dx=3,dy=0,dz=3": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_fallback"
     },
     "dx=3,dy=1,dz=0": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_fallback"
     },
     "dx=3,dy=1,dz=1": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_fallback"
     },
     "dx=3,dy=1,dz=2": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_fallback"
     },
     "dx=3,dy=1,dz=3": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_fallback"
     },
     "dx=3,dy=2,dz=0": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_fallback"
     },
     "dx=3,dy=2,dz=1": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_fallback"
     },
     "dx=3,dy=2,dz=2": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_fallback"
     },
     "dx=3,dy=2,dz=3": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_fallback"
     },
     "dx=3,dy=3,dz=0": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_fallback"
     },
     "dx=3,dy=3,dz=1": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_fallback"
     },
     "dx=3,dy=3,dz=2": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_fallback"
     },
     "dx=3,dy=3,dz=3": {
-      "model": "chinese_traditional_food:block/water_mill_base"
+      "model": "chinese_traditional_food:block/water_mill_fallback"
     }
   }
 }

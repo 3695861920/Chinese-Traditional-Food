@@ -121,7 +121,13 @@ public class MachinePartBlock extends Block {
     @Override
     protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos,
                                                boolean movedByPiston) {
-        this.notifyCore(level, state, pos);
+        // 拆掉任意一块部件 = 拆掉整台机器。
+        // 这是用户明确要的：机器是一体的，拆一块就整个散掉，零件全部掉出来。
+        // 没有核心的话（比如结构表里没列出的格子）就什么都不做。
+        BlockPos core = corePos(state, pos);
+        if (level.getBlockState(core).getBlock() instanceof AbstractMachineCoreBlock machine) {
+            machine.tearDown(level, core);
+        }
         super.affectNeighborsAfterRemoval(state, level, pos, movedByPiston);
     }
 
