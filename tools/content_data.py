@@ -462,6 +462,62 @@ DISHES = [
 
     # ---------------- 冬至 ----------------
     ("yangrou_tang",     "羊肉汤",     "Mutton Soup",             "winter", "dish_soup", "soup", 8, 1.3, "WARMTH_NOURISH"),
+
+    # ---------------- 早餐 ----------------
+    # 早点的共同点：饱食度不高但**饱和度高**，而且大多带一点即时收益
+    # （提神 / 暖身），符合"吃了好去干活"的感觉。
+    ("mantou",          "馒头",       "Steamed Bun",            "breakfast", "cake_slice", "steamed",  5, 0.7, "NONE"),
+    ("hua_juan",        "花卷",       "Steamed Twisted Roll",   "breakfast", "cake_slice", "cake",     6, 0.8, "NONE"),
+    ("baozi",           "包子",       "Steamed Stuffed Bun",    "breakfast", "dumpling",   "steamed",  7, 0.9, "SATED"),
+    ("xiao_long_bao",   "小笼包",     "Soup Dumpling",          "breakfast", "dumpling",   "steamed",  6, 0.9, "SATED_REFRESH"),
+    ("dou_sha_bao",     "豆沙包",     "Red Bean Bun",           "breakfast", "dumpling",   "cake",     6, 0.9, "RISE_UP"),
+    ("youtiao",         "油条",       "Fried Dough Stick",      "breakfast", "spring_roll", "gold",    6, 0.8, "CRISP"),
+    ("doujiang",        "豆浆",       "Soy Milk",               "breakfast", "wine_cup",   "white",     4, 0.6, "REFRESH"),
+    ("youtiao_doujiang", "豆浆油条",  "Soy Milk and Fried Dough", "breakfast", "dish_plate", "gold",   9, 1.1, "CRISP_REFRESH"),
+    ("chao_gan",        "炒肝",       "Stir-fried Liver",       "breakfast", "dish_soup",  "braised",   6, 0.9, "NOURISH"),
+    ("huntun",          "馄饨",       "Wonton",                 "breakfast", "dish_soup",  "soup",      7, 1.1, "WARMTH"),
+    ("wonton_soup",     "馄饨汤",     "Wonton Soup",            "breakfast", "dish_soup",  "soup",      8, 1.2, "WARMTH_NOURISH"),
+    ("xiaomi_zhou",     "小米粥",     "Millet Porridge",        "breakfast", "congee",     "gold",      5, 0.9, "WARMTH"),
+    ("zhou_congee",     "白粥",       "Plain Rice Porridge",    "breakfast", "congee",     "white",     4, 0.7, "NONE"),
+    ("jianbing",        "煎饼果子",   "Jianbing",               "breakfast", "cake_slice", "wheat",     9, 1.2, "SATED_REFRESH"),
+    ("chashao_bao",     "叉烧包",     "BBQ Pork Bun",           "breakfast", "dumpling",   "redbraised", 7, 1.0, "SATED"),
+    ("tangyuan",        "汤圆",       "Glutinous Rice Ball",    "breakfast", "dumpling",   "white",     5, 0.9, "RISE_UP"),
+    ("mixian",          "米线",       "Rice Noodles",           "breakfast", "noodles",    "steamed",   7, 1.1, "WARMTH"),
+    ("chao_mian",       "炒面",       "Fried Noodles",          "breakfast", "noodles",    "stirfry",   8, 1.1, "SATED"),
+
+    # ---------------- 特色小吃 ----------------
+    # 小吃：单价低、饱食度小、但往往带**可叠加的小收益**，适合边逛边吃。
+    ("chou_doufu",       "臭豆腐",     "Stinky Tofu",            "snack", "mapo",        "fungus",    5, 0.7, "CRISP"),
+    ("kao_lengmian",     "烤冷面",     "Grilled Cold Noodles",   "snack", "spring_roll", "redbraised", 7, 0.9, "SATED"),
+    ("chuan_chuan",      "串串香",     "Chuanchuan Skewers",     "snack", "dish_plate",  "chili_oil",  6, 0.8, "REFRESH"),
+    ("roujiamo",         "肉夹馍",     "Roujiamo",               "snack", "dumpling",    "braised",    9, 1.2, "SATED_NOURISH"),
+    ("jian_gao",         "煎糕",       "Pan-fried Cake",         "snack", "cake_slice",  "pastry",     6, 0.8, "NONE"),
+    ("guo_tie",          "锅贴",       "Pot Stickers",           "snack", "dumpling",    "gold",       7, 0.9, "CRISP"),
+    ("shaomai",          "烧卖",       "Siu Mai",                "snack", "dumpling",    "gold",       7, 0.9, "SATED"),
+    ("liangpi",          "凉皮",       "Cold Skin Noodles",      "snack", "noodles",     "stirfry",    6, 0.8, "REFRESH"),
+    ("chuanbei_liangfen", "川北凉粉",  "Sichuan Bean Jelly",     "snack", "dish_plate",  "chili_oil",  6, 0.8, "REFRESH"),
+    ("tanghulu",         "糖葫芦",     "Candied Hawthorn",       "snack", "cherries",    "red",        4, 0.6, "RISE_UP"),
+    ("mahuadou",         "麻花",       "Fried Dough Twist",      "snack", "spring_roll", "gold",       5, 0.7, "CRISP"),
+    ("shao_bing",        "烧饼",       "Baked Flatbread",        "snack", "cake_slice",  "wheat",      6, 0.8, "SATED"),
+    ("zhima_tuan",       "芝麻团",     "Sesame Ball",            "snack", "cookie",      "tan",        5, 0.7, "RISE_UP"),
+    ("zongzi_xian",      "咸肉粽",     "Savoury Zongzi",         "snack", "zongzi",      "braised",    8, 1.0, "SATED"),
+    ("rice_cake",        "年糕片",     "Sliced Rice Cake",       "snack", "cake_slice",  "white",      5, 0.7, "RISE_UP"),
+    ("steamed_pumpkin",  "蒸南瓜",     "Steamed Pumpkin",        "snack", "steamed_plate", "orange",   5, 0.8, "NONE"),
+    ("doufunao",         "豆腐脑",     "Tofu Pudding",           "snack", "congee",      "white",      5, 0.8, "REFRESH"),
+    ("suantang",         "酸汤",       "Sour Soup",              "snack", "dish_soup",   "vinegar",    5, 0.8, "REFRESH"),
+    ("egg_drop_soup",    "蛋花汤",     "Egg Drop Soup",          "snack", "dish_soup",   "soup",       5, 0.8, "WARMTH"),
+    ("tomato_egg",       "西红柿炒蛋", "Tomato and Egg",         "snack", "dish_plate",  "tomato",     7, 0.9, "NONE"),
+    ("scrambled_egg",    "炒蛋",       "Scrambled Egg",          "snack", "dish_plate",  "gold",       5, 0.8, "NONE"),
+    ("chive_egg",        "韭黄炒蛋",   "Chive and Egg",          "snack", "dish_plate",  "greendish",  7, 0.9, "NONE"),
+    ("dry_fried_beans",  "干煸豆角",   "Dry-fried Green Beans",  "snack", "dish_plate",  "chili",      6, 0.8, "CRISP"),
+    ("stir_fried_pea",   "清炒豌豆",   "Stir-fried Peas",        "snack", "dish_plate",  "greendish",  6, 0.8, "NONE"),
+    ("braised_bamboo",   "油焖笋",     "Braised Bamboo Shoots",  "snack", "dish_plate",  "braised",    6, 0.9, "NONE"),
+    ("twice_cooked_pork", "回锅肉片",  "Twice-cooked Pork Slices", "snack", "dish_plate", "redbraised", 8, 1.0, "REFRESH"),
+    ("red_bean_soup",    "红豆汤",     "Red Bean Soup",          "snack", "dish_soup",   "red",        5, 0.9, "WARMTH"),
+    ("mung_bean_soup",   "绿豆汤",     "Mung Bean Soup",         "snack", "dish_soup",   "mung",       5, 0.9, "REFRESH"),
+    ("winter_melon_soup", "冬瓜汤",    "Winter Melon Soup",      "snack", "dish_soup",   "palegreen",  4, 0.7, "REFRESH"),
+    ("lotus_seed_soup",  "莲子羹",     "Lotus Seed Soup",        "snack", "dish_soup",   "cream",      5, 0.9, "NOURISH"),
+    ("yam_ribs_soup",    "山药排骨汤", "Yam and Rib Soup",       "snack", "dish_soup",   "soup",       8, 1.2, "WARMTH_NOURISH"),
 ]
 
 # ======================================================================
@@ -527,6 +583,45 @@ RECIPES = {
                                      "key": {"I": "minecraft:iron_ingot",
                                              "C": "minecraft:cauldron"}}, 1),
 
+    # ---------------- 大型机（"3×3 放大版"）----------------
+    # 配方思路：**四台小型机 + 一个中枢材料** —— 看一眼就知道是"把四条产线
+    # 合成一条"，而且成本正好是小型机的四倍左右，不会出现"直接做大的更划算"。
+    # 中枢材料按机器性质选：发电机用岩浆桶（热源）、磨粉机用石磨（磨盘）、
+    # 脱壳机用铁块（滚筒）。
+    "large_furnace_generator": ("shaped",
+                                {"pattern": ["GGG", "GLG", "GGG"], "key": {
+                                    "G": "chinese_traditional_food:furnace_generator",
+                                    "L": "minecraft:lava_bucket"}}, 1),
+    "large_electric_mill": ("shaped",
+                            {"pattern": ["III", "MSM", "III"], "key": {
+                                "I": "minecraft:iron_block",
+                                "M": "chinese_traditional_food:electric_mill",
+                                "S": "minecraft:stone_bricks"}}, 1),
+    "large_electric_sheller": ("shaped",
+                               {"pattern": ["III", "MSM", "III"], "key": {
+                                   "I": "minecraft:iron_block",
+                                   "M": "chinese_traditional_food:electric_sheller",
+                                   "S": "minecraft:cauldron"}}, 1),
+
+    # ---------------- 灶火系统 ----------------
+    # 电磁炉：铜线圈 + 铁壳 + 石台面 —— 看得出是“用电的”
+    "stove": ("shaped", {"pattern": ["CCC", "IRI", "SSS"],
+                          "key": {"C": "minecraft:copper_ingot",
+                                  "I": "minecraft:iron_ingot",
+                                  "R": "minecraft:redstone",
+                                  "S": "minecraft:stone"}}, 1),
+    # 炒锅：铁块敲出来的圆锅 + 两耳
+    "wok": ("shaped", {"pattern": ["I I", " I "],
+                        "key": {"I": "minecraft:iron_ingot"}}, 1),
+    # 蒸笼：竹材 + 木
+    "steamer": ("shaped", {"pattern": ["PPP", "B B", "PPP"],
+                            "key": {"P": "#minecraft:planks",
+                                    "B": "minecraft:bamboo"}}, 1),
+    # 汤锅：深筒锅 + 双耳
+    "soup_pot": ("shaped", {"pattern": ["I I", "ICI", "III"],
+                             "key": {"I": "minecraft:iron_ingot",
+                                     "C": "minecraft:cauldron"}}, 1),
+
     # ---------------- 调味料 ----------------
     "salt": ("smelting", ["minecraft:dried_kelp"], 1),
     "rock_sugar": ("shapeless", ["minecraft:sugar", "minecraft:sugar"], 1),
@@ -554,7 +649,6 @@ RECIPES = {
 
     # ---------------- 餐具 / 厨具 ----------------
     "plate": ("shaped", {"pattern": ["C C", " C "], "key": {"C": "minecraft:clay_ball"}}, 1),
-    "serving_platter": ("shaped", {"pattern": ["PPP", "P P"], "key": {"P": "#minecraft:planks"}}, 1),
     "cutting_board": ("shaped", {"pattern": ["PPP", "P P"], "key": {"P": "minecraft:stick"}}, 1),
     "chopsticks": ("shaped", {"pattern": ["S", "S"], "key": {"S": "minecraft:stick"}}, 2),
     "rolling_pin": ("shaped", {"pattern": ["S  ", " S ", "  S"], "key": {"S": "minecraft:stick"}}, 1),
@@ -584,7 +678,7 @@ DISH_RECIPE_KIND = {
     "balls_bowl":    ("minecraft:bowl", "sweet"),
     "dish_plate":    ("chinese_traditional_food:plate", "stirfry"),
     "dish_fish":     ("chinese_traditional_food:plate", "fish"),
-    "dish_whole":    ("chinese_traditional_food:serving_platter", "meat"),
+    "dish_whole":    ("chinese_traditional_food:plate", "meat"),
     "dish_pot":      ("minecraft:bowl", "stew"),
     "braised_block": ("chinese_traditional_food:plate", "meat"),
     "steamed_plate": ("chinese_traditional_food:plate", "meat"),
@@ -597,9 +691,11 @@ DISH_RECIPE_KIND = {
     "cake_slice":    ("chinese_traditional_food:plate", "sweet"),
     "cookie":        ("chinese_traditional_food:plate", "sweet"),
     "spring_roll":   ("chinese_traditional_food:plate", "pastry"),
-    "cured_meat":    ("chinese_traditional_food:serving_platter", "meat"),
+    "cured_meat":    ("chinese_traditional_food:plate", "meat"),
     "wine_cup":      ("chinese_traditional_food:cup", "drink"),
     "mapo":          ("minecraft:bowl", "stirfry"),
+    # 糖葫芦：串在竹签上的山楂 —— 用碗当容器不合适，用糖当主料
+    "cherries":      ("chinese_traditional_food:cup", "sweet"),
 }
 
 # 每种"主料类型"的候选材料（配方生成器按顺序取用）
@@ -642,6 +738,59 @@ SHELLING = [
      "chinese_traditional_food:rice_bran", 0.45, 120),
     ("chinese_traditional_food:millet_grass",  "millet",   1,
      "chinese_traditional_food:rice_bran", 0.30, 100),
+]
+
+# ======================================================================
+# 炉灶系列：热力加工表
+# ======================================================================
+# 这三张表对应三件"锅具"，它们本身不耗电 —— 而是**坐在炉灶上一格**，
+# 由炉灶烧燃料提供热力。见 common/block/entity/AbstractHeatProcessorBlockEntity。
+#
+# 每行同 MILLING：(输入, 产出, 数量, 副产物, 概率, tick)
+#
+# 为什么做成"热力"而不是继续用 FE：现实里蒸包子、炖汤、爆炒都是烧火，
+# 不是插电。分开之后玩家有了两条并行路线 —— 电气线（磨粉/脱壳，快且省）
+# 与灶火线（蒸煮炒，慢但便宜、随处可搭）。
+
+# 蒸笼：蒸汽把生料催熟。产出多为"熟"形态。
+STEAMING = [
+    ("chinese_traditional_food:flour",          "mantou",           2, "", 0.0, 120),
+    ("chinese_traditional_food:glutinous_rice", "zao_zong",         2, "", 0.0, 140),
+    ("chinese_traditional_food:rice_flour",     "rice_cake",        2, "", 0.0, 130),
+    ("chinese_traditional_food:bean_paste",     "dou_sha_bao",      2, "", 0.0, 150),
+    ("minecraft:porkchop",                      "baozi",            2, "", 0.0, 160),
+    ("#c:raw_meat",                             "xiao_long_bao",    2, "", 0.0, 170),
+    ("chinese_traditional_food:sweet_potato",   "steamed_pumpkin",  1, "", 0.0, 110),
+    ("chinese_traditional_food:sweet_potato",   "baked_sweet_potato", 1, "", 0.0, 110),
+]
+
+# 汤锅：加水 / 高汤把料吊成汤。
+BOILING = [
+    ("chinese_traditional_food:stock",         "egg_drop_soup",    1, "", 0.0, 120),
+    ("chinese_traditional_food:napa_cabbage",  "winter_melon_soup", 1, "", 0.0, 130),
+    ("chinese_traditional_food:red_bean",      "red_bean_soup",    1, "", 0.0, 160),
+    ("chinese_traditional_food:mung_bean",     "mung_bean_soup",   1, "", 0.0, 150),
+    ("chinese_traditional_food:rice",          "zhou_congee",      1, "", 0.0, 140),
+    ("chinese_traditional_food:millet",        "xiaomi_zhou",      1, "", 0.0, 130),
+    ("chinese_traditional_food:lotus_seed",    "lotus_seed_soup",  1, "", 0.0, 170),
+    ("chinese_traditional_food:chinese_yam",   "yam_ribs_soup",    1, "", 0.0, 175),
+    ("#c:raw_meat",                            "wonton_soup",      1, "", 0.0, 165),
+    ("chinese_traditional_food:vinegar",       "suantang",         1, "", 0.0, 110),
+    ("chinese_traditional_food:soybean",       "doufunao",         1, "", 0.0, 150),
+]
+
+# 炒锅：猛火快炒。
+COOKING = [
+    ("minecraft:egg",                          "scrambled_egg",      1, "", 0.0, 90),
+    ("chinese_traditional_food:tomato",        "tomato_egg",         1, "", 0.0, 110),
+    ("chinese_traditional_food:green_bean",    "dry_fried_beans",    1, "", 0.0, 120),
+    ("chinese_traditional_food:pea",           "stir_fried_pea",     1, "", 0.0, 110),
+    ("chinese_traditional_food:chive",         "chive_egg",          1, "", 0.0, 105),
+    ("chinese_traditional_food:bamboo_shoot",  "braised_bamboo",     1, "", 0.0, 125),
+    ("#c:raw_meat",                            "twice_cooked_pork",  1, "", 0.0, 140),
+    ("chinese_traditional_food:tofu",          "chou_doufu",         1, "", 0.0, 150),
+    ("chinese_traditional_food:flour",         "youtiao",            2, "", 0.0, 100),
+    ("chinese_traditional_food:rice_flour",    "mahuadou",           2, "", 0.0, 110),
 ]
 
 # ======================================================================
@@ -741,8 +890,10 @@ GROUP_TITLES = {
     "spring": "春节", "lantern": "元宵", "qingming": "清明", "duanwu": "端午",
     "qixi": "七夕", "midautumn": "中秋", "chongyang": "重阳", "laba": "腊八",
     "winter": "冬至",
+    "breakfast": "早餐", "snack": "特色小吃",
 }
 
 GROUP_ORDER = ["lu", "chuan", "yue", "su", "min", "zhe", "xiang", "hui",
                "spring", "lantern", "qingming", "duanwu", "qixi", "midautumn",
-               "chongyang", "laba", "winter"]
+               "chongyang", "laba", "winter",
+               "breakfast", "snack"]

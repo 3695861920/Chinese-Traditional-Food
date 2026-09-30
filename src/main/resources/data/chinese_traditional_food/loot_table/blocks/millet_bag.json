@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:block",
+  "random_sequence": "chinese_traditional_food:blocks/millet_bag",
+  "pools": [
+    {
+      "rolls": 1,
+      "bonus_rolls": 0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "chinese_traditional_food:millet_bag"
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ]
+    }
+  ]
+}

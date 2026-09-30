@@ -104,13 +104,33 @@ def collect_declared():
     # 手写的功能方块（它们的物品与语言键在 ModItems / lang 里单独提供）
     for extra in HAND_WRITTEN_BLOCKS:
         ids.add(extra)
+    # 生成出来的压缩方块也算"已声明"，否则配方检查会误报
+    for extra in compressed_blocks():
+        ids.add(extra)
     return ids, dishes, kinds
 
 
 # 手写的功能方块：它们注册的是 BlockItem，语言键走 block. 前缀，
 # 且模型 / 方块状态都是手写或由 display_models.py 生成的。
-HAND_WRITTEN_BLOCKS = ("plate", "serving_platter", "cutting_board",
-                       "furnace_generator", "electric_mill", "electric_sheller")
+HAND_WRITTEN_BLOCKS = ("plate", "cutting_board",
+                       "furnace_generator", "electric_mill", "electric_sheller",
+                       "large_furnace_generator", "large_electric_mill", "large_electric_sheller",
+                       "stove", "wok", "steamer", "soup_pot")
+
+
+def compressed_blocks():
+    """食材压缩方块的 id 列表。
+
+    它们由 tools/gen_compressed.py 生成，清单在同一个脚本里，
+    所以这里直接读那份数据，而不是再手抄一遍 —— 手抄肯定会漏。
+    """
+    import gen_compressed
+    return [row[0] for row in gen_compressed.COMPRESSED]
+
+
+# 生成出来的压缩方块：语言键与资源由 tools/gen_compressed.py 负责，
+# 这里做成一堆常量，避免每次调用都重新读一遍数据表。
+COMPRESSED_IDS = tuple(compressed_blocks())
 
 
 def check_assets(ids):
@@ -121,7 +141,7 @@ def check_assets(ids):
         # 手写功能方块注册的是 BlockItem：
         #   语言键走 block. 前缀，客户端物品直接指向三维方块模型，
         #   所以只需要检查 items/<id>.json（26.1 的真正入口）。
-        if item_id in HAND_WRITTEN_BLOCKS:
+        if item_id in HAND_WRITTEN_BLOCKS or item_id in COMPRESSED_IDS:
             if not any("block.%s.%s" % (NS, item_id) in d for d in (lang_zh, lang_en)):
                 fail("%s 缺少语言键" % item_id)
             if not os.path.exists(os.path.join(ASSETS, "items", "%s.json" % item_id)):
@@ -155,6 +175,20 @@ def known_items():
         "minecraft:apple", "minecraft:beetroot", "minecraft:stone_bricks",
         "minecraft:stone", "minecraft:wheat_seeds", "minecraft:furnace",
         "minecraft:cauldron",
+        # 大型机配方要用的进阶材料
+        "minecraft:iron_block", "minecraft:lava_bucket", "minecraft:copper_ingot",
+        # 农夫乐事 / 森罗物语 / TFC 兼容配方里会用到的通用原版材料
+        "minecraft:bowl", "minecraft:bucket", "minecraft:glass_bottle",
+        "minecraft:honeycomb", "minecraft:sugar_cane", "minecraft:bamboo",
+        "minecraft:melon_slice", "minecraft:pumpkin", "minecraft:sweet_berries",
+        "minecraft:glow_berries", "minecraft:brown_mushroom", "minecraft:red_mushroom",
+        "minecraft:crimson_fungus", "minecraft:warped_fungus",
+        "minecraft:nether_wart", "minecraft:sea_pickle", "minecraft:cod",
+        "minecraft:salmon", "minecraft:tropical_fish", "minecraft:pufferfish",
+        "minecraft:rabbit", "minecraft:beetroot", "minecraft:beetroot_seeds",
+        "minecraft:melon_seeds", "minecraft:pumpkin_seeds",
+        # 灶火系统（炉灶 / 炒锅 / 蒸笼 / 汤锅）的配方材料
+        "minecraft:bricks",
     }
     return {"%s:%s" % (NS, i) for i in ids} | allowed_vanilla
 
@@ -173,6 +207,21 @@ def check_recipes(dishes):
 
         refs = []
         kind = obj.get("type", "")
+
+        # ---- 外部模组的兼容配方：schema 完全是别人定的，不能按我们的规矩查 ----
+        # （比如农夫乐事的切菜板 `result` 是**数组**、材料是 {"item": ...} 对象。）
+        # 这里只做一件有意义的事：检查**我们自己**的物品引用没写错，
+        # 其余的格式正确性由对方模组在加载时自己报错。
+        if kind and not kind.startswith("minecraft:"):
+            if not obj.get("neoforge:conditions"):
+                fail("兼容配方 %s 缺少 neoforge:conditions（没装对方模组时会报错）"
+                     % recipe_id)
+            blob = json.dumps(obj, ensure_ascii=False)
+            for ref in re.findall(r'"(%s:[a-z_0-9/]+)"' % NS, blob):
+                if ref not in known:
+                    fail("兼容配方 %s 引用了不存在的物品 %s" % (recipe_id, ref))
+            continue
+
         if kind == "minecraft:crafting_shapeless":
             refs.extend(obj.get("ingredients", []))
         elif kind == "minecraft:crafting_shaped":
@@ -311,10 +360,15 @@ def check_cutting(ids):
         src = fh.read()
 
     # 装置规则：new Entry("输入", "产出", 数量, "副产物", 概率F, tick)
+    # 现在有两类装置共用一个 record：
+    #   * 耗电的（磨粉 / 脱壳）—— MILLING + SHELLING
+    #   * 坐炉灶的（蒸 / 煮 / 炒）—— STEAMING + BOILING + COOKING
+    # 它们生成到同一个 ModRecipes.java 里，所以条数要一起算。
     entries = re.findall(
         r'new Entry\("([^"]+)",\s*"([^"]+)",\s*(\d+),\s*"([^"]*)",\s*([\d.]+)F,\s*(\d+)\)',
         src)
-    expected = len(DATA.MILLING) + len(DATA.SHELLING)
+    expected = (len(DATA.MILLING) + len(DATA.SHELLING)
+                + len(DATA.STEAMING) + len(DATA.BOILING) + len(DATA.COOKING))
     if len(entries) != expected:
         fail("ModRecipes.java 的装置规则数 %d 与 content_data 的 %d 不一致"
              % (len(entries), expected))

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "chinese_traditional_food:plate",
+    "chinese_traditional_food:flour",
+    "chinese_traditional_food:scallion",
+    "chinese_traditional_food:ginger"
+  ],
+  "result": {
+    "id": "chinese_traditional_food:roujiamo",
+    "count": 1
+  }
+}

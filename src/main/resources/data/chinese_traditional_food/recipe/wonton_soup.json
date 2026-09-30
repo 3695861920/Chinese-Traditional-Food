@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "minecraft:bowl",
+    "chinese_traditional_food:stock",
+    "chinese_traditional_food:scallion",
+    "chinese_traditional_food:ginger"
+  ],
+  "result": {
+    "id": "chinese_traditional_food:wonton_soup",
+    "count": 1
+  }
+}

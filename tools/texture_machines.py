@@ -61,6 +61,15 @@ MILLSTONE = [(58, 60, 62), (78, 80, 82), (98, 100, 102), (118, 120, 122)]
 FIRE = [(120, 40, 12), (188, 74, 18), (238, 138, 32), (252, 200, 96)]
 # 铜：发电机的线圈绕组
 COPPER = [(126, 74, 40), (162, 100, 54), (196, 130, 74), (224, 166, 108)]
+# 砖：炉灶的砖石台体，比砌石暖
+BRICK = [(122, 76, 60), (150, 96, 74), (178, 120, 94), (204, 148, 118)]
+# 竹：蒸笼的竹篾，偏黄绿
+BAMBOO = [(150, 152, 96), (176, 178, 120), (200, 202, 148), (222, 224, 176)]
+# 蒸汽：几乎是白的，带一点灰蓝
+STEAM = [(198, 206, 212), (218, 226, 232), (236, 242, 246), (250, 252, 254)]
+# 灶上的菜（炒锅 / 蒸笼里的内容物）。**不走方块着色** ——
+# 锅具是功能方块而不是摆盘方块，没有颜色属性，所以这里直接画成"熟食色"。
+COOKED = [(126, 74, 40), (156, 96, 52), (186, 124, 72), (212, 156, 104)]
 
 
 def _px(img, x, y, colour, alpha=255):
@@ -228,6 +237,159 @@ def machine_hopper():
     return img
 
 
+def machine_brick():
+    """砖石台面：错缝砌法，砖缝每 8 像素一道（周期整除 16，可平铺）。
+
+    炉灶的台体。和 `machine_stone` 的区别是**暖色调 + 有砖缝** ——
+    灶台和机器放在一起时要一眼看出"这是个砌出来的灶"。
+    """
+    img = _opaque()
+    for y in range(SIZE):
+        for x in range(SIZE):
+            row = y // 4
+            # 错缝：奇数行整体错开半块砖
+            offset = (row % 2) * 4
+            if y % 4 == 3:
+                c = BRICK[0]                  # 横缝
+            elif (x + offset) % 8 == 7:
+                c = BRICK[0]                  # 竖缝
+            else:
+                # 每块砖给一点明暗差，砖墙才不像贴纸
+                tone = 1 + ((x // 8 + row) % 3)
+                c = BRICK[min(3, tone)]
+                if _noise(x, y, 733) > 0.86:
+                    c = BRICK[0]              # 麻点
+            _px(img, x, y, c)
+    return img
+
+
+def machine_bamboo():
+    """竹篾编面：横竖交织的竹条，周期 4 与 2。蒸笼用。"""
+    img = _opaque()
+    for y in range(SIZE):
+        for x in range(SIZE):
+            if y % 4 == 0:
+                c = BAMBOO[0]                 # 横向竹条的缝
+            elif x % 2 == 0:
+                c = BAMBOO[2]                 # 竖向竹条
+            else:
+                c = BAMBOO[1]
+            if (x % 8) in (0, 1) and y % 4 != 0:
+                c = BAMBOO[3]                 # 每 8 像素一根亮篾
+            _px(img, x, y, c)
+    return img
+
+
+def machine_steam():
+    """蒸汽：几乎纯白、带一点灰蓝，用低频噪声做出"云"的感觉。
+
+    **不画结构花纹** —— 蒸汽本来就是无定形的，加线反而假。
+    """
+    img = _opaque()
+    for y in range(SIZE):
+        for x in range(SIZE):
+            v = 0.45 + 0.55 * _noise(x // 4, y // 4, 811)
+            idx = _quantize(v, 4, x, y)
+            c = STEAM[idx]
+            _px(img, x, y, c, 235)            # 略透明，蒸汽才轻
+    return img
+
+
+def machine_cooked():
+    """锅里的熟食：暖褐色的块状料，带几粒点缀。"""
+    img = _opaque()
+    for y in range(SIZE):
+        for x in range(SIZE):
+            v = 0.35 + 0.65 * _noise(x // 2, y // 2, 907)
+            c = COOKED[_quantize(v, 4, x, y)]
+            # 几粒深色的花椒 / 葱花
+            if _noise(x // 3, y // 3, 919) > 0.88:
+                c = COOKED[0]
+            _px(img, x, y, c)
+    return img
+
+
+# ======================================================================
+# 电磁炉（卡通风）
+# ======================================================================
+
+def _cartoon_top(img, seed, on):
+    """电磁炉顶面：同心圆线圈 + 粗描边。
+
+    卡通味道全靠三件事：**粗黑边、平涂、高饱和**。
+    """
+    cx = cy = SIZE / 2.0
+    ring_dark = (26, 28, 32)
+    for y in range(SIZE):
+        for x in range(SIZE):
+            d = math.hypot(x + 0.5 - cx, y + 0.5 - cy) / (SIZE / 2.0)
+            if d > 0.98:
+                c = ring_dark                       # 外框
+            elif d > 0.86:
+                c = (208, 212, 218)                 # 亮圈（不锈钢边）
+            elif d > 0.20 and abs((d * 4.0) % 1.0 - 0.5) < 0.16:
+                # 线圈：4 条同心环，通电时亮橙红、断电时暗灰
+                if on:
+                    c = (255, 122, 40) if ((d * 4.0) % 2.0) < 1.0 else (255, 196, 72)
+                else:
+                    c = (96, 92, 88)
+            else:
+                c = (54, 56, 62) if not on else (72, 60, 56)
+            _px(img, x, y, c)
+
+    # 正中的小圆（磁芯）
+    for y in range(SIZE):
+        for x in range(SIZE):
+            d = math.hypot(x + 0.5 - cx, y + 0.5 - cy) / (SIZE / 2.0)
+            if d < 0.18:
+                _px(img, x, y, (208, 212, 218))
+            elif d < 0.22:
+                _px(img, x, y, ring_dark)
+    # 卡通高光：左上角一块亮斑
+    for y in range(int(2 * U), int(5 * U)):
+        for x in range(int(2 * U), int(6 * U)):
+            if abs(y - 3.5 * U) + abs(x - 3.5 * U) < 2.6 * U:
+                _px(img, x, y, (246, 248, 252))
+    return img
+
+
+def machine_cooker_top():
+    """电磁炉顶面 —— 断电（暗灰色的线圈）。"""
+    return _cartoon_top(_opaque(), 1301, on=False)
+
+
+def machine_cooker_top_on():
+    """电磁炉顶面 —— 通电（发光的橙红线圈）。"""
+    return _cartoon_top(_opaque(), 1301, on=True)
+
+
+def machine_cooker_panel():
+    """电磁炉正面那道控制条：一排小圆扭 + 粗描边。"""
+    img = _opaque()
+    for y in range(SIZE):
+        for x in range(SIZE):
+            e = min(y, SIZE - 1 - y)
+            if e == 0:
+                c = (26, 28, 32)                    # 粗描边
+            elif e == 1:
+                c = (208, 212, 218)
+            else:
+                c = (68, 70, 78)
+            _px(img, x, y, c)
+    # 四个圆钮：两个亮（启用）两个暗
+    for i in range(4):
+        bx = 2.0 + i * 4.0
+        lit = i % 2 == 0
+        for y in range(SIZE):
+            for x in range(SIZE):
+                d = math.hypot((x + 0.5 - bx * U) / U, (y + 0.5 - 8 * U) / U)
+                if d < 1.2:
+                    _px(img, x, y, (120, 214, 120) if lit else (150, 150, 158))
+                elif d < 1.7:
+                    _px(img, x, y, (26, 28, 32))
+    return img
+
+
 BLOCK_TEXTURES = {
     "machine_stone": machine_stone,
     "machine_iron": machine_iron,
@@ -236,6 +398,14 @@ BLOCK_TEXTURES = {
     "machine_vent": machine_vent,
     "machine_coil": machine_coil,
     "machine_hopper": machine_hopper,
+    # 灶火系统（电磁炉 / 炒锅 / 蒸笼 / 汤锅）
+    "machine_bamboo": machine_bamboo,
+    "machine_steam": machine_steam,
+    "machine_cooked": machine_cooked,
+    # 电磁炉
+    "machine_cooker_top": machine_cooker_top,
+    "machine_cooker_top_on": machine_cooker_top_on,
+    "machine_cooker_panel": machine_cooker_panel,
 }
 
 
@@ -333,6 +503,111 @@ def electric_sheller_item():
     return _shadow(img)
 
 
+# 机器类的物品图标（名字 -> 画法）。新增大机器时在这里登记即可。
+#
+# 大型机的图标刻意画得**更满、更复杂**：主体几乎占满整格、没有腿部留空，
+# 并且多画双烟囱 / 双磨盘 / 双滚筒这些"多一套部件"的特征 ——
+# 放在一起时一眼就能分出哪个是升级版。
+def large_furnace_generator_item():
+    """图标：双烟囱的大型炉组，正面两扇炉门。"""
+    img = _blank()
+    # 底座
+    _rect(img, 0.8, 12.4, 15.2, 14.6, DARK_IRON[0])
+    # 主体（几乎占满）
+    _rect(img, 1.2, 3.4, 14.8, 12.4, STONE[1])
+    _rect(img, 1.2, 3.4, 14.8, 4.6, STONE[2])
+    # 两扇炉门 + 火光
+    for i in range(2):
+        x0 = 2.0 + i * 6.6
+        _rect(img, x0, 5.4, x0 + 5.6, 11.2, DARK_IRON[1])
+        for y in range(int(6.2 * U), int(10.6 * U)):
+            for x in range(int((x0 + 0.7) * U), int((x0 + 4.9) * U)):
+                lvl = (y - 6.2 * U) / (4.4 * U)
+                c = FIRE[0] if lvl < 0.35 else (FIRE[1] if lvl < 0.7 else FIRE[2])
+                if (x % max(1, int(2 * U))) == 0:
+                    c = DARK_IRON[0]
+                _px(img, x, y, c)
+    # 双烟囱
+    for cx in (4.6, 11.4):
+        _rect(img, cx - 1.4, 0.8, cx + 1.4, 3.4, IRON[1])
+        _rect(img, cx - 1.4, 0.8, cx + 1.4, 1.4, IRON[2])
+    # 两侧加强筋
+    for i in range(3):
+        _rect(img, 0.6, 6.0 + i * 2.2, 1.4, 7.6 + i * 2.2, IRON[3])
+        _rect(img, 14.6, 6.0 + i * 2.2, 15.4, 7.6 + i * 2.2, IRON[3])
+    return _shadow(img)
+
+
+def large_electric_mill_item():
+    """图标：三层磨盘的大型磨粉机，左右各一个传动轮。"""
+    img = _blank()
+    _rect(img, 0.8, 10.6, 15.2, 14.6, IRON[0])
+    _rect(img, 1.2, 6.4, 14.8, 10.6, IRON[1])
+    _rect(img, 1.2, 6.4, 14.8, 7.4, IRON[2])
+    # 正面的散热百叶
+    for i in range(3):
+        _rect(img, 2.6, 7.8 + i * 0.9, 13.4, 8.4 + i * 0.9, IRON[3])
+    # 三层磨盘：一圈圈收小
+    cx, cy = 8.0, 8.4
+    for y in range(SIZE):
+        for x in range(SIZE):
+            d = math.hypot(x + 0.5 - cx * U, y + 0.5 - cy * U)
+            if d < 5.6 * U:
+                if d < 0.9 * U:
+                    c = DARK_IRON[0]
+                elif d < 3.0 * U:
+                    c = MILLSTONE[1]
+                elif d < 4.4 * U:
+                    c = MILLSTONE[0]
+                else:
+                    c = MILLSTONE[1]
+                _px(img, x, y, c)
+    # 左右传动轮
+    for x0 in (0.2, 14.2):
+        _rect(img, x0, 8.4, x0 + 1.6, 12.4, COPPER[1])
+        _rect(img, x0, 8.4, x0 + 1.6, 9.0, COPPER[2])
+    # 中心立轴
+    _rect(img, 7.2, 1.6, 8.8, 4.2, IRON[1])
+    _rect(img, 6.0, 0.8, 10.0, 1.8, COPPER[1])
+    return _shadow(img)
+
+
+def large_electric_sheller_item():
+    """图标：双滚筒 + 三层大料斗的大型脱壳机。"""
+    img = _blank()
+    _rect(img, 0.8, 11.4, 15.2, 14.8, IRON[0])
+    _rect(img, 1.2, 7.2, 14.8, 11.4, IRON[1])
+    _rect(img, 1.2, 7.2, 14.8, 8.2, IRON[2])
+    # 双滚筒（两个并排的圆）
+    for cx in (4.8, 11.2):
+        for y in range(SIZE):
+            for x in range(SIZE):
+                d = math.hypot(x + 0.5 - cx * U, y + 0.5 - 9.6 * U)
+                if d < 2.4 * U:
+                    _px(img, x, y, MILLSTONE[0] if d < 1.6 * U else MILLSTONE[1])
+        _rect(img, cx - 0.4, 9.2, cx + 0.4, 10.0, COPPER[2])
+    # 三层大料斗（从下往上张开）
+    for i, y in enumerate(range(int(3.6 * U), int(7.4 * U))):
+        t = i / max(1.0, 3.8 * U - 1)
+        half = (1.6 + 3.4 * t) * U
+        for x in range(int(8.0 * U - half), int(8.0 * U + half)):
+            _px(img, x, y, DARK_IRON[2] if x % max(1, int(U)) else DARK_IRON[1])
+    # 顶部排气口
+    for cx in (4.0, 12.0):
+        _rect(img, cx - 0.8, 2.6, cx + 0.8, 3.6, DARK_IRON[1])
+    return _shadow(img)
+
+
+ITEM_ICONS = {
+    "furnace_generator": furnace_generator_item,
+    "electric_mill": electric_mill_item,
+    "electric_sheller": electric_sheller_item,
+    "large_furnace_generator": large_furnace_generator_item,
+    "large_electric_mill": large_electric_mill_item,
+    "large_electric_sheller": large_electric_sheller_item,
+}
+
+
 # ======================================================================
 # 界面底图
 # ======================================================================
@@ -357,6 +632,16 @@ PROC_INPUT = (56, 35)
 PROC_OUTPUT = (116, 35)
 ARROW = (79, 34, 24, 17)                    # 面板里的空箭头
 ARROW_FULL = (176, 0)                       # 画布上的满箭头
+
+# ---- 锅具（炒锅 / 蒸笼 / 汤锅）：2×2 四格原料区 ----
+# 这四个坐标必须和 ProcessorMenu.GRID_* 一一对应。
+COOKER_GRID_X, COOKER_GRID_Y = 44, 24
+COOKER_GRID_STEP = 22
+COOKER_OUTPUT = (122, 33)
+COOKER_ARROW = (92, 33, 24, 17)
+
+# ---- 「正在加工」的高亮框：放在面板外的条带里（见 cooker_gui 的注释）----
+SLOT_MARK = (176, 140)
 
 # ---- 熔炉发电机 ----
 GEN_FUEL = (80, 35)
@@ -514,7 +799,7 @@ def _draw_energy(img, box, full):
 
 
 def processor_gui():
-    """加工机界面：面板 + 两个槽 + 空箭头（满箭头画在面板外）。"""
+    """电动设备的界面：面板 + 一个进料槽 + 出料槽 + 空箭头。"""
     img = _canvas()
     img.alpha_composite(_panel(GUI_W, GUI_H, 701), (0, 0))
     _slot(img, PROC_INPUT)
@@ -527,6 +812,48 @@ def processor_gui():
     _draw_energy(img, (ENERGY_FULL[0], ENERGY_FULL[1],
                        ENERGY[2], ENERGY[3]), full=True)
     return img
+
+
+def cooker_gui():
+    """锅具的界面：面板 + **2×2 四格原料区** + 出料槽。
+
+    四格按 ``ProcessorMenu`` 的 ``GRID_INPUT_X/Y/STEP`` 摆，
+    箭头也跟着右移 —— 这两处坐标必须和 Java 那边一致，
+    改了一边记得改另一边（``tools/preview_gui.py`` 可以对着看）。
+    """
+    img = _canvas()
+    img.alpha_composite(_panel(GUI_W, GUI_H, 733), (0, 0))
+    for i in range(4):
+        x = COOKER_GRID_X + (i % 2) * COOKER_GRID_STEP
+        y = COOKER_GRID_Y + (i // 2) * COOKER_GRID_STEP
+        _slot(img, (x, y))
+    _slot(img, COOKER_OUTPUT)
+    _player_inventory(img)
+    _draw_arrow(img, (COOKER_ARROW[0], COOKER_ARROW[1], ARROW[2], ARROW[3]),
+                full=False)
+    _draw_arrow(img, (ARROW_FULL[0], ARROW_FULL[1],
+                      ARROW[2], ARROW[3]), full=True)    # 满箭头（面板外）
+    _draw_energy(img, ENERGY, full=False)
+    _draw_energy(img, (ENERGY_FULL[0], ENERGY_FULL[1],
+                       ENERGY[2], ENERGY[3]), full=True)
+
+    # 选中框：**画在面板外的条带里**。面板是整张 blit 上去的，
+    # 画在面板内的话一开始就会显示出来（和"满帧不能放面板里"是同一个坑）。
+    _draw_slot_mark(img, (SLOT_MARK[0], SLOT_MARK[1]))
+    return img
+
+
+def _draw_slot_mark(img, box):
+    """高亮框：一圈亮黄边 + 内圈暗线，用来标出"正在加工那一格"。"""
+    x, y = box
+    px = img.load()
+    for yy in range(y, y + 20):
+        for xx in range(x, x + 20):
+            on_border = (xx == x or xx == x + 19 or yy == y or yy == y + 19)
+            if not on_border:
+                continue
+            corner = (xx in (x, x + 19)) and (yy in (y, y + 19))
+            px[xx, yy] = (255, 224, 96, 255) if not corner else (255, 250, 200, 255)
 
 
 def generator_gui():
@@ -588,23 +915,31 @@ def dish_material_textures():
 
 
 # ======================================================================
-def main(block_dir, item_dir, gui_dir):
+def main(block_dir, item_dir, gui_dir, finalize=None):
+    """生成机器相关的全部贴图。
+
+    ``finalize`` 由 build_textures 传入，只作用于 **item_dir** 里的物品图标
+    （统一到 64x64）；方块贴图与界面图保持原分辨率 ——
+    方块贴图会被模型按 UV 采样、界面图有固定像素坐标，放大只会白白占图集。
+    """
     import os
 
     targets = []
     for name, fn in BLOCK_TEXTURES.items():
         targets.append((fn(), block_dir, "%s.png" % name))
 
-    targets.append((furnace_generator_item(), item_dir, "furnace_generator.png"))
-    targets.append((electric_mill_item(), item_dir, "electric_mill.png"))
-    targets.append((electric_sheller_item(), item_dir, "electric_sheller.png"))
+    for name, fn in ITEM_ICONS.items():
+        targets.append((fn(), item_dir, "%s.png" % name))
     targets.append((processor_gui(), gui_dir, "processor.png"))
+    targets.append((cooker_gui(), gui_dir, "cooker.png"))
     targets.append((generator_gui(), gui_dir, "generator.png"))
 
     for img, name in dish_material_textures():
         targets.append((img, block_dir, name))
 
     for img, target, name in targets:
+        if finalize is not None and target == item_dir:
+            img = finalize(img)
         os.makedirs(target, exist_ok=True)
         path = os.path.join(target, name)
         img.save(path)

@@ -7,7 +7,8 @@
     "wood": "chinese_traditional_food:block/dish_wood",
     "iron": "chinese_traditional_food:block/dish_iron",
     "food": "chinese_traditional_food:block/dish_food",
-    "liquid": "chinese_traditional_food:block/dish_liquid"
+    "liquid": "chinese_traditional_food:block/dish_liquid",
+    "shadow": "chinese_traditional_food:block/dish_shadow"
   },
   "elements": [
     {
@@ -456,14 +457,680 @@
     },
     {
       "from": [
-        4.232,
+        4.136,
         1.9,
-        3.9
+        3.75
       ],
       "to": [
-        5.768,
-        2.6,
-        6.1
+        5.864,
+        2.5,
+        6.25
+      ],
+      "faces": {
+        "up": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "down": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "north": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "south": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "west": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "east": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        }
+      }
+    },
+    {
+      "from": [
+        3.65,
+        1.9,
+        4.2
+      ],
+      "to": [
+        4.136,
+        2.5,
+        5.8
+      ],
+      "faces": {
+        "up": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "down": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "north": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "south": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "west": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "east": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        }
+      }
+    },
+    {
+      "from": [
+        5.864,
+        1.9,
+        4.2
+      ],
+      "to": [
+        6.35,
+        2.5,
+        5.8
+      ],
+      "faces": {
+        "up": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "down": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "north": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "south": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "west": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "east": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        }
+      }
+    },
+    {
+      "from": [
+        4.328,
+        2.5,
+        4.05
+      ],
+      "to": [
+        5.672,
+        2.8,
+        5.95
+      ],
+      "faces": {
+        "up": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "down": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "north": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "south": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "west": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "east": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        }
+      }
+    },
+    {
+      "from": [
+        3.95,
+        2.5,
+        4.3919999999999995
+      ],
+      "to": [
+        4.328,
+        2.8,
+        5.6080000000000005
+      ],
+      "faces": {
+        "up": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "down": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "north": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "south": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "west": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "east": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        }
+      }
+    },
+    {
+      "from": [
+        5.672,
+        2.5,
+        4.3919999999999995
+      ],
+      "to": [
+        6.05,
+        2.8,
+        5.6080000000000005
+      ],
+      "faces": {
+        "up": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "down": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "north": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "south": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "west": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "east": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        }
+      }
+    },
+    {
+      "from": [
+        3.23,
+        2.5,
+        4.667
+      ],
+      "to": [
+        3.6700000000000004,
+        2.78,
+        5.333
+      ],
+      "faces": {
+        "up": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "down": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "north": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "south": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "west": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "east": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        }
+      }
+    },
+    {
+      "from": [
+        4.16,
+        2.5,
+        4.3508
+      ],
+      "to": [
+        4.6,
+        2.78,
+        5.6492
+      ],
+      "faces": {
+        "up": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "down": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "north": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "south": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "west": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "east": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        }
+      }
+    },
+    {
+      "from": [
+        5.4,
+        2.5,
+        4.3508
+      ],
+      "to": [
+        5.84,
+        2.78,
+        5.6492
+      ],
+      "faces": {
+        "up": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "down": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "north": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "south": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "west": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "east": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        }
+      }
+    },
+    {
+      "from": [
+        6.33,
+        2.5,
+        4.667
+      ],
+      "to": [
+        6.77,
+        2.78,
+        5.333
       ],
       "faces": {
         "up": {
@@ -531,296 +1198,68 @@
     {
       "from": [
         3.8,
-        1.9,
-        4.296
-      ],
-      "to": [
-        4.232,
-        2.6,
-        5.704
-      ],
-      "faces": {
-        "up": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        },
-        "down": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        },
-        "north": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        },
-        "south": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        },
-        "west": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        },
-        "east": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        }
-      }
-    },
-    {
-      "from": [
-        5.768,
-        1.9,
-        4.296
+        0.2,
+        4.0
       ],
       "to": [
         6.2,
-        2.6,
-        5.704
+        0.32,
+        6.0
       ],
       "faces": {
         "up": {
-          "texture": "#food",
+          "texture": "#shadow",
           "uv": [
             0,
             0,
             16,
             16
-          ],
-          "tintindex": 0
+          ]
         },
         "down": {
-          "texture": "#food",
+          "texture": "#shadow",
           "uv": [
             0,
             0,
             16,
             16
-          ],
-          "tintindex": 0
+          ]
         },
         "north": {
-          "texture": "#food",
+          "texture": "#shadow",
           "uv": [
             0,
             0,
             16,
             16
-          ],
-          "tintindex": 0
+          ]
         },
         "south": {
-          "texture": "#food",
+          "texture": "#shadow",
           "uv": [
             0,
             0,
             16,
             16
-          ],
-          "tintindex": 0
+          ]
         },
         "west": {
-          "texture": "#food",
+          "texture": "#shadow",
           "uv": [
             0,
             0,
             16,
             16
-          ],
-          "tintindex": 0
+          ]
         },
         "east": {
-          "texture": "#food",
+          "texture": "#shadow",
           "uv": [
             0,
             0,
             16,
             16
-          ],
-          "tintindex": 0
-        }
-      }
-    },
-    {
-      "from": [
-        3.7,
-        2.6,
-        3.7
-      ],
-      "to": [
-        6.3,
-        2.9,
-        4.1
-      ],
-      "faces": {
-        "up": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        },
-        "down": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        },
-        "north": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        },
-        "south": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        },
-        "west": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        },
-        "east": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        }
-      }
-    },
-    {
-      "from": [
-        3.7,
-        2.6,
-        5.9
-      ],
-      "to": [
-        6.3,
-        2.9,
-        6.3
-      ],
-      "faces": {
-        "up": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        },
-        "down": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        },
-        "north": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        },
-        "south": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        },
-        "west": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        },
-        "east": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
+          ]
         }
       }
     },
@@ -1270,14 +1709,680 @@
     },
     {
       "from": [
-        10.232000000000001,
+        10.136000000000001,
         1.9,
-        3.9
+        3.75
       ],
       "to": [
-        11.767999999999999,
-        2.6,
-        6.1
+        11.863999999999999,
+        2.5,
+        6.25
+      ],
+      "faces": {
+        "up": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "down": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "north": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "south": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "west": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "east": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        }
+      }
+    },
+    {
+      "from": [
+        9.65,
+        1.9,
+        4.2
+      ],
+      "to": [
+        10.136000000000001,
+        2.5,
+        5.8
+      ],
+      "faces": {
+        "up": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "down": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "north": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "south": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "west": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "east": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        }
+      }
+    },
+    {
+      "from": [
+        11.863999999999999,
+        1.9,
+        4.2
+      ],
+      "to": [
+        12.35,
+        2.5,
+        5.8
+      ],
+      "faces": {
+        "up": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "down": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "north": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "south": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "west": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "east": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        }
+      }
+    },
+    {
+      "from": [
+        10.328,
+        2.5,
+        4.05
+      ],
+      "to": [
+        11.672,
+        2.8,
+        5.95
+      ],
+      "faces": {
+        "up": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "down": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "north": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "south": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "west": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "east": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        }
+      }
+    },
+    {
+      "from": [
+        9.95,
+        2.5,
+        4.3919999999999995
+      ],
+      "to": [
+        10.328,
+        2.8,
+        5.6080000000000005
+      ],
+      "faces": {
+        "up": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "down": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "north": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "south": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "west": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "east": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        }
+      }
+    },
+    {
+      "from": [
+        11.672,
+        2.5,
+        4.3919999999999995
+      ],
+      "to": [
+        12.05,
+        2.8,
+        5.6080000000000005
+      ],
+      "faces": {
+        "up": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "down": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "north": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "south": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "west": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "east": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        }
+      }
+    },
+    {
+      "from": [
+        9.229999999999999,
+        2.5,
+        4.667
+      ],
+      "to": [
+        9.67,
+        2.78,
+        5.333
+      ],
+      "faces": {
+        "up": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "down": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "north": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "south": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "west": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "east": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        }
+      }
+    },
+    {
+      "from": [
+        10.16,
+        2.5,
+        4.3508
+      ],
+      "to": [
+        10.600000000000001,
+        2.78,
+        5.6492
+      ],
+      "faces": {
+        "up": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "down": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "north": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "south": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "west": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "east": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        }
+      }
+    },
+    {
+      "from": [
+        11.399999999999999,
+        2.5,
+        4.3508
+      ],
+      "to": [
+        11.84,
+        2.78,
+        5.6492
+      ],
+      "faces": {
+        "up": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "down": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "north": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "south": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "west": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "east": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        }
+      }
+    },
+    {
+      "from": [
+        12.33,
+        2.5,
+        4.667
+      ],
+      "to": [
+        12.770000000000001,
+        2.78,
+        5.333
       ],
       "faces": {
         "up": {
@@ -1345,296 +2450,68 @@
     {
       "from": [
         9.8,
-        1.9,
-        4.296
-      ],
-      "to": [
-        10.232000000000001,
-        2.6,
-        5.704
-      ],
-      "faces": {
-        "up": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        },
-        "down": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        },
-        "north": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        },
-        "south": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        },
-        "west": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        },
-        "east": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        }
-      }
-    },
-    {
-      "from": [
-        11.767999999999999,
-        1.9,
-        4.296
+        0.2,
+        4.0
       ],
       "to": [
         12.2,
-        2.6,
-        5.704
+        0.32,
+        6.0
       ],
       "faces": {
         "up": {
-          "texture": "#food",
+          "texture": "#shadow",
           "uv": [
             0,
             0,
             16,
             16
-          ],
-          "tintindex": 0
+          ]
         },
         "down": {
-          "texture": "#food",
+          "texture": "#shadow",
           "uv": [
             0,
             0,
             16,
             16
-          ],
-          "tintindex": 0
+          ]
         },
         "north": {
-          "texture": "#food",
+          "texture": "#shadow",
           "uv": [
             0,
             0,
             16,
             16
-          ],
-          "tintindex": 0
+          ]
         },
         "south": {
-          "texture": "#food",
+          "texture": "#shadow",
           "uv": [
             0,
             0,
             16,
             16
-          ],
-          "tintindex": 0
+          ]
         },
         "west": {
-          "texture": "#food",
+          "texture": "#shadow",
           "uv": [
             0,
             0,
             16,
             16
-          ],
-          "tintindex": 0
+          ]
         },
         "east": {
-          "texture": "#food",
+          "texture": "#shadow",
           "uv": [
             0,
             0,
             16,
             16
-          ],
-          "tintindex": 0
-        }
-      }
-    },
-    {
-      "from": [
-        9.7,
-        2.6,
-        3.7
-      ],
-      "to": [
-        12.3,
-        2.9,
-        4.1
-      ],
-      "faces": {
-        "up": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        },
-        "down": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        },
-        "north": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        },
-        "south": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        },
-        "west": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        },
-        "east": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        }
-      }
-    },
-    {
-      "from": [
-        9.7,
-        2.6,
-        5.9
-      ],
-      "to": [
-        12.3,
-        2.9,
-        6.3
-      ],
-      "faces": {
-        "up": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        },
-        "down": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        },
-        "north": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        },
-        "south": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        },
-        "west": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        },
-        "east": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
+          ]
         }
       }
     },
@@ -2084,14 +2961,680 @@
     },
     {
       "from": [
-        7.232,
+        7.136,
         1.9,
-        9.9
+        9.75
       ],
       "to": [
-        8.767999999999999,
-        2.6,
-        12.1
+        8.863999999999999,
+        2.5,
+        12.25
+      ],
+      "faces": {
+        "up": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "down": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "north": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "south": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "west": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "east": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        }
+      }
+    },
+    {
+      "from": [
+        6.65,
+        1.9,
+        10.2
+      ],
+      "to": [
+        7.136,
+        2.5,
+        11.8
+      ],
+      "faces": {
+        "up": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "down": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "north": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "south": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "west": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "east": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        }
+      }
+    },
+    {
+      "from": [
+        8.863999999999999,
+        1.9,
+        10.2
+      ],
+      "to": [
+        9.35,
+        2.5,
+        11.8
+      ],
+      "faces": {
+        "up": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "down": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "north": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "south": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "west": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "east": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        }
+      }
+    },
+    {
+      "from": [
+        7.328,
+        2.5,
+        10.05
+      ],
+      "to": [
+        8.672,
+        2.8,
+        11.95
+      ],
+      "faces": {
+        "up": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "down": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "north": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "south": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "west": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "east": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        }
+      }
+    },
+    {
+      "from": [
+        6.95,
+        2.5,
+        10.392000000000001
+      ],
+      "to": [
+        7.328,
+        2.8,
+        11.607999999999999
+      ],
+      "faces": {
+        "up": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "down": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "north": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "south": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "west": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "east": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        }
+      }
+    },
+    {
+      "from": [
+        8.672,
+        2.5,
+        10.392000000000001
+      ],
+      "to": [
+        9.05,
+        2.8,
+        11.607999999999999
+      ],
+      "faces": {
+        "up": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "down": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "north": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "south": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "west": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "east": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        }
+      }
+    },
+    {
+      "from": [
+        6.23,
+        2.5,
+        10.667
+      ],
+      "to": [
+        6.67,
+        2.78,
+        11.333
+      ],
+      "faces": {
+        "up": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "down": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "north": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "south": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "west": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "east": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        }
+      }
+    },
+    {
+      "from": [
+        7.16,
+        2.5,
+        10.3508
+      ],
+      "to": [
+        7.6,
+        2.78,
+        11.6492
+      ],
+      "faces": {
+        "up": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "down": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "north": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "south": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "west": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "east": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        }
+      }
+    },
+    {
+      "from": [
+        8.399999999999999,
+        2.5,
+        10.3508
+      ],
+      "to": [
+        8.84,
+        2.78,
+        11.6492
+      ],
+      "faces": {
+        "up": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "down": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "north": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "south": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "west": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "east": {
+          "texture": "#food",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        }
+      }
+    },
+    {
+      "from": [
+        9.33,
+        2.5,
+        10.667
+      ],
+      "to": [
+        9.770000000000001,
+        2.78,
+        11.333
       ],
       "faces": {
         "up": {
@@ -2159,296 +3702,68 @@
     {
       "from": [
         6.8,
-        1.9,
-        10.296000000000001
-      ],
-      "to": [
-        7.232,
-        2.6,
-        11.703999999999999
-      ],
-      "faces": {
-        "up": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        },
-        "down": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        },
-        "north": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        },
-        "south": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        },
-        "west": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        },
-        "east": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        }
-      }
-    },
-    {
-      "from": [
-        8.767999999999999,
-        1.9,
-        10.296000000000001
+        0.2,
+        10.0
       ],
       "to": [
         9.2,
-        2.6,
-        11.703999999999999
+        0.32,
+        12.0
       ],
       "faces": {
         "up": {
-          "texture": "#food",
+          "texture": "#shadow",
           "uv": [
             0,
             0,
             16,
             16
-          ],
-          "tintindex": 0
+          ]
         },
         "down": {
-          "texture": "#food",
+          "texture": "#shadow",
           "uv": [
             0,
             0,
             16,
             16
-          ],
-          "tintindex": 0
+          ]
         },
         "north": {
-          "texture": "#food",
+          "texture": "#shadow",
           "uv": [
             0,
             0,
             16,
             16
-          ],
-          "tintindex": 0
+          ]
         },
         "south": {
-          "texture": "#food",
+          "texture": "#shadow",
           "uv": [
             0,
             0,
             16,
             16
-          ],
-          "tintindex": 0
+          ]
         },
         "west": {
-          "texture": "#food",
+          "texture": "#shadow",
           "uv": [
             0,
             0,
             16,
             16
-          ],
-          "tintindex": 0
+          ]
         },
         "east": {
-          "texture": "#food",
+          "texture": "#shadow",
           "uv": [
             0,
             0,
             16,
             16
-          ],
-          "tintindex": 0
-        }
-      }
-    },
-    {
-      "from": [
-        6.7,
-        2.6,
-        9.7
-      ],
-      "to": [
-        9.3,
-        2.9,
-        10.1
-      ],
-      "faces": {
-        "up": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        },
-        "down": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        },
-        "north": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        },
-        "south": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        },
-        "west": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        },
-        "east": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        }
-      }
-    },
-    {
-      "from": [
-        6.7,
-        2.6,
-        11.9
-      ],
-      "to": [
-        9.3,
-        2.9,
-        12.3
-      ],
-      "faces": {
-        "up": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        },
-        "down": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        },
-        "north": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        },
-        "south": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        },
-        "west": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
-        },
-        "east": {
-          "texture": "#food",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "tintindex": 0
+          ]
         }
       }
     }

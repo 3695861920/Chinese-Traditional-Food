@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AAA",
+    "AAA",
+    "AAA"
+  ],
+  "key": {
+    "A": "chinese_traditional_food:mung_bean"
+  },
+  "result": {
+    "id": "chinese_traditional_food:mung_bean_sack",
+    "count": 1
+  }
+}

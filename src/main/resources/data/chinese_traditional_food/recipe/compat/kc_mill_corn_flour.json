@@ -1,0 +1,14 @@
+{
+  "type": "kaleidoscope_cookery:stone_mill",
+  "ingredient": "minecraft:corn",
+  "result": {
+    "id": "chinese_traditional_food:corn_flour",
+    "count": 1
+  },
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "kaleidoscope_cookery"
+    }
+  ]
+}

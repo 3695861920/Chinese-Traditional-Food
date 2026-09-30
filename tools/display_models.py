@@ -112,26 +112,6 @@ def plate():
     return E
 
 
-def serving_platter():
-    """大拼盘：木托盘 —— 四角垫脚 + 底板 + 四边起沿 + 两侧提手。"""
-    E = []
-    # 垫脚
-    for (cx, cz) in ((2.4, 2.4), (13.6, 2.4), (2.4, 13.6), (13.6, 13.6)):
-        E += _oct(cx, cz, 1.3, 1.3, 0.0, 0.5, "#wood", cut=0.30, cull="down")
-    # 底板：两层，下层略小形成倒角
-    E += _oct(8, 8, 7.4, 7.4, 0.5, 0.9, "#wood", cut=0.18)
-    E += _oct(8, 8, 7.6, 7.6, 0.9, 1.0, "#wood", cut=0.18)
-    # 盘面：菜摆在 y=1.0 这一层上
-    E += _oct(8, 8, 7.0, 7.0, 1.0, 1.15, "#wood", cut=0.18)
-    # 四边起沿：一整圈，形成托盘边
-    E += _ring(0.2, 0.2, 15.8, 15.8, 1.4, 1.0, 2.2, "#wood")
-    E += _ring(0.2, 0.2, 15.8, 15.8, 1.4, 2.2, 2.35, "#wood")
-    # 两侧提手
-    E.append(box(-0.9, 1.2, 5.4, 0.3, 2.4, 10.6, "#wood"))
-    E.append(box(15.7, 1.2, 5.4, 16.9, 2.4, 10.6, "#wood"))
-    return E
-
-
 def cutting_board():
     """案板：厚木砧板，两块拼板 + 一道拼缝 + 底部倒角。
 
@@ -157,7 +137,6 @@ def cutting_board():
 # ----------------------------------------------------------------------
 TARGETS = {
     "plate": ("plate", "plate_side", plate),
-    "serving_platter": ("serving_platter", "serving_platter", serving_platter),
     "cutting_board": ("cutting_board", "cutting_board_side", cutting_board),
 }
 

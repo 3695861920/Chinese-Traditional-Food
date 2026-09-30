@@ -1,0 +1,18 @@
+{
+  "type": "kaleidoscope_cookery:pot",
+  "ingredients": [
+    "minecraft:lotus_seed",
+    "minecraft:sugar"
+  ],
+  "result": {
+    "id": "chinese_traditional_food:lotus_seed_soup",
+    "count": 1
+  },
+  "container": "minecraft:bowl",
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "kaleidoscope_cookery"
+    }
+  ]
+}

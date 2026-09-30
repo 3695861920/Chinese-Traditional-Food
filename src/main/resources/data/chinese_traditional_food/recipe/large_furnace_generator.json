@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GGG",
+    "GLG",
+    "GGG"
+  ],
+  "key": {
+    "G": "chinese_traditional_food:furnace_generator",
+    "L": "minecraft:lava_bucket"
+  },
+  "result": {
+    "id": "chinese_traditional_food:large_furnace_generator",
+    "count": 1
+  }
+}

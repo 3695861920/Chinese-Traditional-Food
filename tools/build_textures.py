@@ -245,23 +245,27 @@ def extract_cc0_palette():
 # 色板
 # ======================================================================
 
-# 青花瓷釉：8 档，从盘沿暗部到高光
+# 白瓷釉：8 档，从盘沿暗部到高光。
+# 原来是青花瓷（偏冷的青白 + 钴蓝纹样），现在改成**素面白瓷**：
+# 色调略带暖意，去掉了全部钴蓝花纹 —— 素面白瓷不描任何图案，
+# 所以不管盘里盛什么菜（红油、青菜、白汤）都不会撞色。
+# 保留极淡的一圈口沿亮线，不然盘子在浅色地面上会“糊”成一片。
 PORCELAIN = [
-    (146, 152, 166),
-    (164, 170, 182),
-    (182, 188, 200),
-    (200, 206, 216),
-    (216, 222, 230),
-    (230, 235, 242),
-    (242, 246, 250),
-    (250, 252, 255),
+    (196, 190, 182),
+    (210, 204, 196),
+    (222, 217, 209),
+    (232, 228, 221),
+    (240, 237, 231),
+    (246, 244, 239),
+    (250, 249, 245),
+    (254, 253, 251),
 ]
-# 青花钴蓝：4 档
+# 钴蓝：仅保留“薛素面瓷”上那道烧制留下的淡灰蓝口沿线，不再当主色用
 COBALT = [
-    (20, 34, 74),
-    (32, 58, 116),
-    (46, 82, 152),
-    (66, 106, 186),
+    (150, 154, 162),
+    (168, 172, 180),
+    (186, 190, 198),
+    (204, 208, 214),
 ]
 # 砂锅 / 铁器
 IRONWARE = [
@@ -331,6 +335,11 @@ def plate_porcelain_colour(x, y, cx, cy, radius, with_outline):
 
 
 def draw_plate_top(with_outline=False):
+    """素面白瓷盘的顶面。
+
+    不描任何花纹 —— 只留器型自身的弧度（盘心亮、盘沿暗），
+    加上盘沿内侧那道浅凹槽与最外圈的收边。
+    """
     img = blank()
     cx = cy = SIZE / 2.0
     radius = PLATE_RADIUS * U
@@ -338,38 +347,12 @@ def draw_plate_top(with_outline=False):
     for (x, y) in disc(8.0, 8.0, PLATE_RADIUS):
         put(img, x, y, plate_porcelain_colour(x, y, cx, cy, radius, with_outline))
 
-    # --- 青花：外沿双线 ---
+    # --- 盘沿内壁的一圈极淡的过渡：不是花纹，是瓷胎转折处的明暗 ---
     for (x, y) in annulus(8.0, 8.0, 6.72, 7.10):
         put(img, x, y, COBALT[2])
-    for (x, y) in annulus(8.0, 8.0, 6.34, 6.52):
-        put(img, x, y, COBALT[1])
-
-    # --- 青花：一圈连续的"回纹/蔓草"点饰 ---
-    for i in range(24):
-        a = i * (math.tau / 24.0)
-        px_ = 8.0 + math.cos(a) * 5.55
-        py_ = 8.0 + math.sin(a) * 5.55
-        for (x, y) in disc(px_, py_, 0.30):
-            put(img, x, y, COBALT[1] if i % 2 == 0 else COBALT[0])
-
-    # --- 青花：内圈细线 ---
+    # --- 盘心与盘沿交界处一条更淡的细线 ---
     for (x, y) in annulus(8.0, 8.0, 3.42, 3.62):
-        put(img, x, y, COBALT[1])
-
-    # --- 青花：八瓣缠枝花 ---
-    for (x, y) in disc(8.0, 8.0, 1.05):
-        put(img, x, y, COBALT[1])
-    for i in range(8):
-        a = i * (math.tau / 8.0)
-        px_ = 8.0 + math.cos(a) * 2.30
-        py_ = 8.0 + math.sin(a) * 2.30
-        for (x, y) in disc(px_, py_, 0.62):
-            put(img, x, y, COBALT[2])
-        # 花瓣外的小叶
-        px2 = 8.0 + math.cos(a) * 3.02
-        py2 = 8.0 + math.sin(a) * 3.02
-        for (x, y) in disc(px2, py2, 0.26):
-            put(img, x, y, COBALT[0])
+        put(img, x, y, COBALT[3])
 
     return img
 
@@ -391,12 +374,10 @@ def draw_plate_side():
             # 釉面的竖向细纹
             c = shade(c, ((hash_noise(x, y, 59) - 0.5) * 0.06))
 
-            # 圈足：底部一条青花粗线 + 一条细线（各约 1~2 像素，别做成整条蓝色带）
+            # 圈足：底沿一道极淡的过渡线（素面瓷不描青花）
             yy = v * 16.0
             if 11.55 <= yy < 11.95:
                 c = COBALT[2]
-            elif 12.30 <= yy < 12.55:
-                c = COBALT[1]
             elif yy >= 14.7:
                 c = shade(c, -0.20)      # 底沿落影
             elif yy < 0.5:
@@ -665,15 +646,31 @@ def save(img, directory, name):
     return path
 
 
+# 物品图标一律输出 64x64。16x16 的画法用**最近邻整数放大 4 倍** ——
+# 观感仍是原版 16x16 像素画，只是文件分辨率是 64x64。
+# 这样做的意义：物品栏里看起来和原版一样"工整"，但贴图本身留了余量，
+# 以后想加细节（或换成 2x/3x 的精细版）不用改整套流程；
+# 同时和农作物那批真正的 64x64 精细图标统一了尺寸。
+ITEM_SIZE = 64
+
+
+def to_item_size(img):
+    """把画好的图标统一到 ITEM_SIZE。整数倍用 NEAREST，保证不糊。"""
+    if img.width == ITEM_SIZE and img.height == ITEM_SIZE:
+        return img
+    return img.resize((ITEM_SIZE, ITEM_SIZE), Image.NEAREST)
+
+
 def main():
     global SIZE, U
     parser = argparse.ArgumentParser(description="生成 Minecraft 风格纹理")
     parser.add_argument("--size", type=int, default=16,
                         help="纹理边长，默认 16（原版分辨率）；最大 64")
     parser.add_argument("--only",
-                        choices=["displays", "content", "utilities", "machines", "all"],
+                        choices=["displays", "content", "utilities", "machines",
+                                 "compressed", "all"],
                         default="all",
-                        help="只生成器皿 / 只生成内容图标 / 只生成工具方块 / 只生成机器与界面 / 全部")
+                        help="只生成器皿 / 内容图标 / 工具方块 / 机器与界面 / 压缩方块 / 全部")
     args = parser.parse_args()
 
     # 必须拦住离谱的 --size：所有画法都是**逐像素**的 Python 循环，
@@ -707,9 +704,7 @@ def main():
         for img, directory, name in (
             (draw_plate_top(with_outline=False), BLOCK_DIR, "plate.png"),
             (draw_plate_side(), BLOCK_DIR, "plate_side.png"),
-            (draw_platter_block(wood), BLOCK_DIR, "serving_platter.png"),
-            (draw_plate_top(with_outline=True), ITEM_DIR, "plate.png"),
-            (draw_platter_item(wood), ITEM_DIR, "serving_platter.png"),
+            (to_item_size(draw_plate_top(with_outline=True)), ITEM_DIR, "plate.png"),
         ):
             print("wrote %-52s %dx%d" % (os.path.relpath(save(img, directory, name), ROOT),
                                          img.width, img.height))
@@ -718,13 +713,39 @@ def main():
         import texture_utilities as UTIL
         UTIL.bind(hash_noise, bayer, quantize, shade)
         UTIL.set_size(SIZE)
-        UTIL.main(BLOCK_DIR, ITEM_DIR)
+        UTIL.main(BLOCK_DIR, ITEM_DIR, finalize=to_item_size)
 
     if args.only in ("machines", "all"):
         import texture_machines as MACH
         MACH.bind(hash_noise, bayer, quantize, shade)
         MACH.set_size(SIZE)
-        MACH.main(BLOCK_DIR, ITEM_DIR, GUI_DIR)
+        MACH.main(BLOCK_DIR, ITEM_DIR, GUI_DIR, finalize=to_item_size)
+
+    if args.only in ("compressed", "all"):
+        # 食材包装方块：
+        #   <id>.png      包装本身（布纹 / 木板 / 釉面 / 压块）
+        #   <id>_top.png  袋口 / 箱口 / 缸口露出来的内容物
+        # 外加 2 张共用图（捆扎绳 / 木箱板条）。
+        import texture_compressed as COMP
+        import gen_compressed as COMP_DATA
+        COMP.bind(hash_noise, bayer, quantize, shade)
+        COMP.set_size(SIZE)
+        save(COMP.band(), BLOCK_DIR, "compressed_band.png")
+        save(COMP.crate(), BLOCK_DIR, "compressed_crate.png")
+        n = 0
+        for (bid, _zh, _en, _src, form, pal_name, family) in COMP_DATA.COMPRESSED:
+            pal = DATA.PALETTES.get(pal_name)
+            if pal is None:
+                print("!! 包装方块 %s 的配色 %s 未定义" % (bid, pal_name))
+                continue
+            # 木箱的四壁用**共用**的木板贴图（见 compressed_crate.png），
+            # 所以箱子不需要自己那张底图 —— 只有箱口的内容物是各自一张。
+            if form != "crate":
+                save(COMP.shell(bid, pal, form), BLOCK_DIR, "%s.png" % bid)
+            if form in COMP_DATA.SHOWS_CONTENTS + ("crate", "jar"):
+                save(COMP.contents(bid, pal, family), BLOCK_DIR, "%s_top.png" % bid)
+            n += 1
+        print("compressed textures: %d + band + crate" % n)
 
     if args.only in ("content", "all"):
         # 收集 content_data 里所有需要图标的条目
@@ -761,7 +782,7 @@ def main():
             if seed == 0:
                 seed = 1
             img = ICONS.draw(kind, palette, seed)
-            save(img, ITEM_DIR, "%s.png" % item_id)
+            save(to_item_size(img), ITEM_DIR, "%s.png" % item_id)
             count += 1
             # 打印进度：逐像素画法本来就慢（64x64 的农作物更慢），
             # 没有进度输出时很容易被误当成"卡死了"，进而把进程一起杀掉。

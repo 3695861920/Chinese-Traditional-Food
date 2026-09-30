@@ -35,6 +35,21 @@ BASE = {
     "#vent": (104, 110, 120),
     "#coil": (186, 122, 66),
     "#hopper": (78, 82, 90),
+    # 灶火系统
+    "#brick": (172, 108, 82),
+    "#bamboo": (196, 198, 140),
+    "#steam": (236, 242, 246),
+    "#food": (186, 124, 72),
+    "#shadow": (72, 66, 60),
+    # 电磁炉（通电 / 断电两版顶面）
+    "#cookerTop": (74, 62, 56),
+    "#cookerTopOn": (232, 122, 48),
+    "#cookerPanel": (110, 112, 120),
+    # 包装方块（脚本 preview_compressed 会用）
+    "#body": (196, 168, 128),
+    "#contents": (210, 160, 110),
+    "#crate": (176, 132, 86),
+    "#band": (110, 86, 60),
 }
 SHADE = {"up": 1.00, "east": 0.76, "south": 0.56,
          "north": 0.62, "west": 0.48}
@@ -91,7 +106,9 @@ def render(name):
 
 def main():
     names = sys.argv[1:] or ["furnace_generator", "electric_mill",
-                             "electric_sheller"]
+                             "electric_sheller",
+                             "large_furnace_generator", "large_electric_mill",
+                             "large_electric_sheller"]
     imgs = [(n, render(n)) for n in names]
     W = sum(i.width for _n, i in imgs) + PAD * (len(imgs) + 1)
     H = max(i.height for _n, i in imgs) + PAD * 2

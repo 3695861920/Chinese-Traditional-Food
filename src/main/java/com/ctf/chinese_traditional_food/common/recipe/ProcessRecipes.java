@@ -31,7 +31,19 @@ public final class ProcessRecipes {
         /** 水磨：磨粉。 */
         MILLING(ModRecipes.MILLING),
         /** 脱壳机：脱壳。 */
-        SHELLING(ModRecipes.SHELLING);
+        SHELLING(ModRecipes.SHELLING),
+        /**
+         * 蒸笼：蒸汽催熟。
+         *
+         * <p>与上面两种不同，蒸 / 煮 / 炒这三种<b>不耗电</b> —— 它们要坐在
+         * {@code 炉灶} 上，由炉灶烧燃料供热。所以吃的是"热力"而不是 FE，
+         * 见 {@code AbstractHeatProcessorBlockEntity}。</p>
+         */
+        STEAMING(ModRecipes.STEAMING),
+        /** 汤锅：吊汤。 */
+        BOILING(ModRecipes.BOILING),
+        /** 炒锅：快炒。 */
+        COOKING(ModRecipes.COOKING);
 
         private final List<ModRecipes.Entry> definitions;
 

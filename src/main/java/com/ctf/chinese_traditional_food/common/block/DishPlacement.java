@@ -63,12 +63,12 @@ public final class DishPlacement {
      */
     private static final float[][] BOUNDS = {
             {1.90F, 0.00F, 1.90F, 14.10F, 6.50F, 14.10F},
-            {1.20F, 0.00F, 1.20F, 14.80F, 4.20F, 14.80F},
+            {0.90F, 0.00F, 0.90F, 15.10F, 3.90F, 15.10F},
             {0.60F, 0.00F, 0.60F, 15.40F, 4.80F, 15.40F},
-            {0.00F, 0.00F, 0.60F, 16.00F, 7.30F, 15.40F},
-            {0.80F, 0.00F, 3.40F, 15.20F, 3.60F, 12.60F},
-            {2.70F, 0.00F, 3.00F, 13.30F, 2.90F, 13.00F},
-            {2.40F, 0.00F, 2.40F, 13.80F, 2.60F, 13.40F},
+            {0.00F, 0.00F, 0.60F, 16.00F, 7.20F, 15.40F},
+            {0.60F, 0.00F, 3.20F, 15.40F, 3.95F, 12.80F},
+            {2.70F, 0.00F, 3.00F, 13.30F, 2.80F, 13.00F},
+            {2.40F, 0.00F, 2.40F, 13.80F, 2.50F, 13.40F},
             {2.70F, 0.00F, 5.10F, 13.30F, 4.30F, 10.70F},
             {3.50F, 0.00F, 3.50F, 11.20F, 5.30F, 11.30F},
             {4.60F, 0.00F, 4.60F, 11.40F, 4.00F, 11.40F},
@@ -280,6 +280,54 @@ public final class DishPlacement {
         SHAPE_BY_ITEM.put(ModItems.JUHUA_JIU.get(), Shape.CUP);
         SHAPE_BY_ITEM.put(ModItems.LABA_ZHOU.get(), Shape.BOWL);
         SHAPE_BY_ITEM.put(ModItems.YANGROU_TANG.get(), Shape.BOWL);
+        SHAPE_BY_ITEM.put(ModItems.MANTOU.get(), Shape.CAKE_SLICE);
+        SHAPE_BY_ITEM.put(ModItems.HUA_JUAN.get(), Shape.CAKE_SLICE);
+        SHAPE_BY_ITEM.put(ModItems.BAOZI.get(), Shape.DUMPLING);
+        SHAPE_BY_ITEM.put(ModItems.XIAO_LONG_BAO.get(), Shape.DUMPLING);
+        SHAPE_BY_ITEM.put(ModItems.DOU_SHA_BAO.get(), Shape.DUMPLING);
+        SHAPE_BY_ITEM.put(ModItems.YOUTIAO.get(), Shape.CAKE_SLICE);
+        SHAPE_BY_ITEM.put(ModItems.DOUJIANG.get(), Shape.CUP);
+        SHAPE_BY_ITEM.put(ModItems.YOUTIAO_DOUJIANG.get(), Shape.PLATE);
+        SHAPE_BY_ITEM.put(ModItems.CHAO_GAN.get(), Shape.BOWL);
+        SHAPE_BY_ITEM.put(ModItems.HUNTUN.get(), Shape.BOWL);
+        SHAPE_BY_ITEM.put(ModItems.WONTON_SOUP.get(), Shape.BOWL);
+        SHAPE_BY_ITEM.put(ModItems.XIAOMI_ZHOU.get(), Shape.BOWL);
+        SHAPE_BY_ITEM.put(ModItems.ZHOU_CONGEE.get(), Shape.BOWL);
+        SHAPE_BY_ITEM.put(ModItems.JIANBING.get(), Shape.CAKE_SLICE);
+        SHAPE_BY_ITEM.put(ModItems.CHASHAO_BAO.get(), Shape.DUMPLING);
+        SHAPE_BY_ITEM.put(ModItems.TANGYUAN.get(), Shape.DUMPLING);
+        SHAPE_BY_ITEM.put(ModItems.MIXIAN.get(), Shape.BOWL);
+        SHAPE_BY_ITEM.put(ModItems.CHAO_MIAN.get(), Shape.BOWL);
+        SHAPE_BY_ITEM.put(ModItems.CHOU_DOUFU.get(), Shape.BOWL);
+        SHAPE_BY_ITEM.put(ModItems.KAO_LENGMIAN.get(), Shape.CAKE_SLICE);
+        SHAPE_BY_ITEM.put(ModItems.CHUAN_CHUAN.get(), Shape.PLATE);
+        SHAPE_BY_ITEM.put(ModItems.ROUJIAMO.get(), Shape.DUMPLING);
+        SHAPE_BY_ITEM.put(ModItems.JIAN_GAO.get(), Shape.CAKE_SLICE);
+        SHAPE_BY_ITEM.put(ModItems.GUO_TIE.get(), Shape.DUMPLING);
+        SHAPE_BY_ITEM.put(ModItems.SHAOMAI.get(), Shape.DUMPLING);
+        SHAPE_BY_ITEM.put(ModItems.LIANGPI.get(), Shape.BOWL);
+        SHAPE_BY_ITEM.put(ModItems.CHUANBEI_LIANGFEN.get(), Shape.PLATE);
+        SHAPE_BY_ITEM.put(ModItems.MAHUADOU.get(), Shape.CAKE_SLICE);
+        SHAPE_BY_ITEM.put(ModItems.SHAO_BING.get(), Shape.CAKE_SLICE);
+        SHAPE_BY_ITEM.put(ModItems.ZHIMA_TUAN.get(), Shape.MOONCAKE);
+        SHAPE_BY_ITEM.put(ModItems.ZONGZI_XIAN.get(), Shape.ZONGZI);
+        SHAPE_BY_ITEM.put(ModItems.RICE_CAKE.get(), Shape.CAKE_SLICE);
+        SHAPE_BY_ITEM.put(ModItems.STEAMED_PUMPKIN.get(), Shape.PLATE);
+        SHAPE_BY_ITEM.put(ModItems.DOUFUNAO.get(), Shape.BOWL);
+        SHAPE_BY_ITEM.put(ModItems.SUANTANG.get(), Shape.BOWL);
+        SHAPE_BY_ITEM.put(ModItems.EGG_DROP_SOUP.get(), Shape.BOWL);
+        SHAPE_BY_ITEM.put(ModItems.TOMATO_EGG.get(), Shape.PLATE);
+        SHAPE_BY_ITEM.put(ModItems.SCRAMBLED_EGG.get(), Shape.PLATE);
+        SHAPE_BY_ITEM.put(ModItems.CHIVE_EGG.get(), Shape.PLATE);
+        SHAPE_BY_ITEM.put(ModItems.DRY_FRIED_BEANS.get(), Shape.PLATE);
+        SHAPE_BY_ITEM.put(ModItems.STIR_FRIED_PEA.get(), Shape.PLATE);
+        SHAPE_BY_ITEM.put(ModItems.BRAISED_BAMBOO.get(), Shape.PLATE);
+        SHAPE_BY_ITEM.put(ModItems.TWICE_COOKED_PORK.get(), Shape.PLATE);
+        SHAPE_BY_ITEM.put(ModItems.RED_BEAN_SOUP.get(), Shape.BOWL);
+        SHAPE_BY_ITEM.put(ModItems.MUNG_BEAN_SOUP.get(), Shape.BOWL);
+        SHAPE_BY_ITEM.put(ModItems.WINTER_MELON_SOUP.get(), Shape.BOWL);
+        SHAPE_BY_ITEM.put(ModItems.LOTUS_SEED_SOUP.get(), Shape.BOWL);
+        SHAPE_BY_ITEM.put(ModItems.YAM_RIBS_SOUP.get(), Shape.BOWL);
 
         PALETTE_BY_ITEM.put(ModItems.JIUZHUAN_DACHANG.get(), Palette.REDBRAISED);
         PALETTE_BY_ITEM.put(ModItems.CONGSAO_HAISHEN.get(), Palette.BRAISED);
@@ -377,6 +425,54 @@ public final class DishPlacement {
         PALETTE_BY_ITEM.put(ModItems.JUHUA_JIU.get(), Palette.WINE);
         PALETTE_BY_ITEM.put(ModItems.LABA_ZHOU.get(), Palette.SOUP);
         PALETTE_BY_ITEM.put(ModItems.YANGROU_TANG.get(), Palette.SOUP);
+        PALETTE_BY_ITEM.put(ModItems.MANTOU.get(), Palette.STEAMED);
+        PALETTE_BY_ITEM.put(ModItems.HUA_JUAN.get(), Palette.CAKE);
+        PALETTE_BY_ITEM.put(ModItems.BAOZI.get(), Palette.STEAMED);
+        PALETTE_BY_ITEM.put(ModItems.XIAO_LONG_BAO.get(), Palette.STEAMED);
+        PALETTE_BY_ITEM.put(ModItems.DOU_SHA_BAO.get(), Palette.CAKE);
+        PALETTE_BY_ITEM.put(ModItems.YOUTIAO.get(), Palette.GOLD);
+        PALETTE_BY_ITEM.put(ModItems.DOUJIANG.get(), Palette.WHITE);
+        PALETTE_BY_ITEM.put(ModItems.YOUTIAO_DOUJIANG.get(), Palette.GOLD);
+        PALETTE_BY_ITEM.put(ModItems.CHAO_GAN.get(), Palette.BRAISED);
+        PALETTE_BY_ITEM.put(ModItems.HUNTUN.get(), Palette.SOUP);
+        PALETTE_BY_ITEM.put(ModItems.WONTON_SOUP.get(), Palette.SOUP);
+        PALETTE_BY_ITEM.put(ModItems.XIAOMI_ZHOU.get(), Palette.GOLD);
+        PALETTE_BY_ITEM.put(ModItems.ZHOU_CONGEE.get(), Palette.WHITE);
+        PALETTE_BY_ITEM.put(ModItems.JIANBING.get(), Palette.WHEAT);
+        PALETTE_BY_ITEM.put(ModItems.CHASHAO_BAO.get(), Palette.REDBRAISED);
+        PALETTE_BY_ITEM.put(ModItems.TANGYUAN.get(), Palette.WHITE);
+        PALETTE_BY_ITEM.put(ModItems.MIXIAN.get(), Palette.STEAMED);
+        PALETTE_BY_ITEM.put(ModItems.CHAO_MIAN.get(), Palette.STIRFRY);
+        PALETTE_BY_ITEM.put(ModItems.CHOU_DOUFU.get(), Palette.FUNGUS);
+        PALETTE_BY_ITEM.put(ModItems.KAO_LENGMIAN.get(), Palette.REDBRAISED);
+        PALETTE_BY_ITEM.put(ModItems.CHUAN_CHUAN.get(), Palette.CHILI_OIL);
+        PALETTE_BY_ITEM.put(ModItems.ROUJIAMO.get(), Palette.BRAISED);
+        PALETTE_BY_ITEM.put(ModItems.JIAN_GAO.get(), Palette.PASTRY);
+        PALETTE_BY_ITEM.put(ModItems.GUO_TIE.get(), Palette.GOLD);
+        PALETTE_BY_ITEM.put(ModItems.SHAOMAI.get(), Palette.GOLD);
+        PALETTE_BY_ITEM.put(ModItems.LIANGPI.get(), Palette.STIRFRY);
+        PALETTE_BY_ITEM.put(ModItems.CHUANBEI_LIANGFEN.get(), Palette.CHILI_OIL);
+        PALETTE_BY_ITEM.put(ModItems.MAHUADOU.get(), Palette.GOLD);
+        PALETTE_BY_ITEM.put(ModItems.SHAO_BING.get(), Palette.WHEAT);
+        PALETTE_BY_ITEM.put(ModItems.ZHIMA_TUAN.get(), Palette.TAN);
+        PALETTE_BY_ITEM.put(ModItems.ZONGZI_XIAN.get(), Palette.BRAISED);
+        PALETTE_BY_ITEM.put(ModItems.RICE_CAKE.get(), Palette.WHITE);
+        PALETTE_BY_ITEM.put(ModItems.STEAMED_PUMPKIN.get(), Palette.ORANGE);
+        PALETTE_BY_ITEM.put(ModItems.DOUFUNAO.get(), Palette.WHITE);
+        PALETTE_BY_ITEM.put(ModItems.SUANTANG.get(), Palette.VINEGAR);
+        PALETTE_BY_ITEM.put(ModItems.EGG_DROP_SOUP.get(), Palette.SOUP);
+        PALETTE_BY_ITEM.put(ModItems.TOMATO_EGG.get(), Palette.TOMATO);
+        PALETTE_BY_ITEM.put(ModItems.SCRAMBLED_EGG.get(), Palette.GOLD);
+        PALETTE_BY_ITEM.put(ModItems.CHIVE_EGG.get(), Palette.GREENDISH);
+        PALETTE_BY_ITEM.put(ModItems.DRY_FRIED_BEANS.get(), Palette.CHILI);
+        PALETTE_BY_ITEM.put(ModItems.STIR_FRIED_PEA.get(), Palette.GREENDISH);
+        PALETTE_BY_ITEM.put(ModItems.BRAISED_BAMBOO.get(), Palette.BRAISED);
+        PALETTE_BY_ITEM.put(ModItems.TWICE_COOKED_PORK.get(), Palette.REDBRAISED);
+        PALETTE_BY_ITEM.put(ModItems.RED_BEAN_SOUP.get(), Palette.RED);
+        PALETTE_BY_ITEM.put(ModItems.MUNG_BEAN_SOUP.get(), Palette.MUNG);
+        PALETTE_BY_ITEM.put(ModItems.WINTER_MELON_SOUP.get(), Palette.PALEGREEN);
+        PALETTE_BY_ITEM.put(ModItems.LOTUS_SEED_SOUP.get(), Palette.CREAM);
+        PALETTE_BY_ITEM.put(ModItems.YAM_RIBS_SOUP.get(), Palette.SOUP);
     }
 
     /** 这道菜的器型；不在表里返回 {@code null}（表示不能摆）。 */

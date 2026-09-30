@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:block",
+  "random_sequence": "chinese_traditional_food:blocks/radish_crate",
+  "pools": [
+    {
+      "rolls": 1,
+      "bonus_rolls": 0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "chinese_traditional_food:radish_crate"
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ]
+    }
+  ]
+}

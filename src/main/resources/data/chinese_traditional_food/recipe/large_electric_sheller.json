@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "III",
+    "MSM",
+    "III"
+  ],
+  "key": {
+    "I": "minecraft:iron_block",
+    "M": "chinese_traditional_food:electric_sheller",
+    "S": "minecraft:cauldron"
+  },
+  "result": {
+    "id": "chinese_traditional_food:large_electric_sheller",
+    "count": 1
+  }
+}

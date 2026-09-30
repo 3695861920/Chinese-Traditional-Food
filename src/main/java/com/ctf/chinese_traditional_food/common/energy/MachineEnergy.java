@@ -48,15 +48,67 @@ public final class MachineEnergy {
      *
      * <p>原版的容器数据同步走的是 <b>short</b>（±32767）。我们的缓冲只有
      * 4000 FE、燃烧时间最长也就岩浆桶的 20000 tick，**都在范围内**，
-     * 所以直接把原值丢进 {@code ContainerData} 就行，不必折算。
-     * 万一以后把缓冲调大到超过这个范围，就得在这里改回按比例折算。</p>
+     * 所以直接把原值丢进 {@code ContainerData} 就行，不必折算。</p>
+     *
+     * <p><b>大型机呢？</b>大型机缓冲 {@link #LARGE_MACHINE_BUFFER} = 19200，
+     * 仍然小于 32767，所以也直接放原值。</p>
      */
     public static final int SYNC_SAFE_MAX = Short.MAX_VALUE;
+
+    // ==================================================================
+    // 大型机（"3×3 放大版"）
+    // ==================================================================
+    //
+    // 定位：小型机是"一台机器"，大型机是"一整条产线塞进一个方块"。
+    // 所有数值都是小型机的整数倍，便于口算，也便于玩家理解升级幅度：
+    //
+    //   批次大小  8  -> 32   （4 倍）
+    //   批次耗时 200 -> 60   （快了 3.3 倍）
+    //   耗电      10 -> 40   FE/t
+    //
+    // 合起来：小型机 10 秒出 8 个、单位耗电 250 FE/个；
+    //        大型机 3 秒出 32 个、单位耗电 75 FE/个 ——
+    //        也就是**更快 + 更省**，代价是要先攒出四台小型机来合。
+
+    /** 大型机一个批次加工多少个。 */
+    public static final int LARGE_BATCH_SIZE = 32;
+
+    /** 大型机一个批次的耗时（60 tick = 3 秒）。 */
+    public static final int LARGE_BATCH_TICKS = 60;
+
+    /** 大型机运行时的耗电（FE/t）。 */
+    public static final int LARGE_ENERGY_PER_TICK = 40;
+
+    /** 大型机一个批次的总耗电（2400 FE）。 */
+    public static final int LARGE_ENERGY_PER_BATCH = LARGE_ENERGY_PER_TICK * LARGE_BATCH_TICKS;
+
+    /** 大型机缓冲（FE）。足够连跑 8 批，所以电网偶尔抖一下不会停线。 */
+    public static final int LARGE_MACHINE_BUFFER = LARGE_ENERGY_PER_BATCH * 8;
+
+    /** 大型发电机输出（FE/t）。要能喂饱 4 台大型加工机（4 × 40 = 160）。 */
+    public static final int LARGE_GENERATOR_OUTPUT = 200;
+
+    /** 大型发电机缓冲（FE）。 */
+    public static final int LARGE_GENERATOR_BUFFER = 40000;
 
     /** 把要放进 {@code ContainerData} 的值夹到安全范围。 */
     public static int clampForSync(int value) {
         return Math.max(0, Math.min(SYNC_SAFE_MAX, value));
     }
+
+    // ==================================================================
+    // 电磁炉（灶上锅具的热源）
+    // ==================================================================
+    //
+    // 它就是"把锅垫高并且供热"的那一格。因为没有燃料、没有界面、
+    // 也不储能之外的东西，所以数值只有一条：每 tick 抽多少电。
+    //
+    // 比加工机便宜得多（10 / 40 FE/t）—— 灶活本来就慢，成本就该低，
+    // 不然没人愿意用锅。一块煤炭 1600 tick × 40 = 64000 FE，
+    // 够电磁炉跑 1600 秒 = 26 分钟，做几十道菜。
+
+    /** 电磁炉在供热时每 tick 抽的电。 */
+    public static final int STOVE_ENERGY_PER_TICK = 25;
 
     /** 电量文案，例如 {@code 1234 / 4000 FE}。 */
     public static MutableComponent describe(int energy, int capacity) {

@@ -1,0 +1,21 @@
+{
+  "type": "farmersdelight:cooking",
+  "ingredients": [
+    "minecraft:chinese_yam",
+    "minecraft:raw_meat_tag",
+    "minecraft:stock"
+  ],
+  "result": {
+    "id": "chinese_traditional_food:yam_ribs_soup",
+    "count": 1
+  },
+  "experience": 0.35,
+  "cookingtime": 200,
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "farmersdelight"
+    }
+  ],
+  "container": "minecraft:bowl"
+}

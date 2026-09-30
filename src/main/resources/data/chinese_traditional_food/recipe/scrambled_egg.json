@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "chinese_traditional_food:plate",
+    "minecraft:porkchop",
+    "chinese_traditional_food:scallion",
+    "chinese_traditional_food:garlic"
+  ],
+  "result": {
+    "id": "chinese_traditional_food:scrambled_egg",
+    "count": 1
+  }
+}

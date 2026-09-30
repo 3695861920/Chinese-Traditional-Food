@@ -35,23 +35,35 @@ public class GeneratorMenu extends AbstractContainerMenu {
 
     private final ContainerData data;
 
-    /** 服务端构造。 */
-    public GeneratorMenu(MenuType<?> type, int containerId, Inventory playerInventory,
-                         FurnaceGeneratorBlockEntity generator) {
-        this(type, containerId, playerInventory, generator.getFuel(), generator);
+    /** 那根竖条的满值（发电机的 FE 缓冲）。 */
+    private final int powerCapacity;
+
+    /** 服务端构造：熔炉发电机。
+     *
+     * <p>用<b>命名工厂</b>而不是构造重载：构造签名都一样、只有参数类型不同，
+     * 重载在调用点上很容易歧义（javac 会报
+     * "reference to GeneratorMenu is ambiguous"），名字分开最省心。</p>
+     */
+    public static GeneratorMenu forGenerator(MenuType<?> type, int containerId,
+                                             Inventory playerInventory,
+                                             FurnaceGeneratorBlockEntity generator) {
+        return new GeneratorMenu(type, containerId, playerInventory, generator.getFuel(),
+                generator, MachineEnergy.GENERATOR_BUFFER);
     }
 
-    /** 客户端构造。 */
+    /** 客户端构造：只有类型与背包，具体数据由服务端同步进来。 */
     public GeneratorMenu(MenuType<?> type, int containerId, Inventory playerInventory) {
         this(type, containerId, playerInventory,
-                new SimpleContainer(MACHINE_SLOTS), new SimpleContainerData(DATA_COUNT));
+                new SimpleContainer(MACHINE_SLOTS), new SimpleContainerData(DATA_COUNT),
+                MachineEnergy.GENERATOR_BUFFER);
     }
 
     private GeneratorMenu(MenuType<?> type, int containerId, Inventory playerInventory,
-                          Container fuel, ContainerData data) {
+                          Container fuel, ContainerData data, int powerCapacity) {
         super(type, containerId);
         checkContainerSize(fuel, MACHINE_SLOTS);
         this.data = data;
+        this.powerCapacity = powerCapacity;
 
         this.addSlot(new Slot(fuel, FurnaceGeneratorBlockEntity.SLOT_FUEL, FUEL_X, FUEL_Y));
         this.addStandardInventorySlots(playerInventory, 8, 84);
@@ -75,13 +87,18 @@ public class GeneratorMenu extends AbstractContainerMenu {
         return this.data.get(DATA_BURN_LEFT) > 0;
     }
 
-    /** 当前电量（FE）。缓冲只有 4000，short 范围内，所以直接同步原值。 */
+    /** 当前数值（发电机是 FE，炉灶是热度）。缓冲小，short 范围内，直接同步原值。 */
     public int getEnergy() {
         return this.data.get(DATA_ENERGY);
     }
 
     public int getEnergyCapacity() {
-        return MachineEnergy.GENERATOR_BUFFER;
+        return this.powerCapacity;
+    }
+
+    /** 竖条代表热力而不是电量 —— 界面据此换文案。 */
+    public boolean isHeatPowered() {
+        return false;
     }
 
     /** 电量比例 0~1。 */

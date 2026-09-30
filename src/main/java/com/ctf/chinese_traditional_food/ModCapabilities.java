@@ -30,6 +30,11 @@ public final class ModCapabilities {
                 (machine, side) -> VanillaContainerWrapper.of(machine.getInventory()));
         event.registerBlockEntity(Capabilities.Item.BLOCK, ModBlockEntities.ELECTRIC_SHELLER.get(),
                 (machine, side) -> VanillaContainerWrapper.of(machine.getInventory()));
+        // 大型机也要挂物品能力，否则漏斗没法自动喂料 / 抽成品
+        event.registerBlockEntity(Capabilities.Item.BLOCK, ModBlockEntities.LARGE_ELECTRIC_MILL.get(),
+                (machine, side) -> VanillaContainerWrapper.of(machine.getInventory()));
+        event.registerBlockEntity(Capabilities.Item.BLOCK, ModBlockEntities.LARGE_ELECTRIC_SHELLER.get(),
+                (machine, side) -> VanillaContainerWrapper.of(machine.getInventory()));
 
         // ---- 能量 ----
         event.registerBlockEntity(Capabilities.Energy.BLOCK, ModBlockEntities.FURNACE_GENERATOR.get(),
@@ -38,6 +43,28 @@ public final class ModCapabilities {
                 (machine, side) -> machine.getEnergyHandler());
         event.registerBlockEntity(Capabilities.Energy.BLOCK, ModBlockEntities.ELECTRIC_SHELLER.get(),
                 (machine, side) -> machine.getEnergyHandler());
+        event.registerBlockEntity(Capabilities.Energy.BLOCK, ModBlockEntities.LARGE_FURNACE_GENERATOR.get(),
+                (generator, side) -> generator.getEnergyHandler());
+        event.registerBlockEntity(Capabilities.Energy.BLOCK, ModBlockEntities.LARGE_ELECTRIC_MILL.get(),
+                (machine, side) -> machine.getEnergyHandler());
+        event.registerBlockEntity(Capabilities.Energy.BLOCK, ModBlockEntities.LARGE_ELECTRIC_SHELLER.get(),
+                (machine, side) -> machine.getEnergyHandler());
+
+        // ---- 灶火系统 ----
+        //
+        // 电磁炉是**用电**的热源，所以要挂能量能力（插上电线就能用）；
+        // 三件锅具则是**刻意不挂能量能力**的 —— 它们靠正下方的电磁炉供热，
+        // 如果挂上 Energy，玩家插根线就能免费炒菜，整个"灶火线"的设计就绕过去了。
+        //
+        // 锅具要挂**物品能力**：漏斗自动送料、往外抽成品是刚需。
+        event.registerBlockEntity(Capabilities.Energy.BLOCK, ModBlockEntities.STOVE.get(),
+                (stove, side) -> stove.getEnergyHandler());
+        event.registerBlockEntity(Capabilities.Item.BLOCK, ModBlockEntities.WOK.get(),
+                (machine, side) -> VanillaContainerWrapper.of(machine.getInventory()));
+        event.registerBlockEntity(Capabilities.Item.BLOCK, ModBlockEntities.STEAMER.get(),
+                (machine, side) -> VanillaContainerWrapper.of(machine.getInventory()));
+        event.registerBlockEntity(Capabilities.Item.BLOCK, ModBlockEntities.SOUP_POT.get(),
+                (machine, side) -> VanillaContainerWrapper.of(machine.getInventory()));
     }
 
     private ModCapabilities() {}

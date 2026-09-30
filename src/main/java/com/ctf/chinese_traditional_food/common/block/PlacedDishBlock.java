@@ -42,9 +42,17 @@ import org.jetbrains.annotations.Nullable;
  * <h2>交互</h2>
  * <ul>
  *   <li>拿菜对着<b>地面或方块顶面</b>右键 → 摆在地上；</li>
- *   <li><b>空手右键</b> → 就地夹一口吃（和餐盘上一致）；</li>
- *   <li><b>潜行 + 空手右键</b> → 端起来放回背包（方便收拾）。</li>
+ *   <li><b>潜行 + 空手右键</b> → 就地夹一口吃；</li>
+ *   <li><b>空手右键</b> → 端起来放回背包（方便收拾）。</li>
  * </ul>
+ *
+ * <p>“吃”被刻意放在<b>潜行</b>上：地上摆的一桌菜，平时右键是收拾 / 挪位置，
+ * 只有明确蹲下来才是动筷子 —— 否则收拾桌面时很容易误吃。</p>
+ *
+ * <h2>吃完留下空盘子</h2>
+ * <p>最后一口吃完时，这一格不会消失，而是<b>变成一只空盘子</b>
+ * （{@link ModBlocks#PLATE}）—— 摆一桌菜吃完之后，桌上留下餐具，
+ * 而不是豁然空一片。空盘子可以右键端走，也可以直接敲掉。</p>
  */
 public class PlacedDishBlock extends Block implements EntityBlock {
     /** 选三维模型用的属性。取值顺序与 {@code tools/dish_models.py} 的 SHAPE_ORDER 一致。 */
@@ -123,9 +131,11 @@ public class PlacedDishBlock extends Block implements EntityBlock {
     // ------------------------------------------------------------------
 
     /**
-     * 空手右键：就地夹一口；潜行右键：整份端回背包。
+     * 空手右键：把整份端起来；潜行右键：就地夹一口。
      *
-     * <p>这两个行为与餐盘 / 大拼盘保持一致，免得玩家形成两套肌肉记忆。</p>
+     * <p>注意这里和餐盘（{@code PlateBlock}）是<b>反的</b>：餐盘上只有一道菜，
+     * 直接右键吃最顺；而地上可能摆了一桌，右键应该是“收拾”而不是“动筷子”，
+     * 所以吃放在潜行上。</p>
      */
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos,
@@ -139,12 +149,12 @@ public class PlacedDishBlock extends Block implements EntityBlock {
         }
 
         if (player.isShiftKeyDown()) {
-            return pickUp(level, pos, player, be);
+            return eatOne(level, pos, player, be, dish);
         }
-        return eatOne(level, pos, player, be, dish);
+        return pickUp(level, pos, player, be);
     }
 
-    /** 潜行 + 空手：把整份端起来放回背包（盘子本身不是方块物品，直接消失）。 */
+    /** 空手（不潜行）：把整份端起来放回背包。 */
     private InteractionResult pickUp(Level level, BlockPos pos, Player player,
                                       PlacedDishBlockEntity be) {
         if (level.isClientSide()) {
@@ -162,7 +172,16 @@ public class PlacedDishBlock extends Block implements EntityBlock {
         return InteractionResult.SUCCESS_SERVER;
     }
 
-    /** 空手：夹一口，吃完这份就把方块一并收走。 */
+    /**
+     * 潜行 + 空手：就地夹一口。
+     *
+     * <p>吃完最后一口时<b>不是把方块抹掉</b>，而是就地换成一个空盘子 ——
+     * “盘装菜”吃完本来就应该在桌上留个盘子。空盘子的行为见
+     * {@code PlateBlock}（右键端走、空盘可以直接敲）。</p>
+     *
+     * <p>换方块时用 {@code setBlock} + 保留原方块状态里的朝向信息：
+     * 餐盘没有朝向属性，所以直接拿默认状态即可。</p>
+     */
     private InteractionResult eatOne(Level level, BlockPos pos, Player player,
                                       PlacedDishBlockEntity be, ItemStack dish) {
         if (!DishItem.serve(level, player, dish)) {
@@ -172,9 +191,12 @@ public class PlacedDishBlock extends Block implements EntityBlock {
             ItemStack remaining = dish.copy();
             remaining.shrink(1);
             if (remaining.isEmpty()) {
-                // 吃完最后一口：方块本体也一起收走，不留下一个空碗卡在地上
+                // 吃完最后一口：原地留下一只空盘子。
+                // 用 ModBlocks.PLATE 而不是 removeBlock —— 见类注释。
                 be.setDish(0, ItemStack.EMPTY);
-                level.removeBlock(pos, false);
+                level.setBlock(pos, com.ctf.chinese_traditional_food.registry.ModBlocks.PLATE.get()
+                        .defaultBlockState(), Block.UPDATE_ALL);
+                level.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 0.6F, 1.3F);
             } else {
                 be.setDish(0, remaining);
                 be.onDishesChanged();

@@ -81,12 +81,12 @@ public class GeneratorScreen extends AbstractContainerScreen<GeneratorMenu> {
     protected void extractLabels(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         super.extractLabels(graphics, mouseX, mouseY);
 
-        // 右上角：电量数字
-        Component energy = Component.translatable(
+        // 右上角把电量写成数字 —— 光看竖条只能看个大概
+        Component power = Component.translatable(
                 "tooltip.chinese_traditional_food.energy_amount",
                 this.menu.getEnergy(), this.menu.getEnergyCapacity());
-        int w = this.font.width(energy);
-        graphics.text(this.font, energy,
+        int w = this.font.width(power);
+        graphics.text(this.font, power,
                 this.leftPos + PANEL_W - 8 - w, this.topPos + 6, TEXT_COLOR, false);
 
         // 左侧：运行状态，缺燃料时用警示色

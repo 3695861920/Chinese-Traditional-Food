@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "chinese_traditional_food:sichuan_peppercorn_jar"
+  ],
+  "result": {
+    "id": "chinese_traditional_food:sichuan_peppercorn",
+    "count": 9
+  }
+}

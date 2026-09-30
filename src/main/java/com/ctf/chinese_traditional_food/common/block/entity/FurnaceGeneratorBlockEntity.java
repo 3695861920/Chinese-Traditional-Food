@@ -69,16 +69,7 @@ public class FurnaceGeneratorBlockEntity extends BlockEntity implements Containe
         }
     };
 
-    private final SimpleEnergyHandler energy = new SimpleEnergyHandler(
-            MachineEnergy.GENERATOR_BUFFER,
-            0,                              // 只出不进：发电机不接受外部送电
-            MachineEnergy.GENERATOR_OUTPUT) {
-        @Override
-        protected void onEnergyChanged(int previousAmount) {
-            FurnaceGeneratorBlockEntity.this.setChanged();
-            FurnaceGeneratorBlockEntity.this.syncToClient();
-        }
-    };
+    private final SimpleEnergyHandler energy;
 
     /** 剩余燃烧 tick。 */
     private int burnLeft;
@@ -91,6 +82,34 @@ public class FurnaceGeneratorBlockEntity extends BlockEntity implements Containe
 
     public FurnaceGeneratorBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
+        this.energy = new SimpleEnergyHandler(this.generatorBuffer(),
+                0,                          // 只出不进：发电机不接受外部送电
+                this.outputRate()) {
+            @Override
+            protected void onEnergyChanged(int previousAmount) {
+                FurnaceGeneratorBlockEntity.this.setChanged();
+                FurnaceGeneratorBlockEntity.this.syncToClient();
+            }
+        };
+    }
+
+    // ------------------------------------------------------------------
+    // 数值：小型机用 MachineEnergy 的常量，大型机覆写成放大版的
+    // ------------------------------------------------------------------
+
+    /** 这台是不是“大型机”。覆写时必须返回**常量** —— 构造期就会调用它。 */
+    protected boolean large() {
+        return false;
+    }
+
+    /** 输出功率（FE/t）。 */
+    protected int outputRate() {
+        return this.large() ? MachineEnergy.LARGE_GENERATOR_OUTPUT : MachineEnergy.GENERATOR_OUTPUT;
+    }
+
+    /** 内部缓冲（FE）。 */
+    protected int generatorBuffer() {
+        return this.large() ? MachineEnergy.LARGE_GENERATOR_BUFFER : MachineEnergy.GENERATOR_BUFFER;
     }
 
     public SimpleContainer getFuel() {
@@ -137,7 +156,7 @@ public class FurnaceGeneratorBlockEntity extends BlockEntity implements Containe
             generator.burnLeft--;
             int room = (int) (generator.energy.getCapacityAsLong()
                     - generator.energy.getAmountAsLong());
-            int produced = Math.min(MachineEnergy.GENERATOR_OUTPUT, room);
+            int produced = Math.min(generator.outputRate(), room);
             if (produced > 0) {
                 generator.energy.set((int) generator.energy.getAmountAsLong() + produced);
             }

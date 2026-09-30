@@ -57,6 +57,14 @@ public final class DishEffects {
     public static final List<ServeEffect> WARMTH_REFRESH = join(WARMTH, REFRESH);
     public static final List<ServeEffect> WARMTH_NOURISH = join(WARMTH, NOURISH);
 
+    // 早餐 / 小吃的组合：都是"顶饱 + 一点小收益"，符合早点与街头小吃的定位
+    /** 饱足 + 提神（煎饼果子、小笼包这类"吃完就能出门干活"的）。 */
+    public static final List<ServeEffect> SATED_REFRESH = join(SATED, REFRESH);
+    /** 饱足 + 滋补（肉夹馍这类扎实的）。 */
+    public static final List<ServeEffect> SATED_NOURISH = join(SATED, NOURISH);
+    /** 爽脆 + 提神（油条豆浆、豆浆油条）。 */
+    public static final List<ServeEffect> CRISP_REFRESH = join(CRISP, REFRESH);
+
     /**
      * 佛跳墙、孔府一品锅这类压轴大菜：滋补 + 暖身 + 饱足，一次给满。
      */

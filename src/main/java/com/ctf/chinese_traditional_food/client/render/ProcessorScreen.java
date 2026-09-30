@@ -30,6 +30,15 @@ public class ProcessorScreen extends AbstractContainerScreen<ProcessorMenu> {
     private static final Identifier TEXTURE =
             ChineseTraditionalFood.id("textures/gui/processor.png");
 
+    /**
+     * 多进料口机器（锅）用的另一张底图。
+     *
+     * <p>为什么不把两套槽位画在同一张图上：那样单进料口的机器会多出三个
+     * 永远空着的格子，玩家会以为"还有别的位置能放料"。分开两张最诚实。</p>
+     */
+    private static final Identifier TEXTURE_COOKER =
+            ChineseTraditionalFood.id("textures/gui/cooker.png");
+
     /** 贴图画布尺寸 —— 必须和 PNG 一致，也是 blit 的 textureWidth/Height。 */
     private static final int TEX_W = 256;
     private static final int TEX_H = 256;
@@ -37,15 +46,21 @@ public class ProcessorScreen extends AbstractContainerScreen<ProcessorMenu> {
     private static final int PANEL_W = 176;
     private static final int PANEL_H = 166;
 
-    /** 进度箭头：面板里的位置（空帧），以及画布上满帧的位置。 */
+    // ---- 单进料口：箭头在槽位右边 ----
     private static final int ARROW_X = 79;
     private static final int ARROW_Y = 34;
     private static final int ARROW_W = 24;
     private static final int ARROW_H = 17;
+
+    // ---- 四进料口：2×2 原料区占得宽，箭头相应右移 ----
+    private static final int COOKER_ARROW_X = 92;
+    private static final int COOKER_ARROW_Y = 33;
+
+    /** 满帧（箭头 / 动力条）一律画在面板右侧的条带上，两张图共用同一坐标。 */
     private static final int ARROW_FULL_X = 176;
     private static final int ARROW_FULL_Y = 0;
 
-    /** 竖排电量条：面板位置 + 满帧位置。 */
+    /** 竖排动力条：电动设备上是电量、锅上是热力。 */
     private static final int ENERGY_X = 152;
     private static final int ENERGY_Y = 20;
     private static final int ENERGY_W = 16;
@@ -60,6 +75,19 @@ public class ProcessorScreen extends AbstractContainerScreen<ProcessorMenu> {
         super(menu, inventory, title);
     }
 
+    /** 这台机器是不是多进料口（锅）。 */
+    private boolean multiSlot() {
+        return this.menu.inputSlots() > 1;
+    }
+
+    private int arrowX() {
+        return this.multiSlot() ? COOKER_ARROW_X : ARROW_X;
+    }
+
+    private int arrowY() {
+        return this.multiSlot() ? COOKER_ARROW_Y : ARROW_Y;
+    }
+
     @Override
     public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         // 先让原版画默认背景（暗化 + 模糊），再叠我们自己的底图
@@ -68,22 +96,37 @@ public class ProcessorScreen extends AbstractContainerScreen<ProcessorMenu> {
         int x = this.leftPos;
         int y = this.topPos;
         // 面板（只取左上角那一块）
-        graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, x, y, 0.0F, 0.0F,
-                PANEL_W, PANEL_H, TEX_W, TEX_H);
+        graphics.blit(RenderPipelines.GUI_TEXTURED,
+                this.multiSlot() ? TEXTURE_COOKER : TEXTURE,
+                x, y, 0.0F, 0.0F, PANEL_W, PANEL_H, TEX_W, TEX_H);
+
+        // 多进料口：把"正在加工的那一格"框出来 ——
+        // 否则玩家分不清四个格子里到底轮到谁了
+        if (this.multiSlot()) {
+            int active = this.menu.getActiveSlot();
+            int sx = x + ProcessorMenu.inputSlotX(active, 2) - 1;
+            int sy = y + ProcessorMenu.inputSlotY(active, 2) - 1;
+            graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE_COOKER,
+                    sx, sy,
+                    (float) SLOT_MARK_U, (float) SLOT_MARK_V,
+                    20, 20, TEX_W, TEX_H);
+        }
 
         // 进度：从满帧条带上裁左边一段，贴到箭头位置（左 -> 右填充）
         int filled = (int) (ARROW_W * this.menu.getProgressRatio());
         if (filled > 0) {
-            graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE,
-                    x + ARROW_X, y + ARROW_Y,
+            graphics.blit(RenderPipelines.GUI_TEXTURED,
+                    this.multiSlot() ? TEXTURE_COOKER : TEXTURE,
+                    x + this.arrowX(), y + this.arrowY(),
                     (float) ARROW_FULL_X, (float) ARROW_FULL_Y,
                     filled, ARROW_H, TEX_W, TEX_H);
         }
 
-        // 电量：从满帧条带的底部裁一段，从下往上填
+        // 动力：从满帧条带的底部裁一段，从下往上填
         int lit = (int) (ENERGY_H * this.menu.getEnergyRatio());
         if (lit > 0) {
-            graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE,
+            graphics.blit(RenderPipelines.GUI_TEXTURED,
+                    this.multiSlot() ? TEXTURE_COOKER : TEXTURE,
                     x + ENERGY_X, y + ENERGY_Y + (ENERGY_H - lit),
                     (float) ENERGY_FULL_X,
                     (float) (ENERGY_FULL_Y + ENERGY_H - lit),
@@ -91,22 +134,34 @@ public class ProcessorScreen extends AbstractContainerScreen<ProcessorMenu> {
         }
     }
 
+    /** 选中框在贴图上的位置（放在满帧条带里，不会一开始就露出来）。 */
+    private static final int SLOT_MARK_U = 176;
+    private static final int SLOT_MARK_V = 140;
+
     @Override
     protected void extractLabels(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         super.extractLabels(graphics, mouseX, mouseY);
 
-        // 右上角把电量写成数字 —— 进度条只能看个大概，够不够跑一批还得看数
-        Component energy = Component.translatable(
-                "tooltip.chinese_traditional_food.energy_amount",
-                this.menu.getEnergy(), this.menu.getEnergyCapacity());
-        int w = this.font.width(energy);
-        graphics.text(this.font, energy,
+        // 灶上锅具吃的是"热力"、电动设备吃的是"电量" —— 同一个界面，
+        // 靠菜单同步过来的标志位换文案，免得玩家对着炒锅满世界找插口。
+        boolean heat = this.menu.isHeatPowered();
+
+        // 右上角把数值写成文字 —— 光看竖条只能看个大概
+        Component power = heat
+                ? Component.translatable(
+                        "tooltip.chinese_traditional_food.heat_amount")
+                : Component.translatable(
+                        "tooltip.chinese_traditional_food.energy_amount",
+                        this.menu.getEnergy(), this.menu.getEnergyCapacity());
+        int w = this.font.width(power);
+        graphics.text(this.font, power,
                 this.leftPos + PANEL_W - 8 - w, this.topPos + 6, TEXT_COLOR, false);
 
-        // 没电的时候在箭头下面提一句，省得玩家对着不动的机器发呆
+        // 没动力的时候提一句，省得玩家对着不动的机器发呆
         if (!this.menu.hasEnergy()) {
-            Component hint = Component.translatable(
-                    "tooltip.chinese_traditional_food.gui_no_power");
+            Component hint = Component.translatable(heat
+                    ? "tooltip.chinese_traditional_food.gui_no_heat"
+                    : "tooltip.chinese_traditional_food.gui_no_power");
             int hw = this.font.width(hint);
             graphics.text(this.font, hint,
                     this.leftPos + (PANEL_W - hw) / 2, this.topPos + 58,

@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "DDD",
+    "DPD",
+    "DDD"
+  ],
+  "key": {
+    "D": "#tfc_food_port:dough",
+    "P": "chinese_traditional_food:bean_paste"
+  },
+  "result": {
+    "id": "chinese_traditional_food:dousha_yuebing",
+    "count": 4
+  },
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "tfc_food_port"
+    }
+  ]
+}

@@ -32,10 +32,6 @@ public final class ModItems {
     /** 餐盘，摆放 1 份菜。 */
     public static final DeferredItem<BlockItem> PLATE = ITEMS.registerSimpleBlockItem(ModBlocks.PLATE);
 
-    /** 大拼盘，摆放 4 份菜。 */
-    public static final DeferredItem<BlockItem> SERVING_PLATTER =
-            ITEMS.registerSimpleBlockItem(ModBlocks.SERVING_PLATTER);
-
     /** 案板，放上食材后用刀切。 */
     public static final DeferredItem<BlockItem> CUTTING_BOARD =
             ITEMS.registerSimpleBlockItem(ModBlocks.CUTTING_BOARD);
@@ -51,6 +47,41 @@ public final class ModItems {
     /** 熔炉发电机，烧燃料发电。 */
     public static final DeferredItem<BlockItem> FURNACE_GENERATOR =
             ITEMS.registerSimpleBlockItem(ModBlocks.FURNACE_GENERATOR);
+
+    // ---- 大型机（"3×3 放大版"）--------------------------------------
+    // 仍是单方块，但造型铺满整格、没有腿部留空；数值上批次 ×4、
+    // 速度快 3.3 倍、单位耗电约三成。详见 MachineEnergy 的"大型机"一节。
+
+    /** 大型熔炉发电机，200 FE/t、缓冲 40000 FE。 */
+    public static final DeferredItem<BlockItem> LARGE_FURNACE_GENERATOR =
+            ITEMS.registerSimpleBlockItem(ModBlocks.LARGE_FURNACE_GENERATOR);
+
+    /** 大型电动磨粉机，32 个一批 / 3 秒一批。 */
+    public static final DeferredItem<BlockItem> LARGE_ELECTRIC_MILL =
+            ITEMS.registerSimpleBlockItem(ModBlocks.LARGE_ELECTRIC_MILL);
+
+    /** 大型电动脱壳机，32 个一批 / 3 秒一批。 */
+    public static final DeferredItem<BlockItem> LARGE_ELECTRIC_SHELLER =
+            ITEMS.registerSimpleBlockItem(ModBlocks.LARGE_ELECTRIC_SHELLER);
+
+    // ---- 灶火系统：炉灶 + 三件锅具 --------------------------------------
+    // 和电力系统并行的一条路线：炉灶烧燃料只供热，锅具坐在它正上方用热。
+
+    /** 炉灶，烧燃料给正上方一格的锅具供热。 */
+    public static final DeferredItem<BlockItem> STOVE =
+            ITEMS.registerSimpleBlockItem(ModBlocks.STOVE);
+
+    /** 炒锅，坐在炉灶上快炒。 */
+    public static final DeferredItem<BlockItem> WOK =
+            ITEMS.registerSimpleBlockItem(ModBlocks.WOK);
+
+    /** 蒸笼，坐在炉灶上蒸。 */
+    public static final DeferredItem<BlockItem> STEAMER =
+            ITEMS.registerSimpleBlockItem(ModBlocks.STEAMER);
+
+    /** 汤锅，坐在炉灶上吊汤。 */
+    public static final DeferredItem<BlockItem> SOUP_POT =
+            ITEMS.registerSimpleBlockItem(ModBlocks.SOUP_POT);
 
     // ==================================================================
     // 基础食材
@@ -1904,6 +1935,455 @@ public final class ModItems {
                         .build()));
 
     // ==================================================================
+    // 早餐 —— 早餐（18 道）
+    // ==================================================================
+
+    /** 馒头（Steamed Bun）：5 饥饿 / 0.7 饱和，效果 NONE。 */
+    public static final DeferredItem<DishItem> MANTOU = ITEMS.registerItem(
+            "mantou",
+            props -> new DishItem(props, DishEffects.NONE),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(5)
+                        .saturationModifier(0.70F)
+                        .build()));
+
+    /** 花卷（Steamed Twisted Roll）：6 饥饿 / 0.8 饱和，效果 NONE。 */
+    public static final DeferredItem<DishItem> HUA_JUAN = ITEMS.registerItem(
+            "hua_juan",
+            props -> new DishItem(props, DishEffects.NONE),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(6)
+                        .saturationModifier(0.80F)
+                        .build()));
+
+    /** 包子（Steamed Stuffed Bun）：7 饥饿 / 0.9 饱和，效果 SATED。 */
+    public static final DeferredItem<DishItem> BAOZI = ITEMS.registerItem(
+            "baozi",
+            props -> new DishItem(props, DishEffects.SATED),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(7)
+                        .saturationModifier(0.90F)
+                        .build()));
+
+    /** 小笼包（Soup Dumpling）：6 饥饿 / 0.9 饱和，效果 SATED_REFRESH。 */
+    public static final DeferredItem<DishItem> XIAO_LONG_BAO = ITEMS.registerItem(
+            "xiao_long_bao",
+            props -> new DishItem(props, DishEffects.SATED_REFRESH),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(6)
+                        .saturationModifier(0.90F)
+                        .build()));
+
+    /** 豆沙包（Red Bean Bun）：6 饥饿 / 0.9 饱和，效果 RISE_UP。 */
+    public static final DeferredItem<DishItem> DOU_SHA_BAO = ITEMS.registerItem(
+            "dou_sha_bao",
+            props -> new DishItem(props, DishEffects.RISE_UP),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(6)
+                        .saturationModifier(0.90F)
+                        .build()));
+
+    /** 油条（Fried Dough Stick）：6 饥饿 / 0.8 饱和，效果 CRISP。 */
+    public static final DeferredItem<DishItem> YOUTIAO = ITEMS.registerItem(
+            "youtiao",
+            props -> new DishItem(props, DishEffects.CRISP),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(6)
+                        .saturationModifier(0.80F)
+                        .build()));
+
+    /** 豆浆（Soy Milk）：4 饥饿 / 0.6 饱和，效果 REFRESH。 */
+    public static final DeferredItem<DishItem> DOUJIANG = ITEMS.registerItem(
+            "doujiang",
+            props -> new DishItem(props, DishEffects.REFRESH),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(4)
+                        .saturationModifier(0.60F)
+                        .build()));
+
+    /** 豆浆油条（Soy Milk and Fried Dough）：9 饥饿 / 1.1 饱和，效果 CRISP_REFRESH。 */
+    public static final DeferredItem<DishItem> YOUTIAO_DOUJIANG = ITEMS.registerItem(
+            "youtiao_doujiang",
+            props -> new DishItem(props, DishEffects.CRISP_REFRESH),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(9)
+                        .saturationModifier(1.10F)
+                        .build()));
+
+    /** 炒肝（Stir-fried Liver）：6 饥饿 / 0.9 饱和，效果 NOURISH。 */
+    public static final DeferredItem<DishItem> CHAO_GAN = ITEMS.registerItem(
+            "chao_gan",
+            props -> new DishItem(props, DishEffects.NOURISH),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(6)
+                        .saturationModifier(0.90F)
+                        .build()));
+
+    /** 馄饨（Wonton）：7 饥饿 / 1.1 饱和，效果 WARMTH。 */
+    public static final DeferredItem<DishItem> HUNTUN = ITEMS.registerItem(
+            "huntun",
+            props -> new DishItem(props, DishEffects.WARMTH),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(7)
+                        .saturationModifier(1.10F)
+                        .build()));
+
+    /** 馄饨汤（Wonton Soup）：8 饥饿 / 1.2 饱和，效果 WARMTH_NOURISH。 */
+    public static final DeferredItem<DishItem> WONTON_SOUP = ITEMS.registerItem(
+            "wonton_soup",
+            props -> new DishItem(props, DishEffects.WARMTH_NOURISH),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(8)
+                        .saturationModifier(1.20F)
+                        .build()));
+
+    /** 小米粥（Millet Porridge）：5 饥饿 / 0.9 饱和，效果 WARMTH。 */
+    public static final DeferredItem<DishItem> XIAOMI_ZHOU = ITEMS.registerItem(
+            "xiaomi_zhou",
+            props -> new DishItem(props, DishEffects.WARMTH),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(5)
+                        .saturationModifier(0.90F)
+                        .build()));
+
+    /** 白粥（Plain Rice Porridge）：4 饥饿 / 0.7 饱和，效果 NONE。 */
+    public static final DeferredItem<DishItem> ZHOU_CONGEE = ITEMS.registerItem(
+            "zhou_congee",
+            props -> new DishItem(props, DishEffects.NONE),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(4)
+                        .saturationModifier(0.70F)
+                        .build()));
+
+    /** 煎饼果子（Jianbing）：9 饥饿 / 1.2 饱和，效果 SATED_REFRESH。 */
+    public static final DeferredItem<DishItem> JIANBING = ITEMS.registerItem(
+            "jianbing",
+            props -> new DishItem(props, DishEffects.SATED_REFRESH),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(9)
+                        .saturationModifier(1.20F)
+                        .build()));
+
+    /** 叉烧包（BBQ Pork Bun）：7 饥饿 / 1.0 饱和，效果 SATED。 */
+    public static final DeferredItem<DishItem> CHASHAO_BAO = ITEMS.registerItem(
+            "chashao_bao",
+            props -> new DishItem(props, DishEffects.SATED),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(7)
+                        .saturationModifier(1.00F)
+                        .build()));
+
+    /** 汤圆（Glutinous Rice Ball）：5 饥饿 / 0.9 饱和，效果 RISE_UP。 */
+    public static final DeferredItem<DishItem> TANGYUAN = ITEMS.registerItem(
+            "tangyuan",
+            props -> new DishItem(props, DishEffects.RISE_UP),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(5)
+                        .saturationModifier(0.90F)
+                        .build()));
+
+    /** 米线（Rice Noodles）：7 饥饿 / 1.1 饱和，效果 WARMTH。 */
+    public static final DeferredItem<DishItem> MIXIAN = ITEMS.registerItem(
+            "mixian",
+            props -> new DishItem(props, DishEffects.WARMTH),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(7)
+                        .saturationModifier(1.10F)
+                        .build()));
+
+    /** 炒面（Fried Noodles）：8 饥饿 / 1.1 饱和，效果 SATED。 */
+    public static final DeferredItem<DishItem> CHAO_MIAN = ITEMS.registerItem(
+            "chao_mian",
+            props -> new DishItem(props, DishEffects.SATED),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(8)
+                        .saturationModifier(1.10F)
+                        .build()));
+
+    // ==================================================================
+    // 特色小吃 —— 特色小吃（31 道）
+    // ==================================================================
+
+    /** 臭豆腐（Stinky Tofu）：5 饥饿 / 0.7 饱和，效果 CRISP。 */
+    public static final DeferredItem<DishItem> CHOU_DOUFU = ITEMS.registerItem(
+            "chou_doufu",
+            props -> new DishItem(props, DishEffects.CRISP),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(5)
+                        .saturationModifier(0.70F)
+                        .build()));
+
+    /** 烤冷面（Grilled Cold Noodles）：7 饥饿 / 0.9 饱和，效果 SATED。 */
+    public static final DeferredItem<DishItem> KAO_LENGMIAN = ITEMS.registerItem(
+            "kao_lengmian",
+            props -> new DishItem(props, DishEffects.SATED),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(7)
+                        .saturationModifier(0.90F)
+                        .build()));
+
+    /** 串串香（Chuanchuan Skewers）：6 饥饿 / 0.8 饱和，效果 REFRESH。 */
+    public static final DeferredItem<DishItem> CHUAN_CHUAN = ITEMS.registerItem(
+            "chuan_chuan",
+            props -> new DishItem(props, DishEffects.REFRESH),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(6)
+                        .saturationModifier(0.80F)
+                        .build()));
+
+    /** 肉夹馍（Roujiamo）：9 饥饿 / 1.2 饱和，效果 SATED_NOURISH。 */
+    public static final DeferredItem<DishItem> ROUJIAMO = ITEMS.registerItem(
+            "roujiamo",
+            props -> new DishItem(props, DishEffects.SATED_NOURISH),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(9)
+                        .saturationModifier(1.20F)
+                        .build()));
+
+    /** 煎糕（Pan-fried Cake）：6 饥饿 / 0.8 饱和，效果 NONE。 */
+    public static final DeferredItem<DishItem> JIAN_GAO = ITEMS.registerItem(
+            "jian_gao",
+            props -> new DishItem(props, DishEffects.NONE),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(6)
+                        .saturationModifier(0.80F)
+                        .build()));
+
+    /** 锅贴（Pot Stickers）：7 饥饿 / 0.9 饱和，效果 CRISP。 */
+    public static final DeferredItem<DishItem> GUO_TIE = ITEMS.registerItem(
+            "guo_tie",
+            props -> new DishItem(props, DishEffects.CRISP),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(7)
+                        .saturationModifier(0.90F)
+                        .build()));
+
+    /** 烧卖（Siu Mai）：7 饥饿 / 0.9 饱和，效果 SATED。 */
+    public static final DeferredItem<DishItem> SHAOMAI = ITEMS.registerItem(
+            "shaomai",
+            props -> new DishItem(props, DishEffects.SATED),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(7)
+                        .saturationModifier(0.90F)
+                        .build()));
+
+    /** 凉皮（Cold Skin Noodles）：6 饥饿 / 0.8 饱和，效果 REFRESH。 */
+    public static final DeferredItem<DishItem> LIANGPI = ITEMS.registerItem(
+            "liangpi",
+            props -> new DishItem(props, DishEffects.REFRESH),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(6)
+                        .saturationModifier(0.80F)
+                        .build()));
+
+    /** 川北凉粉（Sichuan Bean Jelly）：6 饥饿 / 0.8 饱和，效果 REFRESH。 */
+    public static final DeferredItem<DishItem> CHUANBEI_LIANGFEN = ITEMS.registerItem(
+            "chuanbei_liangfen",
+            props -> new DishItem(props, DishEffects.REFRESH),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(6)
+                        .saturationModifier(0.80F)
+                        .build()));
+
+    /** 糖葫芦（Candied Hawthorn）：4 饥饿 / 0.6 饱和，效果 RISE_UP。 */
+    public static final DeferredItem<DishItem> TANGHULU = ITEMS.registerItem(
+            "tanghulu",
+            props -> new DishItem(props, DishEffects.RISE_UP),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(4)
+                        .saturationModifier(0.60F)
+                        .build()));
+
+    /** 麻花（Fried Dough Twist）：5 饥饿 / 0.7 饱和，效果 CRISP。 */
+    public static final DeferredItem<DishItem> MAHUADOU = ITEMS.registerItem(
+            "mahuadou",
+            props -> new DishItem(props, DishEffects.CRISP),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(5)
+                        .saturationModifier(0.70F)
+                        .build()));
+
+    /** 烧饼（Baked Flatbread）：6 饥饿 / 0.8 饱和，效果 SATED。 */
+    public static final DeferredItem<DishItem> SHAO_BING = ITEMS.registerItem(
+            "shao_bing",
+            props -> new DishItem(props, DishEffects.SATED),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(6)
+                        .saturationModifier(0.80F)
+                        .build()));
+
+    /** 芝麻团（Sesame Ball）：5 饥饿 / 0.7 饱和，效果 RISE_UP。 */
+    public static final DeferredItem<DishItem> ZHIMA_TUAN = ITEMS.registerItem(
+            "zhima_tuan",
+            props -> new DishItem(props, DishEffects.RISE_UP),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(5)
+                        .saturationModifier(0.70F)
+                        .build()));
+
+    /** 咸肉粽（Savoury Zongzi）：8 饥饿 / 1.0 饱和，效果 SATED。 */
+    public static final DeferredItem<DishItem> ZONGZI_XIAN = ITEMS.registerItem(
+            "zongzi_xian",
+            props -> new DishItem(props, DishEffects.SATED),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(8)
+                        .saturationModifier(1.00F)
+                        .build()));
+
+    /** 年糕片（Sliced Rice Cake）：5 饥饿 / 0.7 饱和，效果 RISE_UP。 */
+    public static final DeferredItem<DishItem> RICE_CAKE = ITEMS.registerItem(
+            "rice_cake",
+            props -> new DishItem(props, DishEffects.RISE_UP),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(5)
+                        .saturationModifier(0.70F)
+                        .build()));
+
+    /** 蒸南瓜（Steamed Pumpkin）：5 饥饿 / 0.8 饱和，效果 NONE。 */
+    public static final DeferredItem<DishItem> STEAMED_PUMPKIN = ITEMS.registerItem(
+            "steamed_pumpkin",
+            props -> new DishItem(props, DishEffects.NONE),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(5)
+                        .saturationModifier(0.80F)
+                        .build()));
+
+    /** 豆腐脑（Tofu Pudding）：5 饥饿 / 0.8 饱和，效果 REFRESH。 */
+    public static final DeferredItem<DishItem> DOUFUNAO = ITEMS.registerItem(
+            "doufunao",
+            props -> new DishItem(props, DishEffects.REFRESH),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(5)
+                        .saturationModifier(0.80F)
+                        .build()));
+
+    /** 酸汤（Sour Soup）：5 饥饿 / 0.8 饱和，效果 REFRESH。 */
+    public static final DeferredItem<DishItem> SUANTANG = ITEMS.registerItem(
+            "suantang",
+            props -> new DishItem(props, DishEffects.REFRESH),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(5)
+                        .saturationModifier(0.80F)
+                        .build()));
+
+    /** 蛋花汤（Egg Drop Soup）：5 饥饿 / 0.8 饱和，效果 WARMTH。 */
+    public static final DeferredItem<DishItem> EGG_DROP_SOUP = ITEMS.registerItem(
+            "egg_drop_soup",
+            props -> new DishItem(props, DishEffects.WARMTH),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(5)
+                        .saturationModifier(0.80F)
+                        .build()));
+
+    /** 西红柿炒蛋（Tomato and Egg）：7 饥饿 / 0.9 饱和，效果 NONE。 */
+    public static final DeferredItem<DishItem> TOMATO_EGG = ITEMS.registerItem(
+            "tomato_egg",
+            props -> new DishItem(props, DishEffects.NONE),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(7)
+                        .saturationModifier(0.90F)
+                        .build()));
+
+    /** 炒蛋（Scrambled Egg）：5 饥饿 / 0.8 饱和，效果 NONE。 */
+    public static final DeferredItem<DishItem> SCRAMBLED_EGG = ITEMS.registerItem(
+            "scrambled_egg",
+            props -> new DishItem(props, DishEffects.NONE),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(5)
+                        .saturationModifier(0.80F)
+                        .build()));
+
+    /** 韭黄炒蛋（Chive and Egg）：7 饥饿 / 0.9 饱和，效果 NONE。 */
+    public static final DeferredItem<DishItem> CHIVE_EGG = ITEMS.registerItem(
+            "chive_egg",
+            props -> new DishItem(props, DishEffects.NONE),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(7)
+                        .saturationModifier(0.90F)
+                        .build()));
+
+    /** 干煸豆角（Dry-fried Green Beans）：6 饥饿 / 0.8 饱和，效果 CRISP。 */
+    public static final DeferredItem<DishItem> DRY_FRIED_BEANS = ITEMS.registerItem(
+            "dry_fried_beans",
+            props -> new DishItem(props, DishEffects.CRISP),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(6)
+                        .saturationModifier(0.80F)
+                        .build()));
+
+    /** 清炒豌豆（Stir-fried Peas）：6 饥饿 / 0.8 饱和，效果 NONE。 */
+    public static final DeferredItem<DishItem> STIR_FRIED_PEA = ITEMS.registerItem(
+            "stir_fried_pea",
+            props -> new DishItem(props, DishEffects.NONE),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(6)
+                        .saturationModifier(0.80F)
+                        .build()));
+
+    /** 油焖笋（Braised Bamboo Shoots）：6 饥饿 / 0.9 饱和，效果 NONE。 */
+    public static final DeferredItem<DishItem> BRAISED_BAMBOO = ITEMS.registerItem(
+            "braised_bamboo",
+            props -> new DishItem(props, DishEffects.NONE),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(6)
+                        .saturationModifier(0.90F)
+                        .build()));
+
+    /** 回锅肉片（Twice-cooked Pork Slices）：8 饥饿 / 1.0 饱和，效果 REFRESH。 */
+    public static final DeferredItem<DishItem> TWICE_COOKED_PORK = ITEMS.registerItem(
+            "twice_cooked_pork",
+            props -> new DishItem(props, DishEffects.REFRESH),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(8)
+                        .saturationModifier(1.00F)
+                        .build()));
+
+    /** 红豆汤（Red Bean Soup）：5 饥饿 / 0.9 饱和，效果 WARMTH。 */
+    public static final DeferredItem<DishItem> RED_BEAN_SOUP = ITEMS.registerItem(
+            "red_bean_soup",
+            props -> new DishItem(props, DishEffects.WARMTH),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(5)
+                        .saturationModifier(0.90F)
+                        .build()));
+
+    /** 绿豆汤（Mung Bean Soup）：5 饥饿 / 0.9 饱和，效果 REFRESH。 */
+    public static final DeferredItem<DishItem> MUNG_BEAN_SOUP = ITEMS.registerItem(
+            "mung_bean_soup",
+            props -> new DishItem(props, DishEffects.REFRESH),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(5)
+                        .saturationModifier(0.90F)
+                        .build()));
+
+    /** 冬瓜汤（Winter Melon Soup）：4 饥饿 / 0.7 饱和，效果 REFRESH。 */
+    public static final DeferredItem<DishItem> WINTER_MELON_SOUP = ITEMS.registerItem(
+            "winter_melon_soup",
+            props -> new DishItem(props, DishEffects.REFRESH),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(4)
+                        .saturationModifier(0.70F)
+                        .build()));
+
+    /** 莲子羹（Lotus Seed Soup）：5 饥饿 / 0.9 饱和，效果 NOURISH。 */
+    public static final DeferredItem<DishItem> LOTUS_SEED_SOUP = ITEMS.registerItem(
+            "lotus_seed_soup",
+            props -> new DishItem(props, DishEffects.NOURISH),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(5)
+                        .saturationModifier(0.90F)
+                        .build()));
+
+    /** 山药排骨汤（Yam and Rib Soup）：8 饥饿 / 1.2 饱和，效果 WARMTH_NOURISH。 */
+    public static final DeferredItem<DishItem> YAM_RIBS_SOUP = ITEMS.registerItem(
+            "yam_ribs_soup",
+            props -> new DishItem(props, DishEffects.WARMTH_NOURISH),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(8)
+                        .saturationModifier(1.20F)
+                        .build()));
+
+    // ==================================================================
     // 汇总：所有可食用 / 可摆盘的物品
     // ==================================================================
 
@@ -2077,7 +2557,56 @@ public final class ModItems {
             JUHUA_JIU,
             LABA_ZHOU,
             LABA_SUAN,
-            YANGROU_TANG
+            YANGROU_TANG,
+            MANTOU,
+            HUA_JUAN,
+            BAOZI,
+            XIAO_LONG_BAO,
+            DOU_SHA_BAO,
+            YOUTIAO,
+            DOUJIANG,
+            YOUTIAO_DOUJIANG,
+            CHAO_GAN,
+            HUNTUN,
+            WONTON_SOUP,
+            XIAOMI_ZHOU,
+            ZHOU_CONGEE,
+            JIANBING,
+            CHASHAO_BAO,
+            TANGYUAN,
+            MIXIAN,
+            CHAO_MIAN,
+            CHOU_DOUFU,
+            KAO_LENGMIAN,
+            CHUAN_CHUAN,
+            ROUJIAMO,
+            JIAN_GAO,
+            GUO_TIE,
+            SHAOMAI,
+            LIANGPI,
+            CHUANBEI_LIANGFEN,
+            TANGHULU,
+            MAHUADOU,
+            SHAO_BING,
+            ZHIMA_TUAN,
+            ZONGZI_XIAN,
+            RICE_CAKE,
+            STEAMED_PUMPKIN,
+            DOUFUNAO,
+            SUANTANG,
+            EGG_DROP_SOUP,
+            TOMATO_EGG,
+            SCRAMBLED_EGG,
+            CHIVE_EGG,
+            DRY_FRIED_BEANS,
+            STIR_FRIED_PEA,
+            BRAISED_BAMBOO,
+            TWICE_COOKED_PORK,
+            RED_BEAN_SOUP,
+            MUNG_BEAN_SOUP,
+            WINTER_MELON_SOUP,
+            LOTUS_SEED_SOUP,
+            YAM_RIBS_SOUP
     );
 
     public static void register(IEventBus modBus) {

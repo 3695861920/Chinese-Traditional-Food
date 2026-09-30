@@ -29,6 +29,7 @@
 import json
 import math
 import os
+import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RES = os.path.join(ROOT, "src", "main", "resources", "assets",
@@ -249,6 +250,169 @@ def electric_sheller():
 
 
 # ======================================================================
+# 大型机（"3×3 放大版"）
+# ======================================================================
+#
+# 与小型机的区别（造型上）：
+#
+# * **没有支腿**：小型机坐在四条腿上、底下是空的；大型机是落地的一整台
+#   机组，所以主体从 0 到 16 铺满整格 —— 也因此碰撞箱是完整的一格；
+# * **多出来的部件**：双烟囱 / 双磨盘 / 双料斗、外置的配电箱与飞轮、
+#   一圈加强筋与铆钉排 —— 体量感完全不一样，一眼能看出是升级版；
+# * 仍然全部是**实心盒子**，不做薄壳中空，所以不会出现"透视"。
+
+def large_furnace_generator():
+    """大型熔炉发电机：落地机组 + 双炉膛 + 双烟囱 + 侧面配电箱与飞轮。"""
+    E = []
+    # 底座（含一圈加强筋）
+    E.append(box({"down": "#stone"}, 0.0, 0.0, 0.0, 16.0, 2.0, 16.0,
+                 default="#stone"))
+    E.append(box({}, -0.4, 0.0, -0.4, 16.4, 1.0, 16.4, default="#iron"))
+
+    # 主炉体
+    E.append(box({"down": "#stone"}, 0.4, 2.0, 0.4, 15.6, 11.6, 15.6,
+                 default="#stone"))
+    # 上段收一点，形成台阶轮廓
+    E.append(box({"up": "#iron"}, 1.0, 11.6, 1.0, 15.0, 13.4, 15.0,
+                 default="#iron"))
+
+    # 两侧的加强筋（三道）
+    for y0 in (3.0, 5.6, 8.2):
+        E.append(box({}, -0.5, y0, 0.8, 0.4, y0 + 2.0, 15.2, default="#iron"))
+        E.append(box({}, 15.6, y0, 0.8, 16.5, y0 + 2.0, 15.2, default="#iron"))
+
+    # 正面：两扇炉门并排（各自带炉栅与门闩）—— 双炉膛
+    for i in range(2):
+        x0 = 1.6 + i * 7.0
+        E.append(box({}, x0, 3.4, -0.2, x0 + 6.4, 10.6, 0.8, default="#iron"))
+        E.append(box({"north": "#grate"}, x0 + 0.9, 4.4, -0.4, x0 + 5.5, 9.6,
+                     0.2, default="#iron"))
+        E.append(box({}, x0 + 2.6, 9.6, -0.4, x0 + 3.8, 11.0, 0.2,
+                     default="#iron"))
+
+    # 双烟囱
+    for cx in (4.4, 11.6):
+        E.append(box({}, cx - 1.4, 13.4, 4.6, cx + 1.4, 20.6, 8.2,
+                     default="#iron"))
+        E.append(box({}, cx - 2.0, 20.6, 4.0, cx + 2.0, 21.8, 8.8,
+                     default="#stone"))
+        E.append(box({}, cx - 1.0, 21.8, 4.9, cx + 1.0, 22.4, 7.9,
+                     default="#grate"))
+
+    # 右侧配电箱 + 压力表
+    E.append(box({}, 11.2, 4.0, 15.4, 15.2, 10.0, 16.6, default="#iron"))
+    for y0 in (5.0, 6.8, 8.6):
+        E.append(box({"south": "#coil"}, 12.0, y0, 16.4, 14.4, y0 + 1.2, 16.9,
+                     default="#coil"))
+
+    # 左侧飞轮（八棱柱）+ 皮带
+    E += oct_prism(0.8, 8.0, 3.4, 5.0, 11.0, "#iron", top="#coil")
+    E.append(box({}, 0.0, 7.4, 7.4, 0.4, 8.6, 8.6, default="#coil"))
+
+    # 顶部散热片
+    for i in range(4):
+        z = 3.0 + i * 2.6
+        E.append(box({}, 1.4, 13.4, z, 14.6, 14.4, z + 1.2, default="#vent"))
+    return E
+
+
+def large_electric_mill():
+    """大型电动磨粉机：落地机组 + 上下双磨盘 + 环绕的传动轮 + 双出料槽。"""
+    E = []
+    E.append(box({"down": "#iron"}, 0.0, 0.0, 0.0, 16.0, 2.0, 16.0,
+                 default="#iron"))
+    E.append(box({}, -0.4, 0.0, -0.4, 16.4, 1.0, 16.4, default="#stone"))
+
+    # 机身
+    E.append(box({"down": "#iron"}, 0.4, 2.0, 0.4, 15.6, 9.6, 15.6,
+                 default="#iron"))
+    # 正面的散热百叶（整片，比小型机宽一倍）
+    E.append(box({"north": "#vent"}, 1.4, 3.2, -0.2, 14.6, 8.6, 0.6,
+                 default="#iron"))
+    # 铁箍
+    for y0 in (2.4, 9.0):
+        E.append(box({}, 0.0, y0, 0.0, 16.0, y0 + 1.6, 16.0, default="#iron"))
+
+    # 下磨盘
+    E += oct_prism(8.0, 8.0, 7.4, 9.6, 12.4, "#millstone", top="#millstone")
+    # 上磨盘
+    E += oct_prism(8.0, 8.0, 5.4, 12.4, 15.2, "#millstone", top="#millstone")
+    # 第三层小盘（大型机比小型机多一级）
+    E += oct_prism(8.0, 8.0, 3.4, 15.2, 17.4, "#millstone", top="#millstone")
+    # 中心立轴 + 传动轮
+    E.append(box({}, 6.8, 17.4, 6.8, 9.2, 20.2, 9.2, default="#iron"))
+    E.append(box({}, 5.4, 20.2, 5.4, 10.6, 21.4, 10.6, default="#coil"))
+
+    # 环绕的两条传动轮（左右各一，八棱柱）
+    E += oct_prism(0.8, 4.4, 2.6, 4.0, 9.0, "#iron", top="#coil")
+    E += oct_prism(0.8, 11.6, 2.6, 4.0, 9.0, "#iron", top="#coil")
+
+    # 进料斗：顶部大斗
+    E += sq_ring(4.4, 10.0, 11.6, 16.0, 1.4, 9.6, 12.4, "#hopper")
+    E += sq_ring(3.4, 9.0, 12.6, 16.0, 1.6, 12.4, 15.0, "#hopper",
+                 top="#hopper")
+
+    # 双出料槽
+    for i in range(2):
+        x0 = 1.2 + i * 7.6
+        E.append(box({}, x0, 2.2, 0.0, x0 + 5.8, 4.4, 1.6, default="#hopper"))
+        E.append(box({"north": "#hopper"}, x0 + 0.6, 3.0, -0.4, x0 + 5.2, 4.2,
+                     0.2, default="#hopper"))
+    return E
+
+
+def large_electric_sheller():
+    """大型电动脱壳机：落地机组 + 三层大料斗 + 双滚筒 + 外置电机与检修门。"""
+    E = []
+    E.append(box({"down": "#iron"}, 0.0, 0.0, 0.0, 16.0, 2.0, 16.0,
+                 default="#iron"))
+    E.append(box({}, -0.4, 0.0, -0.4, 16.4, 1.0, 16.4, default="#stone"))
+
+    # 机身
+    E.append(box({"down": "#iron"}, 0.4, 2.0, 0.4, 15.6, 10.0, 15.6,
+                 default="#iron"))
+    E.append(box({"north": "#vent"}, 1.4, 3.2, -0.2, 14.6, 9.0, 0.6,
+                 default="#iron"))
+    for y0 in (2.4, 9.4):
+        E.append(box({}, 0.0, y0, 0.0, 16.0, y0 + 1.6, 16.0, default="#iron"))
+
+    # 双滚筒：两个并排的八棱柱横在机身正面（脱壳的核心部件）
+    for cx in (4.8, 11.2):
+        E += oct_prism(cx, 1.6, 3.2, 4.4, 8.0, "#millstone", top="#coil")
+
+    # 三层递增的大料斗
+    E += sq_ring(4.0, 5.0, 12.0, 13.0, 1.5, 10.0, 13.0, "#hopper")
+    E += sq_ring(2.6, 4.0, 13.4, 14.0, 1.8, 13.0, 16.0, "#hopper",
+                 top="#hopper")
+    E += sq_ring(1.0, 3.0, 15.0, 15.0, 2.0, 16.0, 19.0, "#hopper",
+                 top="#hopper")
+    # 斗底的出料喉（两根，对应双滚筒）
+    for cx in (5.2, 10.8):
+        E.append(box({}, cx - 1.4, 7.6, 6.4, cx + 1.4, 10.4, 9.6,
+                     default="#hopper"))
+
+    # 右侧外置电机
+    E += oct_prism(15.8, 8.0, 3.0, 4.4, 10.4, "#iron", top="#coil")
+    E.append(box({}, 15.4, 6.4, 5.6, 16.8, 8.0, 10.4, default="#coil"))
+
+    # 双出料口
+    for i in range(2):
+        x0 = 1.6 + i * 7.0
+        E.append(box({}, x0, 2.2, 0.0, x0 + 6.0, 4.6, 1.8, default="#hopper"))
+
+    # 正面的检修门（带观察窗）
+    E.append(box({}, 2.4, 4.6, -0.2, 13.6, 8.6, 0.4, default="#iron"))
+    E.append(box({"north": "#grate"}, 5.0, 5.4, -0.4, 11.0, 7.8, 0.0,
+                 default="#grate"))
+
+    # 顶部排气口
+    for cx in (3.6, 12.4):
+        E.append(box({}, cx - 1.0, 19.0, 7.0, cx + 1.0, 20.6, 10.0,
+                     default="#grate"))
+    return E
+
+
+# ======================================================================
 # 材质与生成
 # ======================================================================
 TEX = {
@@ -260,13 +424,50 @@ TEX = {
     "vent": "%s:block/machine_vent" % NS,
     "coil": "%s:block/machine_coil" % NS,
     "hopper": "%s:block/machine_hopper" % NS,
+    # 灶火系统
+    "bamboo": "%s:block/machine_bamboo" % NS,
+    "steam": "%s:block/machine_steam" % NS,
+    # 锅里的熟食（不走方块着色 —— 锅具没有颜色属性，直接画成熟食色）
+    "food": "%s:block/machine_cooked" % NS,
+    # 器皿内壁 / 层缝的暗色
+    "shadow": "%s:block/dish_shadow" % NS,
+    # 电磁炉的顶面 / 面板（有通电与断电两版）
+    "cookerTop": "%s:block/machine_cooker_top" % NS,
+    "cookerTopOn": "%s:block/machine_cooker_top_on" % NS,
+    "cookerPanel": "%s:block/machine_cooker_panel" % NS,
 }
 
 BUILDERS = {
     "furnace_generator": furnace_generator,
     "electric_mill": electric_mill,
     "electric_sheller": electric_sheller,
+    "large_furnace_generator": large_furnace_generator,
+    "large_electric_mill": large_electric_mill,
+    "large_electric_sheller": large_electric_sheller,
 }
+
+# 灶火系统（炉灶 + 三件锅具）单独放在 stove_models.py 里 ——
+# 它们的造型语言（砖台、竹笼、敞口锅）和机器差别很大，混在一处反而难读。
+import stove_models  # noqa: E402
+
+stove_models.bind(sys.modules[__name__])
+
+BUILDERS.update({
+    "stove": stove_models.stove,
+    "wok": stove_models.wok,
+    "steamer": stove_models.steamer,
+    "soup_pot": stove_models.soup_pot,
+})
+
+# 哪些方块带一个额外的 "powered" 方块状态（并因此多一份模型）。
+# 电磁炉就是这么做的：通电时顶面的线圈换成发光的那张。
+# 值为 "通电模型里被替换掉的材质键 -> 替换成的新键"。
+POWERED_BLOCKS = {
+    "stove": {"cookerTop": "cookerTopOn"},
+}
+
+# 小型机（带腿）与大型机（落地）在方块状态上完全一样，都是 4 个朝向；
+# 下面的 build_blockstates 会把 BUILDERS 里的每一项都写一份。
 
 # 上一版（整块方块 / 多方块）留下来的孤儿模型
 STALE = (
@@ -301,8 +502,19 @@ def build_models():
             "textures": TEX,
             "elements": elements,
         })
-        print("model  %-20s %2d 构件" % (name, len(elements)))
         total += 1
+        # 带 powered 状态的方块：再写一份"通电版"模型，只换掉指定材质
+        swaps = POWERED_BLOCKS.get(name)
+        if swaps:
+            on_tex = dict(TEX)
+            for old, new in swaps.items():
+                on_tex[old] = TEX[new]
+            _write(os.path.join(out, "%s_on.json" % name), {
+                "parent": "minecraft:block/block",
+                "textures": on_tex,
+                "elements": elements,
+            })
+            total += 1
     print("machine models: %d" % total)
 
 
@@ -311,11 +523,24 @@ def build_blockstates():
     yrot = {"north": 0, "east": 90, "south": 180, "west": 270}
     for name in BUILDERS:
         variants = {}
-        for facing, deg in yrot.items():
-            entry = {"model": "%s:block/%s" % (NS, name)}
-            if deg:
-                entry["y"] = deg
-            variants["facing=%s" % facing] = entry
+        if name in POWERED_BLOCKS:
+            # facing × powered 的**所有**组合都要列出来，漏一个就会
+            # 在那种状态下模型直接 Missing。
+            for facing, deg in yrot.items():
+                for powered in ("false", "true"):
+                    entry = {
+                        "model": "%s:block/%s%s"
+                                 % (NS, name, "_on" if powered == "true" else "")
+                    }
+                    if deg:
+                        entry["y"] = deg
+                    variants["facing=%s,powered=%s" % (facing, powered)] = entry
+        else:
+            for facing, deg in yrot.items():
+                entry = {"model": "%s:block/%s" % (NS, name)}
+                if deg:
+                    entry["y"] = deg
+                variants["facing=%s" % facing] = entry
         _write(os.path.join(out, "%s.json" % name), {"variants": variants})
         print("blockstate %-20s %d 朝向" % ("%s.json" % name, len(variants)))
 

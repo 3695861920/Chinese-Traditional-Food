@@ -1,0 +1,20 @@
+{
+  "type": "kaleidoscope_cookery:cutting_board",
+  "ingredients": [
+    {
+      "item": "chinese_traditional_food:tofu"
+    }
+  ],
+  "result": [
+    {
+      "item": "chinese_traditional_food:shredded_tofu",
+      "count": 1
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "kaleidoscope_cookery"
+    }
+  ]
+}

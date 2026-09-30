@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AAA",
+    "AAA",
+    "AAA"
+  ],
+  "key": {
+    "A": "chinese_traditional_food:garlic"
+  },
+  "result": {
+    "id": "chinese_traditional_food:garlic_crate",
+    "count": 1
+  }
+}

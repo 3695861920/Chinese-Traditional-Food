@@ -1,0 +1,21 @@
+{
+  "type": "farmersdelight:cooking",
+  "ingredients": [
+    "minecraft:red_bean",
+    "minecraft:red_bean",
+    "minecraft:sugar"
+  ],
+  "result": {
+    "id": "chinese_traditional_food:red_bean_soup",
+    "count": 1
+  },
+  "experience": 0.35,
+  "cookingtime": 200,
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "farmersdelight"
+    }
+  ],
+  "container": "minecraft:bowl"
+}

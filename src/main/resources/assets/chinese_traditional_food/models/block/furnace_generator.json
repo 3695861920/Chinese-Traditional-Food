@@ -8,7 +8,14 @@
     "grate": "chinese_traditional_food:block/machine_grate",
     "vent": "chinese_traditional_food:block/machine_vent",
     "coil": "chinese_traditional_food:block/machine_coil",
-    "hopper": "chinese_traditional_food:block/machine_hopper"
+    "hopper": "chinese_traditional_food:block/machine_hopper",
+    "bamboo": "chinese_traditional_food:block/machine_bamboo",
+    "steam": "chinese_traditional_food:block/machine_steam",
+    "food": "chinese_traditional_food:block/machine_cooked",
+    "shadow": "chinese_traditional_food:block/dish_shadow",
+    "cookerTop": "chinese_traditional_food:block/machine_cooker_top",
+    "cookerTopOn": "chinese_traditional_food:block/machine_cooker_top_on",
+    "cookerPanel": "chinese_traditional_food:block/machine_cooker_panel"
   },
   "elements": [
     {

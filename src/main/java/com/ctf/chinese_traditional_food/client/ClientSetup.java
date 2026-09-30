@@ -5,7 +5,6 @@ import com.ctf.chinese_traditional_food.client.render.CuttingBoardBlockEntityRen
 import com.ctf.chinese_traditional_food.client.render.GeneratorScreen;
 import com.ctf.chinese_traditional_food.client.render.PlateBlockEntityRenderer;
 import com.ctf.chinese_traditional_food.client.render.ProcessorScreen;
-import com.ctf.chinese_traditional_food.client.render.ServingPlatterBlockEntityRenderer;
 import com.ctf.chinese_traditional_food.registry.ModBlockEntities;
 import com.ctf.chinese_traditional_food.registry.ModMenus;
 import net.neoforged.api.distmarker.Dist;
@@ -27,17 +26,19 @@ public final class ClientSetup {
         // "摆菜"类方块：把方块实体槽位里的物品画出来
         event.registerBlockEntityRenderer(ModBlockEntities.PLATE.get(),
                 PlateBlockEntityRenderer::new);
-        event.registerBlockEntityRenderer(ModBlockEntities.SERVING_PLATTER.get(),
-                ServingPlatterBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.CUTTING_BOARD.get(),
                 CuttingBoardBlockEntityRenderer::new);
-        // 发电机与两台加工机没有额外的动态渲染，普通方块模型就够了，不注册渲染器。
+        // 发电机 / 加工机 / 炉灶 / 锅具都没有额外的动态渲染，普通方块模型就够了。
     }
 
     @SubscribeEvent
     public static void registerScreens(RegisterMenuScreensEvent event) {
+        // 电动设备（1 个进料槽）
         event.register(ModMenus.PROCESSOR.get(), ProcessorScreen::new);
+        // 灶上锅具（4 个进料槽）—— 同一个屏幕类，布局按进料口数量自己切
+        event.register(ModMenus.COOKER.get(), ProcessorScreen::new);
         event.register(ModMenus.GENERATOR.get(), GeneratorScreen::new);
+        // 电磁炉没有界面：通电就亮，方块状态直接写在贴图上。
     }
 
     private ClientSetup() {}

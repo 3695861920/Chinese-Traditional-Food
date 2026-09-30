@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "PPP",
+    "B B",
+    "PPP"
+  ],
+  "key": {
+    "P": "#minecraft:planks",
+    "B": "minecraft:bamboo"
+  },
+  "result": {
+    "id": "chinese_traditional_food:steamer",
+    "count": 1
+  }
+}

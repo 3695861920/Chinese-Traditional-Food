@@ -3,6 +3,13 @@
   "values": [
     "chinese_traditional_food:furnace_generator",
     "chinese_traditional_food:electric_mill",
-    "chinese_traditional_food:electric_sheller"
+    "chinese_traditional_food:electric_sheller",
+    "chinese_traditional_food:large_furnace_generator",
+    "chinese_traditional_food:large_electric_mill",
+    "chinese_traditional_food:large_electric_sheller",
+    "chinese_traditional_food:stove",
+    "chinese_traditional_food:wok",
+    "chinese_traditional_food:steamer",
+    "chinese_traditional_food:soup_pot"
   ]
 }

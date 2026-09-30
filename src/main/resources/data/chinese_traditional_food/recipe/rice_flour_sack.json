@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AAA",
+    "AAA",
+    "AAA"
+  ],
+  "key": {
+    "A": "chinese_traditional_food:rice_flour"
+  },
+  "result": {
+    "id": "chinese_traditional_food:rice_flour_sack",
+    "count": 1
+  }
+}

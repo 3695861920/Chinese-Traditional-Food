@@ -44,23 +44,36 @@ public abstract class AbstractFacingBlock extends Block {
      */
     public static final VoxelShape MACHINE_SHAPE = Block.box(1.0, 0.0, 1.0, 15.0, 16.0, 15.0);
 
+    /**
+     * 大型机的碰撞箱：**整整一格**。
+     *
+     * <p>小型机是“四条腿搭起的机身”，所以内缩一圈；而大型机造型就是铺满整格的
+     * 方箱，碰撞箱自然也该是一整格 —— 否则一面对它站着就会被空气墙顶住。</p>
+     */
+    public static final VoxelShape LARGE_MACHINE_SHAPE = Block.box(0.0, 0.0, 0.0, 16.0, 16.0, 16.0);
+
     protected AbstractFacingBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any()
                 .setValue(FACING, Direction.NORTH));
     }
 
+    /** 供子类覆写：大型机返回整格长方体。 */
+    protected VoxelShape machineShape() {
+        return MACHINE_SHAPE;
+    }
+
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, net.minecraft.core.BlockPos pos,
                                   CollisionContext context) {
-        return MACHINE_SHAPE;
+        return this.machineShape();
     }
 
     @Override
     protected VoxelShape getCollisionShape(BlockState state, BlockGetter level,
                                            net.minecraft.core.BlockPos pos,
                                            CollisionContext context) {
-        return MACHINE_SHAPE;
+        return this.machineShape();
     }
 
     @Override

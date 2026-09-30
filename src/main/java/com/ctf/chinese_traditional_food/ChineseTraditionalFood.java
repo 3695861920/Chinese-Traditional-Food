@@ -2,6 +2,7 @@ package com.ctf.chinese_traditional_food;
 
 import com.ctf.chinese_traditional_food.registry.ModBlockEntities;
 import com.ctf.chinese_traditional_food.registry.ModBlocks;
+import com.ctf.chinese_traditional_food.registry.ModCompressed;
 import com.ctf.chinese_traditional_food.registry.ModCreativeTabs;
 import com.ctf.chinese_traditional_food.registry.ModItems;
 import com.ctf.chinese_traditional_food.registry.ModMenus;
@@ -33,6 +34,8 @@ public class ChineseTraditionalFood {
         ModBlocks.register(modBus);
         ModBlockEntities.register(modBus);
         ModItems.register(modBus);
+        // 食材压缩方块（34 种）是生成出来的，单独一个注册表
+        ModCompressed.register(modBus);
         ModMenus.register(modBus);
         ModMobEffects.register(modBus);
         ModCreativeTabs.register(modBus);

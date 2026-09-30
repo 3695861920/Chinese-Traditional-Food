@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "chinese_traditional_food:block/soup_pot"
+    },
+    "facing=east": {
+      "model": "chinese_traditional_food:block/soup_pot",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "chinese_traditional_food:block/soup_pot",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "chinese_traditional_food:block/soup_pot",
+      "y": 270
+    }
+  }
+}

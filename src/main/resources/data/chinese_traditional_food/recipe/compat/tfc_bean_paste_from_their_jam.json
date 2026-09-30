@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "JJ",
+    "JJ"
+  ],
+  "key": {
+    "J": "#tfc_food_port:jam"
+  },
+  "result": {
+    "id": "chinese_traditional_food:bean_paste",
+    "count": 2
+  },
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "tfc_food_port"
+    }
+  ]
+}

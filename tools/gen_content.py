@@ -144,10 +144,6 @@ public final class ModItems {
     /** 餐盘，摆放 1 份菜。 */
     public static final DeferredItem<BlockItem> PLATE = ITEMS.registerSimpleBlockItem(ModBlocks.PLATE);
 
-    /** 大拼盘，摆放 4 份菜。 */
-    public static final DeferredItem<BlockItem> SERVING_PLATTER =
-            ITEMS.registerSimpleBlockItem(ModBlocks.SERVING_PLATTER);
-
     /** 案板，放上食材后用刀切。 */
     public static final DeferredItem<BlockItem> CUTTING_BOARD =
             ITEMS.registerSimpleBlockItem(ModBlocks.CUTTING_BOARD);
@@ -163,6 +159,41 @@ public final class ModItems {
     /** 熔炉发电机，烧燃料发电。 */
     public static final DeferredItem<BlockItem> FURNACE_GENERATOR =
             ITEMS.registerSimpleBlockItem(ModBlocks.FURNACE_GENERATOR);
+
+    // ---- 大型机（"3×3 放大版"）--------------------------------------
+    // 仍是单方块，但造型铺满整格、没有腿部留空；数值上批次 ×4、
+    // 速度快 3.3 倍、单位耗电约三成。详见 MachineEnergy 的"大型机"一节。
+
+    /** 大型熔炉发电机，200 FE/t、缓冲 40000 FE。 */
+    public static final DeferredItem<BlockItem> LARGE_FURNACE_GENERATOR =
+            ITEMS.registerSimpleBlockItem(ModBlocks.LARGE_FURNACE_GENERATOR);
+
+    /** 大型电动磨粉机，32 个一批 / 3 秒一批。 */
+    public static final DeferredItem<BlockItem> LARGE_ELECTRIC_MILL =
+            ITEMS.registerSimpleBlockItem(ModBlocks.LARGE_ELECTRIC_MILL);
+
+    /** 大型电动脱壳机，32 个一批 / 3 秒一批。 */
+    public static final DeferredItem<BlockItem> LARGE_ELECTRIC_SHELLER =
+            ITEMS.registerSimpleBlockItem(ModBlocks.LARGE_ELECTRIC_SHELLER);
+
+    // ---- 灶火系统：炉灶 + 三件锅具 --------------------------------------
+    // 和电力系统并行的一条路线：炉灶烧燃料只供热，锅具坐在它正上方用热。
+
+    /** 炉灶，烧燃料给正上方一格的锅具供热。 */
+    public static final DeferredItem<BlockItem> STOVE =
+            ITEMS.registerSimpleBlockItem(ModBlocks.STOVE);
+
+    /** 炒锅，坐在炉灶上快炒。 */
+    public static final DeferredItem<BlockItem> WOK =
+            ITEMS.registerSimpleBlockItem(ModBlocks.WOK);
+
+    /** 蒸笼，坐在炉灶上蒸。 */
+    public static final DeferredItem<BlockItem> STEAMER =
+            ITEMS.registerSimpleBlockItem(ModBlocks.STEAMER);
+
+    /** 汤锅，坐在炉灶上吊汤。 */
+    public static final DeferredItem<BlockItem> SOUP_POT =
+            ITEMS.registerSimpleBlockItem(ModBlocks.SOUP_POT);
 """
 
 FOOTER = """
@@ -249,9 +280,12 @@ def gen_mod_items(items, dishes):
         if not rows:
             continue
         cuisine = group in ("lu", "chuan", "yue", "su", "min", "zhe", "xiang", "hui")
+        kind_note = " —— 八大菜系" if cuisine else (
+            " —— 早餐" if group == "breakfast" else (
+                " —— 特色小吃" if group == "snack" else " —— 传统节日"))
         out.append("\n    // ==================================================================\n")
         out.append("    // %s%s（%d 道）\n"
-                   % (DATA.GROUP_TITLES[group], " —— 八大菜系" if cuisine else " —— 传统节日", len(rows)))
+                   % (DATA.GROUP_TITLES[group], kind_note, len(rows)))
         out.append("    // ==================================================================\n\n")
         out.append("\n\n".join(item_entry(d) for d in rows))
         out.append("\n")
@@ -306,11 +340,21 @@ public final class ModCreativeTabs {
                     .displayItems((params, output) -> {
                         // 餐具与功能方块
                         output.accept(ModItems.PLATE.get());
-                        output.accept(ModItems.SERVING_PLATTER.get());
                         output.accept(ModItems.CUTTING_BOARD.get());
                         output.accept(ModItems.FURNACE_GENERATOR.get());
                         output.accept(ModItems.ELECTRIC_MILL.get());
                         output.accept(ModItems.ELECTRIC_SHELLER.get());
+                        output.accept(ModItems.LARGE_FURNACE_GENERATOR.get());
+                        output.accept(ModItems.LARGE_ELECTRIC_MILL.get());
+                        output.accept(ModItems.LARGE_ELECTRIC_SHELLER.get());
+                        output.accept(ModItems.STOVE.get());
+                        output.accept(ModItems.WOK.get());
+                        output.accept(ModItems.STEAMER.get());
+                        output.accept(ModItems.SOUP_POT.get());
+                        // 食材压缩方块（生成出来的，走另一个注册表）
+                        for (var item : ModCompressed.all()) {
+                            output.accept(item.get());
+                        }
                         // 其余全部内容（食材 / 调味料 / 水果 / 蔬菜 / 厨具 / 菜品）
                         for (var item : ModItems.allFoods()) {
                             output.accept(item.get());
@@ -326,14 +370,24 @@ CREATIVE_FOOTER = """
             for (var item : ModItems.allFoods()) {
                 event.accept(item.get());
             }
+            // 压缩方块也是"食材"，放进原料页最合适
+            for (var item : ModCompressed.all()) {
+                event.accept(item.get());
+            }
         }
         if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
             event.accept(ModItems.PLATE.get());
-            event.accept(ModItems.SERVING_PLATTER.get());
             event.accept(ModItems.CUTTING_BOARD.get());
             event.accept(ModItems.FURNACE_GENERATOR.get());
             event.accept(ModItems.ELECTRIC_MILL.get());
             event.accept(ModItems.ELECTRIC_SHELLER.get());
+            event.accept(ModItems.LARGE_FURNACE_GENERATOR.get());
+            event.accept(ModItems.LARGE_ELECTRIC_MILL.get());
+            event.accept(ModItems.LARGE_ELECTRIC_SHELLER.get());
+            event.accept(ModItems.STOVE.get());
+            event.accept(ModItems.WOK.get());
+            event.accept(ModItems.STEAMER.get());
+            event.accept(ModItems.SOUP_POT.get());
         }
         if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
             for (var item : ModItems.allFoods()) {
@@ -345,11 +399,17 @@ CREATIVE_FOOTER = """
                 event.accept(item.get());
             }
             event.accept(ModItems.PLATE.get());
-            event.accept(ModItems.SERVING_PLATTER.get());
             event.accept(ModItems.CUTTING_BOARD.get());
             event.accept(ModItems.FURNACE_GENERATOR.get());
             event.accept(ModItems.ELECTRIC_MILL.get());
             event.accept(ModItems.ELECTRIC_SHELLER.get());
+            event.accept(ModItems.LARGE_FURNACE_GENERATOR.get());
+            event.accept(ModItems.LARGE_ELECTRIC_MILL.get());
+            event.accept(ModItems.LARGE_ELECTRIC_SHELLER.get());
+            event.accept(ModItems.STOVE.get());
+            event.accept(ModItems.WOK.get());
+            event.accept(ModItems.STEAMER.get());
+            event.accept(ModItems.SOUP_POT.get());
         }
     }
 
@@ -421,6 +481,24 @@ CUTTING_MID = '''    );
 
 CUTTING_FOOTER = '''    );
 
+    /** 蒸笼：蒸汽催熟。坐在炉灶上使用，不耗电。 */
+    public static final List<Entry> STEAMING = List.of(
+'''
+
+BOILING_MID = '''    );
+
+    /** 汤锅：加水 / 高汤吊成汤。坐在炉灶上使用。 */
+    public static final List<Entry> BOILING = List.of(
+'''
+
+COOKING_MID = '''    );
+
+    /** 炒锅：猛火快炒。坐在炉灶上使用。 */
+    public static final List<Entry> COOKING = List.of(
+'''
+
+CUTTING_REAL = '''    );
+
     /** 案板切割。先匹配具体物品、再匹配标签，所以顺序有意义。 */
     public static final List<CuttingEntry> CUTTING = List.of(
 '''
@@ -458,6 +536,12 @@ def gen_recipes_table():
              CUTTING_MID,
              ",\n".join(_entry_lines(DATA.SHELLING)), "\n",
              CUTTING_FOOTER,
+             ",\n".join(_entry_lines(DATA.STEAMING)), "\n",
+             BOILING_MID,
+             ",\n".join(_entry_lines(DATA.BOILING)), "\n",
+             COOKING_MID,
+             ",\n".join(_entry_lines(DATA.COOKING)), "\n",
+             CUTTING_REAL,
              ",\n".join('            new CuttingEntry("%s", "%s", %s, %d)'
                         % (i, o, "true" if k else "false", t)
                         for (i, o, k, t) in DATA.CUTTING), "\n",
@@ -465,8 +549,9 @@ def gen_recipes_table():
     write(os.path.join(JAVA, "common", "recipe", "ModRecipes.java"), "".join(parts))
     # 早期版本叫 ModCutting，现已合并进 ModRecipes；留着会编译进旧表
     drop_if_exists(os.path.join(JAVA, "common", "recipe", "ModCutting.java"))
-    print("machine recipes: milling=%d shelling=%d cutting=%d"
-          % (len(DATA.MILLING), len(DATA.SHELLING), len(DATA.CUTTING)))
+    print("machine recipes: milling=%d shelling=%d steam=%d boil=%d cook=%d cutting=%d"
+          % (len(DATA.MILLING), len(DATA.SHELLING), len(DATA.STEAMING),
+             len(DATA.BOILING), len(DATA.COOKING), len(DATA.CUTTING)))
 
 
 # ======================================================================
@@ -674,11 +759,30 @@ def gen_lang(items, dishes):
     # 方块与已有条目
     zh.update({
         "block.chinese_traditional_food.plate": "餐盘",
-        "block.chinese_traditional_food.serving_platter": "大拼盘",
         "block.chinese_traditional_food.cutting_board": "案板",
         "block.chinese_traditional_food.furnace_generator": "熔炉发电机",
         "block.chinese_traditional_food.electric_mill": "电动磨粉机",
         "block.chinese_traditional_food.electric_sheller": "电动脱壳机",
+        "block.chinese_traditional_food.large_furnace_generator": "大型熔炉发电机",
+        "block.chinese_traditional_food.large_electric_mill": "大型电动磨粉机",
+        "block.chinese_traditional_food.large_electric_sheller": "大型电动脱壳机",
+        "container.chinese_traditional_food.large_electric_mill": "大型电动磨粉机",
+        "container.chinese_traditional_food.large_electric_sheller": "大型电动脱壳机",
+        "block.chinese_traditional_food.stove": "磁烧炉",
+        "block.chinese_traditional_food.wok": "炒锅",
+        "block.chinese_traditional_food.steamer": "蒸笼",
+        "block.chinese_traditional_food.soup_pot": "汤锅",
+        "container.chinese_traditional_food.stove": "磁烧炉",
+        "container.chinese_traditional_food.wok": "炒锅",
+        "container.chinese_traditional_food.steamer": "蒸笼",
+        "container.chinese_traditional_food.soup_pot": "汤锅",
+        "tooltip.chinese_traditional_food.stove_heating": "正在供热（%d / %d FE）",
+        "tooltip.chinese_traditional_food.stove_no_power": "没有接电（%d / %d FE）",
+        "tooltip.chinese_traditional_food.appliance_hot": "有热，正在加热",
+        "tooltip.chinese_traditional_food.appliance_cold": "没有热——请在正下方放一个磁烧炉并接上电",
+        "tooltip.chinese_traditional_food.heat_amount": "热力",
+        "tooltip.chinese_traditional_food.gui_no_heat": "炉灶没火",
+        "tooltip.chinese_traditional_food.gui_heat_hint": "需坐在炉灶上",
         "container.chinese_traditional_food.electric_mill": "电动磨粉机",
         "container.chinese_traditional_food.electric_sheller": "电动脱壳机",
         "container.chinese_traditional_food.furnace_generator": "熔炉发电机",
@@ -704,11 +808,30 @@ def gen_lang(items, dishes):
     })
     en.update({
         "block.chinese_traditional_food.plate": "Plate",
-        "block.chinese_traditional_food.serving_platter": "Serving Platter",
         "block.chinese_traditional_food.cutting_board": "Cutting Board",
         "block.chinese_traditional_food.furnace_generator": "Furnace Generator",
         "block.chinese_traditional_food.electric_mill": "Electric Mill",
         "block.chinese_traditional_food.electric_sheller": "Electric Sheller",
+        "block.chinese_traditional_food.large_furnace_generator": "Large Furnace Generator",
+        "block.chinese_traditional_food.large_electric_mill": "Large Electric Mill",
+        "block.chinese_traditional_food.large_electric_sheller": "Large Electric Sheller",
+        "container.chinese_traditional_food.large_electric_mill": "Large Electric Mill",
+        "container.chinese_traditional_food.large_electric_sheller": "Large Electric Sheller",
+        "block.chinese_traditional_food.stove": "Induction Cooker",
+        "block.chinese_traditional_food.wok": "Wok",
+        "block.chinese_traditional_food.steamer": "Bamboo Steamer",
+        "block.chinese_traditional_food.soup_pot": "Soup Pot",
+        "container.chinese_traditional_food.stove": "Induction Cooker",
+        "container.chinese_traditional_food.wok": "Wok",
+        "container.chinese_traditional_food.steamer": "Bamboo Steamer",
+        "container.chinese_traditional_food.soup_pot": "Soup Pot",
+        "tooltip.chinese_traditional_food.stove_heating": "Heating (%d / %d FE)",
+        "tooltip.chinese_traditional_food.stove_no_power": "No power (%d / %d FE)",
+        "tooltip.chinese_traditional_food.appliance_hot": "Heating",
+        "tooltip.chinese_traditional_food.appliance_cold": "No heat - place an Induction Cooker below and power it",
+        "tooltip.chinese_traditional_food.heat_amount": "Heat",
+        "tooltip.chinese_traditional_food.gui_no_heat": "No fire",
+        "tooltip.chinese_traditional_food.gui_heat_hint": "Needs a Stove below",
         "container.chinese_traditional_food.electric_mill": "Electric Mill",
         "container.chinese_traditional_food.electric_sheller": "Electric Sheller",
         "container.chinese_traditional_food.furnace_generator": "Furnace Generator",
@@ -756,6 +879,18 @@ def gen_lang(items, dishes):
     en["tooltip.chinese_traditional_food.dish_display"] = \
         "Empty-hand right-click to take a bite, sneak right-click to pick the dish up"
 
+    # 食材压缩方块的语言键。
+    #
+    # 这里**必须**写进来，不能让 gen_compressed.py 自己追加 ——
+    # 本函数会整份重写 lang 文件，先跑 gen_compressed 再跑 gen_content
+    # 就会把它写进去的键全冲掉（踩过一次）。所以让"唯一的语言来源"
+    # 在这里把压缩方块的清单读进来一起写。
+    import gen_compressed as COMP
+    for row in COMP.COMPRESSED:
+        bid, zh_name, en_name = row[0], row[1], row[2]
+        zh["block.%s.%s" % (NAMESPACE, bid)] = zh_name
+        en["block.%s.%s" % (NAMESPACE, bid)] = en_name
+
     write_json(os.path.join(RES, "assets", NAMESPACE, "lang", "zh_cn.json"), zh)
     write_json(os.path.join(RES, "assets", NAMESPACE, "lang", "en_us.json"), en)
 
@@ -791,13 +926,23 @@ def gen_item_assets(items, dishes):
 BLOCK_ITEM_MODELS = {
     # 餐具类：三维模型本身就很精致，直接拿来做物品图标最有立体感
     "plate": "block/plate",
-    "serving_platter": "block/serving_platter",
     "cutting_board": "block/cutting_board",
     # 机器：三个都是单方块，用 2D 图标最清楚（尤其发电机和加工机长得像，
     # 直接拿模型当图标很难分辨）。
     "furnace_generator": "item/furnace_generator",
     "electric_mill": "item/electric_mill",
     "electric_sheller": "item/electric_sheller",
+    # 大型机也用 2D 图标，理由同上；图标里多画了双烟囱 / 双磨盘 / 双滚筒，
+    # 和小型机放在一起能一眼区分。
+    "large_furnace_generator": "item/large_furnace_generator",
+    "large_electric_mill": "item/large_electric_mill",
+    "large_electric_sheller": "item/large_electric_sheller",
+    # 灶火系统：四件器物的造型本身就很有辨识度（矮灶 / 敞口锅 / 三层蒸笼 /
+    # 高筒汤锅），直接拿三维模型当物品图标比再画一张 2D 图标更省事也更好认。
+    "stove": "block/stove",
+    "wok": "block/wok",
+    "steamer": "block/steamer",
+    "soup_pot": "block/soup_pot",
 }
 
 
@@ -873,8 +1018,10 @@ def recipe_object(recipe_id, spec):
 def gen_recipes(items, dishes):
     base = os.path.join(RES, "data", NAMESPACE, "recipe")
     known = ({i["id"] for i in items} | {d["id"] for d in dishes}
-             | {"plate", "serving_platter", "cutting_board",
+             | {"plate", "cutting_board",
                 "furnace_generator", "electric_mill", "electric_sheller",
+                "large_furnace_generator", "large_electric_mill", "large_electric_sheller",
+                "stove", "wok", "steamer", "soup_pot",
                 "placed_dish"})
 
     written = 0

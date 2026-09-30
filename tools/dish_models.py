@@ -94,8 +94,10 @@ def shape_for(kind):
 MATERIALS = {
     # 陶（砂锅、粗碗）
     "dish_clay":  ((96, 60, 44), (122, 80, 58), (150, 104, 76), (176, 132, 100)),
-    # 瓷（碗、盘、盏）
-    "dish_porcelain": ((196, 200, 208), (222, 226, 232), (240, 244, 248), (170, 176, 186)),
+    # 瓷（碗、盘、盏）：**素面白瓷**。原来用的是偏冷的青白（会发蓝），
+    # 现在把色相往暖里拉一点 —— 白瓷该是近中性的暖白，
+    # 这样不管盘里是红油、青菜还是白汤都不会撞色。
+    "dish_porcelain": ((200, 195, 187), (222, 218, 212), (240, 237, 232), (176, 171, 163)),
     # 木（盘托、案面）
     "dish_wood":  ((120, 80, 44), (146, 100, 56), (170, 122, 70), (196, 148, 92)),
     # 铁（锅沿、箍）
@@ -104,6 +106,12 @@ MATERIALS = {
     "dish_food":  ((210, 210, 210), (232, 232, 232), (250, 250, 250), (188, 188, 188)),
     # 汁水 / 汤（也会被染色，但更暗一档）
     "dish_liquid": ((150, 150, 150), (176, 176, 176), (200, 200, 200), (126, 126, 126)),
+    # 阴影 / 内壁（**不参与着色**，是固定的暗色）
+    #
+    # 为什么要它：器皿的壁只用一种材质时，从上面看进去和外面一模一样，
+    # 碗、锅看起来就是“实心一块”。给内壁单独一层暗材质之后，
+    # 一眼就能看出是空心的 —— 这比加多边形便宜得多，效果却最直接。
+    "dish_shadow": ((62, 58, 54), (84, 79, 73), (108, 102, 95), (44, 40, 37)),
 }
 
 # 食物色与汤汁色在 BlockTintSource 里的下标
@@ -223,6 +231,33 @@ def _vessel(x0, z0, x1, z1, y0, h, texture, tint=None, layers=3, flare=0.9):
     return out
 
 
+def _lining(x0, z0, x1, z1, y0, h, layers=3, flare=0.9, wall=1.6, thick=0.9,
+            gap=0.03):
+    """器皿内壁：紧贴外壁**内侧**的一层暗色（见 MATERIALS["dish_shadow"]）。
+
+    * 半径与壁厚完全按 `_vessel` 同一套曲线算，所以两层始终平行；
+    * 再往里缩 gap（默认 0.03）—— 共面的两张面会闪烁，
+      这么一个亚像素级的小缝足以避开；
+    * 只在**向内**的方向占厚度，所以不会堵住器皿内部。
+    """
+    out = []
+    cx = (x0 + x1) / 2.0
+    cz = (z0 + z1) / 2.0
+    hw = (x1 - x0) / 2.0
+    dh = h / layers
+    for i in range(layers):
+        t = i / (layers - 1) if layers > 1 else 0.0
+        s = flare + (1.0 - flare) * t
+        w = hw * s
+        outer = wall * (1.0 - 0.375 * t) + gap      # 外壁内表面 + 缝隙
+        inset = w - outer
+        if inset <= thick + 0.1:
+            continue                                 # 太窄了就不画，免得穿帮
+        out += _ring(cx - inset, cz - inset, cx + inset, cz + inset, thick,
+                     y0 + i * dh, y0 + (i + 1) * dh, "#shadow", tint=None)
+    return out
+
+
 # ----------------------------------------------------------------------
 # 12 种器型的三维几何
 # ----------------------------------------------------------------------
@@ -237,33 +272,51 @@ def geometry(shape):
 
     # ------------------------------------------------------------------
     if shape == "bowl":
-        # 粗瓷碗：圆底 + 三层张开的碗腹 + 口沿 + 汤面 + 料堆
+        # 粗瓷碗：圆底 + 三层张开的碗腹 + 内壁 + 口沿 + 汤面 + 料堆
         E += _disc(8, 8, 5.4, 0.0, 0.9, "#clay", layers=3, shrink=0.30)
         E += _vessel(2.3, 2.3, 13.7, 13.7, 0.9, 3.0, "#clay", layers=3, flare=0.80)
-        # 口沿：一圈略宽的厚边，把碗口"收"住
-        E += _ring(1.9, 1.9, 14.1, 14.1, 1.3, 3.9, 4.6, "#clay")
-        # 汤面
-        E += _oct(8, 8, 5.6, 5.6, 3.4, 4.0, "#liquid", tint=TINT_LIQUID, cut=0.30)
-        # 料堆：三坨高低错开
+        # 内壁：让碗看起来是“空心的”（而不是一块实心黑）
+        E += _lining(2.3, 2.3, 13.7, 13.7, 0.9, 3.0, layers=3, flare=0.80)
+        # 口沿：一圈略宽的厚边，把碗口"收"住；外沿亮、内沿暗
+        E += _ring(1.9, 1.9, 14.1, 14.1, 1.3, 3.9, 4.3, "#clay")
+        E += _ring(2.6, 2.6, 13.4, 13.4, 0.7, 4.3, 4.6, "#shadow")
+        # 汤面：略低于口沿，中间比边上鼓一点（液体的张力）
+        E += _oct(8, 8, 5.6, 5.6, 3.4, 3.9, "#liquid", tint=TINT_LIQUID, cut=0.30)
+        E += _oct(8, 8, 5.0, 5.0, 3.9, 4.0, "#liquid", tint=TINT_LIQUID, cut=0.30)
+        # 料堆：四块高低错开，最大的一块压在中间
         E += _oct(6.4, 6.6, 2.5, 2.4, 4.0, 5.3, "#food", tint=TINT_FOOD, cut=0.30)
         E += _oct(10.0, 9.6, 2.1, 2.2, 4.0, 6.1, "#food", tint=TINT_FOOD, cut=0.30)
         E += _oct(7.6, 10.6, 1.7, 1.5, 4.0, 4.9, "#food", tint=TINT_FOOD, cut=0.30)
+        E += _oct(9.4, 6.0, 1.3, 1.2, 4.0, 5.6, "#food", tint=TINT_FOOD, cut=0.30)
+        # 汤里泡着的两面（小一点、更低）
+        E += _oct(10.6, 11.4, 1.1, 1.0, 4.0, 4.5, "#food", tint=TINT_FOOD, cut=0.30)
         # 点缀（葱花 / 枸杞）
         E += [box(5.6, 5.3, 6.2, 7.0, 5.7, 7.2, "#liquid", tint=TINT_LIQUID)]
         E += [box(9.4, 6.1, 8.8, 10.6, 6.5, 9.8, "#liquid", tint=TINT_LIQUID)]
+        E += [box(7.0, 4.9, 9.6, 8.0, 5.3, 10.6, "#liquid", tint=TINT_LIQUID)]
         return E, True
 
     # ------------------------------------------------------------------
     if shape == "plate":
-        # 浅盘：四层收缩的圆盘 + 中间堆起来的菜 + 浇汁
-        E += _disc(8, 8, 6.8, 0.0, 1.5, "#porcelain", layers=4, shrink=0.30)
-        E += _disc(8, 8, 4.6, 1.5, 1.5, "#food", tint=TINT_FOOD, layers=3, shrink=0.36)
-        E += _disc(8, 8, 3.0, 3.0, 1.2, "#food", tint=TINT_FOOD, layers=3, shrink=0.40)
+        # 浅盘：圈足 + 盘腹 + **翘起的盘沿** + 盘心 + 菜
+        # 以前直接是几个圆盘堆起来，看不出是“盘”——现在多了一圈盘沿，
+        # 从斜上方看能明显看出“外边一道边、中间凹下去”。
+        E += _disc(8, 8, 4.4, 0.0, 0.7, "#porcelain", layers=2, shrink=0.24)
+        E += _disc(8, 8, 6.8, 0.7, 0.8, "#porcelain", layers=3, shrink=0.30)
+        # 盘沿：比盘心高 0.5 像素的一圈
+        E += _ring(0.9, 0.9, 15.1, 15.1, 2.4, 1.5, 2.0, "#porcelain")
+        E += _ring(0.9, 0.9, 15.1, 15.1, 2.4, 2.0, 2.15, "#porcelain")
+        # 盘心（露出菜就在这一层上）
+        E += _disc(8, 8, 5.0, 1.5, 0.5, "#porcelain", layers=2, shrink=0.20)
+        # 菜：一主两副，主堆略偏，看起来是“倒进去的”而不是雕出来的
+        E += _disc(7.6, 7.8, 4.3, 2.0, 1.5, "#food", tint=TINT_FOOD, layers=3, shrink=0.36)
+        E += _disc(9.2, 9.0, 2.7, 2.6, 1.3, "#food", tint=TINT_FOOD, layers=3, shrink=0.40)
         # 浇汁：盘心一圈更暗的汁水
-        E += _oct(8, 8, 2.0, 2.0, 2.9, 3.2, "#liquid", tint=TINT_LIQUID, cut=0.34)
-        # 配菜：三个小点
-        for (dx, dz) in ((-3.6, -3.0), (3.4, -3.4), (-2.8, 3.6)):
-            E += _oct(8 + dx, 8 + dz, 0.9, 0.9, 1.6, 2.3, "#food",
+        E += _oct(8, 8, 2.2, 2.2, 3.2, 3.5, "#liquid", tint=TINT_LIQUID, cut=0.34)
+        # 配菜：四个小点，不对称
+        for (dx, dz, r) in ((-3.8, -3.2, 0.9), (3.6, -3.6, 0.8),
+                            (-3.0, 3.8, 0.7), (3.9, 3.4, 0.6)):
+            E += _oct(8 + dx, 8 + dz, r, r, 1.6, 2.3, "#food",
                       tint=TINT_FOOD, cut=0.34)
         return E, True
 
@@ -283,80 +336,122 @@ def geometry(shape):
 
     # ------------------------------------------------------------------
     if shape == "pot":
-        # 砂锅：锅底 + 三层锅腹 + 铁锅沿 + 双耳 + 炖菜
+        # 砂锅：锅底 + 三层锅腹 + 内壁 + 铁锅沿 + 双耳 + 炖菜
         E += [box(1.4, 0.0, 1.4, 14.6, 1.0, 14.6, "#clay")]
         E += _vessel(1.0, 1.0, 15.0, 15.0, 1.0, 4.2, "#clay", layers=3, flare=0.84)
-        E += _ring(0.6, 0.6, 15.4, 15.4, 1.1, 5.2, 6.0, "#iron")
-        # 双耳
+        E += _lining(1.0, 1.0, 15.0, 15.0, 1.0, 4.2, layers=3, flare=0.84)
+        E += _ring(0.6, 0.6, 15.4, 15.4, 1.1, 5.2, 5.7, "#iron")
+        E += _ring(1.5, 1.5, 14.5, 14.5, 0.7, 5.7, 6.0, "#shadow")
+        # 双耳（带一点下摆，看着像铸出来的）
         E += [box(0.0, 3.2, 6.4, 1.0, 4.6, 9.6, "#clay")]
         E += [box(15.0, 3.2, 6.4, 16.0, 4.6, 9.6, "#clay")]
-        # 炖菜：汤面 + 两坨料 + 点缀
-        E += _oct(8, 8, 6.2, 6.2, 5.0, 5.6, "#liquid", tint=TINT_LIQUID, cut=0.32)
-        E += _oct(6.6, 6.8, 2.4, 2.3, 5.6, 6.8, "#food", tint=TINT_FOOD, cut=0.30)
-        E += _oct(9.8, 9.4, 2.2, 2.4, 5.6, 7.3, "#food", tint=TINT_FOOD, cut=0.30)
-        E += [box(5.8, 6.8, 6.0, 7.2, 7.2, 7.4, "#liquid", tint=TINT_LIQUID)]
+        E += [box(0.0, 2.8, 6.9, 1.0, 3.2, 9.1, "#shadow")]
+        E += [box(15.0, 2.8, 6.9, 16.0, 3.2, 9.1, "#shadow")]
+        # 炖菜：汤面 + 四块料 + 点缀
+        E += _oct(8, 8, 6.2, 6.2, 5.0, 5.5, "#liquid", tint=TINT_LIQUID, cut=0.32)
+        E += _oct(6.6, 6.8, 2.4, 2.3, 5.5, 6.7, "#food", tint=TINT_FOOD, cut=0.30)
+        E += _oct(9.8, 9.4, 2.2, 2.4, 5.5, 7.2, "#food", tint=TINT_FOOD, cut=0.30)
+        E += _oct(6.2, 10.2, 1.6, 1.5, 5.5, 6.3, "#food", tint=TINT_FOOD, cut=0.30)
+        E += _oct(10.4, 6.0, 1.4, 1.3, 5.5, 6.1, "#food", tint=TINT_FOOD, cut=0.30)
+        E += [box(5.8, 6.7, 6.0, 7.2, 7.1, 7.4, "#liquid", tint=TINT_LIQUID)]
+        E += [box(9.0, 6.2, 9.6, 10.0, 6.6, 10.6, "#liquid", tint=TINT_LIQUID)]
         return E, True
 
     # ------------------------------------------------------------------
     if shape == "fish_plate":
-        # 鱼盘：长椭圆盘 + 身 / 尾 / 头 / 背鳍 / 眼
-        E += _disc_ellipse(8, 8, 7.2, 4.6, 0.0, 1.1, "#porcelain", layers=3,
-                           shrink=0.24)
-        E += _disc_ellipse(8, 8, 4.8, 2.6, 1.1, 1.9, "#food", tint=TINT_FOOD,
+        # 鱼盘：长椭圆盘 + **两端䓍起的盘沿** + 鱼身 / 尾鳍 / 背鳍 / 目 / 淋汁
+        E += _disc_ellipse(8, 8, 7.4, 4.8, 0.0, 0.8, "#porcelain", layers=2,
+                           shrink=0.20)
+        # 盘沿：沿椭圆外圈䓍起来的一道边（用两个错开的椭圆环近似）
+        E += _disc_ellipse(8, 8, 7.4, 4.8, 0.8, 0.7, "#porcelain", layers=2,
+                           shrink=0.06)
+        E += _disc_ellipse(8, 8, 6.3, 3.7, 0.8, 0.9, "#porcelain", layers=2,
+                           shrink=0.10)
+        # 鱼身
+        E += _disc_ellipse(8, 8, 5.0, 2.6, 1.2, 1.9, "#food", tint=TINT_FOOD,
                            layers=3, shrink=0.34)
-        # 尾巴
-        E += _oct(13.4, 8, 1.5, 1.8, 1.2, 2.6, "#food", tint=TINT_FOOD, cut=0.26)
+        # 尾巴（两片张开）
+        E += _disc_ellipse(13.6, 7.2, 1.3, 1.7, 1.3, 1.3, "#food",
+                           tint=TINT_FOOD, layers=2, shrink=0.20)
+        E += _disc_ellipse(13.8, 8.8, 1.2, 1.6, 1.3, 1.3, "#food",
+                           tint=TINT_FOOD, layers=2, shrink=0.20)
         # 头
-        E += _oct(3.4, 8, 1.7, 1.6, 1.4, 2.9, "#food", tint=TINT_FOOD, cut=0.28)
-        # 背鳍
-        E += _oct(8, 8, 3.4, 0.7, 2.9, 3.6, "#food", tint=TINT_FOOD, cut=0.30)
+        E += _disc_ellipse(3.3, 8.0, 1.8, 1.7, 1.3, 1.7, "#food",
+                           tint=TINT_FOOD, layers=2, shrink=0.26)
+        # 背鳍 + 腹鳍
+        E += _disc_ellipse(8.0, 8.0, 3.6, 0.8, 3.1, 0.7, "#food",
+                           tint=TINT_FOOD, layers=2, shrink=0.18)
+        E += _disc_ellipse(8.6, 8.0, 2.4, 0.7, 0.9, 0.4, "#food",
+                           tint=TINT_FOOD, layers=2, shrink=0.18)
+        # 鳞：三排浅色小点
+        for i in range(5):
+            for j in range(3):
+                E += [box(5.2 + i * 1.4, 2.6 + j * 0.55, 7.0 + j * 0.3,
+                          5.8 + i * 1.4, 2.85 + j * 0.55, 7.6 + j * 0.3,
+                          "#liquid", tint=TINT_LIQUID)]
         # 眼与身上淋的汁
-        E += [box(2.9, 2.5, 7.4, 3.7, 3.1, 8.6, "#liquid", tint=TINT_LIQUID)]
+        E += [box(2.8, 2.9, 7.4, 3.5, 3.4, 8.6, "#shadow")]
         E += [box(10.2, 3.0, 7.2, 11.4, 3.4, 8.8, "#liquid", tint=TINT_LIQUID)]
         E += [box(6.4, 3.0, 6.6, 8.0, 3.4, 9.4, "#liquid", tint=TINT_LIQUID)]
         return E, True
 
     # ------------------------------------------------------------------
     if shape == "dumpling":
-        # 饺子：三只（底 + 鼓起的肚 + 顶上的褶），摆成三角居中
+        # 饺子：三只（底 + 鼓起的肚 + 顶上的褶），摆成三角居中。
+        # 褶从两道加到四道，并且逐渐收窄 —— 这是饺子最好认的特征。
         for (ox, oz) in ((5.0, 5.0), (11.0, 5.0), (8.0, 11.0)):
             E += _oct(ox, oz, 2.3, 2.0, 0.2, 0.9, "#food",
                       tint=TINT_FOOD, cut=0.36)
             E += _oct(ox, oz, 1.9, 1.7, 0.9, 1.9, "#food",
                       tint=TINT_FOOD, cut=0.36)
-            E += _oct(ox, oz, 1.2, 1.1, 1.9, 2.6, "#food",
+            # 捏口：一条比肚子窄的棱
+            E += _oct(ox, oz, 1.35, 1.25, 1.9, 2.5, "#food",
                       tint=TINT_FOOD, cut=0.36)
-            # 褶（两道细边）
-            E += [box(ox - 1.3, 2.6, oz - 1.3, ox + 1.3, 2.9, oz - 0.9, "#food",
-                      tint=TINT_FOOD)]
-            E += [box(ox - 1.3, 2.6, oz + 0.9, ox + 1.3, 2.9, oz + 1.3, "#food",
-                      tint=TINT_FOOD)]
+            E += _oct(ox, oz, 1.05, 0.95, 2.5, 2.8, "#food",
+                      tint=TINT_FOOD, cut=0.36)
+            # 褶：左右各两道，越靠外越短
+            for k, off in enumerate((-1.55, -0.62, 0.62, 1.55)):
+                half = 0.86 - abs(off) * 0.34
+                E += [box(ox + off - 0.22, 2.5, oz - half,
+                          ox + off + 0.22, 2.78, oz + half,
+                          "#food", tint=TINT_FOOD)]
+            # 底部的蒸汽水痕
+            E += [box(ox - 1.2, 0.2, oz - 1.0, ox + 1.2, 0.32, oz + 1.0,
+                      "#shadow")]
         return E, True
 
     # ------------------------------------------------------------------
     if shape == "mooncake":
-        # 月饼：方中带圆的厚饼（三层台阶）+ 顶面纹样 + 中心印记
+        # 月饼：方中带圆的厚饼（三层台阶）+ 顶面印花 + 中心印记
         for (ox, oz) in ((4.9, 4.9), (11.3, 4.7), (8.1, 11.1)):
             E += _oct(ox, oz, 2.5, 2.3, 0.0, 0.7, "#food",
                       tint=TINT_FOOD, cut=0.34)
             E += _oct(ox, oz, 2.2, 2.0, 0.7, 2.0, "#food",
                       tint=TINT_FOOD, cut=0.34)
-            # 顶面纹样：外圈 + 中心
-            E += _oct(ox, oz, 1.5, 1.4, 2.0, 2.3, "#food",
+            # 顶面印花：外圈 + 四瓣花 + 中心印记
+            E += _oct(ox, oz, 1.6, 1.5, 2.0, 2.3, "#food",
                       tint=TINT_FOOD, cut=0.34)
-            E += _oct(ox, oz, 0.7, 0.7, 2.3, 2.6, "#liquid",
+            for (fx, fz) in ((-0.72, 0.0), (0.72, 0.0), (0.0, -0.72), (0.0, 0.72)):
+                E += [box(ox + fx - 0.32, 2.3, oz + fz - 0.32,
+                          ox + fx + 0.32, 2.45, oz + fz + 0.32,
+                          "#liquid", tint=TINT_LIQUID)]
+            E += _oct(ox, oz, 0.62, 0.62, 2.3, 2.5, "#liquid",
                       tint=TINT_LIQUID, cut=0.34)
         return E, True
 
     # ------------------------------------------------------------------
     if shape == "zongzi":
-        # 粽子：四棱锥（逐层收小的八边形）+ 腰绳 + 顶上露出的米
+        # 粽子：四棱锥（逐层收小的八边形）+ 叶脉 + 腰绳 + 顶上露出的米
         for (ox, oz) in ((5.4, 8.0), (10.6, 7.8)):
             for i in range(6):
                 s = 2.6 - i * 0.36
                 y = 0.8 + i * 0.52
                 E += _oct(ox, oz, s, s, y, y + 0.56, "#food",
                           tint=TINT_FOOD, cut=0.34)
+            # 蓑叶的棱：锿面两侧各一道纵向的暗线（叶子交叠的地方）
+            for side in (-1, 1):
+                E += [box(ox + side * 2.35, 0.8, oz - 2.3,
+                          ox + side * 2.5, 4.0, oz + 2.3, "#shadow")]
             # 腰绳（十字两道）
             E += [box(ox - 2.7, 2.1, oz - 0.35, ox + 2.7, 2.5, oz + 0.35, "#wood")]
             E += [box(ox - 0.35, 2.1, oz - 2.7, ox + 0.35, 2.5, oz + 2.7, "#wood")]
@@ -454,6 +549,7 @@ def build_models():
                 "iron": "%s:block/dish_iron" % NS,
                 "food": "%s:block/dish_food" % NS,
                 "liquid": "%s:block/dish_liquid" % NS,
+                "shadow": "%s:block/dish_shadow" % NS,
             },
             "elements": elements,
         }

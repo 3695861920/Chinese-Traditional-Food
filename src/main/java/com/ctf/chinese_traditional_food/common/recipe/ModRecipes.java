@@ -56,6 +56,47 @@ public final class ModRecipes {
             new Entry("chinese_traditional_food:millet_grass", "millet", 1, "rice_bran", 0.30F, 100)
     );
 
+    /** 蒸笼：蒸汽催熟。坐在炉灶上使用，不耗电。 */
+    public static final List<Entry> STEAMING = List.of(
+            new Entry("chinese_traditional_food:flour", "mantou", 2, "", 0.00F, 120),
+            new Entry("chinese_traditional_food:glutinous_rice", "zao_zong", 2, "", 0.00F, 140),
+            new Entry("chinese_traditional_food:rice_flour", "rice_cake", 2, "", 0.00F, 130),
+            new Entry("chinese_traditional_food:bean_paste", "dou_sha_bao", 2, "", 0.00F, 150),
+            new Entry("minecraft:porkchop", "baozi", 2, "", 0.00F, 160),
+            new Entry("#c:raw_meat", "xiao_long_bao", 2, "", 0.00F, 170),
+            new Entry("chinese_traditional_food:sweet_potato", "steamed_pumpkin", 1, "", 0.00F, 110),
+            new Entry("chinese_traditional_food:sweet_potato", "baked_sweet_potato", 1, "", 0.00F, 110)
+    );
+
+    /** 汤锅：加水 / 高汤吊成汤。坐在炉灶上使用。 */
+    public static final List<Entry> BOILING = List.of(
+            new Entry("chinese_traditional_food:stock", "egg_drop_soup", 1, "", 0.00F, 120),
+            new Entry("chinese_traditional_food:napa_cabbage", "winter_melon_soup", 1, "", 0.00F, 130),
+            new Entry("chinese_traditional_food:red_bean", "red_bean_soup", 1, "", 0.00F, 160),
+            new Entry("chinese_traditional_food:mung_bean", "mung_bean_soup", 1, "", 0.00F, 150),
+            new Entry("chinese_traditional_food:rice", "zhou_congee", 1, "", 0.00F, 140),
+            new Entry("chinese_traditional_food:millet", "xiaomi_zhou", 1, "", 0.00F, 130),
+            new Entry("chinese_traditional_food:lotus_seed", "lotus_seed_soup", 1, "", 0.00F, 170),
+            new Entry("chinese_traditional_food:chinese_yam", "yam_ribs_soup", 1, "", 0.00F, 175),
+            new Entry("#c:raw_meat", "wonton_soup", 1, "", 0.00F, 165),
+            new Entry("chinese_traditional_food:vinegar", "suantang", 1, "", 0.00F, 110),
+            new Entry("chinese_traditional_food:soybean", "doufunao", 1, "", 0.00F, 150)
+    );
+
+    /** 炒锅：猛火快炒。坐在炉灶上使用。 */
+    public static final List<Entry> COOKING = List.of(
+            new Entry("minecraft:egg", "scrambled_egg", 1, "", 0.00F, 90),
+            new Entry("chinese_traditional_food:tomato", "tomato_egg", 1, "", 0.00F, 110),
+            new Entry("chinese_traditional_food:green_bean", "dry_fried_beans", 1, "", 0.00F, 120),
+            new Entry("chinese_traditional_food:pea", "stir_fried_pea", 1, "", 0.00F, 110),
+            new Entry("chinese_traditional_food:chive", "chive_egg", 1, "", 0.00F, 105),
+            new Entry("chinese_traditional_food:bamboo_shoot", "braised_bamboo", 1, "", 0.00F, 125),
+            new Entry("#c:raw_meat", "twice_cooked_pork", 1, "", 0.00F, 140),
+            new Entry("chinese_traditional_food:tofu", "chou_doufu", 1, "", 0.00F, 150),
+            new Entry("chinese_traditional_food:flour", "youtiao", 2, "", 0.00F, 100),
+            new Entry("chinese_traditional_food:rice_flour", "mahuadou", 2, "", 0.00F, 110)
+    );
+
     /** 案板切割。先匹配具体物品、再匹配标签，所以顺序有意义。 */
     public static final List<CuttingEntry> CUTTING = List.of(
             new CuttingEntry("chinese_traditional_food:tofu", "shredded_tofu", true, 0),
