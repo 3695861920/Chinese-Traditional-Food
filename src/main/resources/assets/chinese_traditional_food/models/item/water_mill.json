@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "chinese_traditional_food:item/water_mill"
-  }
-}

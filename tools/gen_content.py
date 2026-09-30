@@ -152,25 +152,17 @@ public final class ModItems {
     public static final DeferredItem<BlockItem> CUTTING_BOARD =
             ITEMS.registerSimpleBlockItem(ModBlocks.CUTTING_BOARD);
 
-    /** 水磨，谷物磨粉。 */
-    public static final DeferredItem<BlockItem> WATER_MILL =
-            ITEMS.registerSimpleBlockItem(ModBlocks.WATER_MILL);
+    /** 电动脱壳机，吃电给谷物脱壳。 */
+    public static final DeferredItem<BlockItem> ELECTRIC_SHELLER =
+            ITEMS.registerSimpleBlockItem(ModBlocks.ELECTRIC_SHELLER);
 
-    /** 脱壳机，手摇式，无界面。 */
-    public static final DeferredItem<BlockItem> GRAIN_SHELLER =
-            ITEMS.registerSimpleBlockItem(ModBlocks.GRAIN_SHELLER);
+    /** 电动磨粉机，吃电把谷物磨成粉。 */
+    public static final DeferredItem<BlockItem> ELECTRIC_MILL =
+            ITEMS.registerSimpleBlockItem(ModBlocks.ELECTRIC_MILL);
 
-    /** 水磨部件（石台 / 水轮 / 传动箱）。 */
-    public static final DeferredItem<BlockItem> WATER_MILL_PART =
-            ITEMS.registerSimpleBlockItem(ModBlocks.WATER_MILL_PART);
-
-    /** 碾米机部件（木架 / 机箱板 / 立柱 / 料斗）。 */
-    public static final DeferredItem<BlockItem> GRAIN_SHELLER_PART =
-            ITEMS.registerSimpleBlockItem(ModBlocks.GRAIN_SHELLER_PART);
-
-    /** 水车：装在水磨两侧接口的外侧，泡在水里转，给水磨提供动力。 */
-    public static final DeferredItem<BlockItem> WATER_WHEEL =
-            ITEMS.registerSimpleBlockItem(ModBlocks.WATER_WHEEL);
+    /** 熔炉发电机，烧燃料发电。 */
+    public static final DeferredItem<BlockItem> FURNACE_GENERATOR =
+            ITEMS.registerSimpleBlockItem(ModBlocks.FURNACE_GENERATOR);
 """
 
 FOOTER = """
@@ -316,11 +308,9 @@ public final class ModCreativeTabs {
                         output.accept(ModItems.PLATE.get());
                         output.accept(ModItems.SERVING_PLATTER.get());
                         output.accept(ModItems.CUTTING_BOARD.get());
-                        output.accept(ModItems.WATER_MILL.get());
-                        output.accept(ModItems.WATER_MILL_PART.get());
-                        output.accept(ModItems.WATER_WHEEL.get());
-                        output.accept(ModItems.GRAIN_SHELLER.get());
-                        output.accept(ModItems.GRAIN_SHELLER_PART.get());
+                        output.accept(ModItems.FURNACE_GENERATOR.get());
+                        output.accept(ModItems.ELECTRIC_MILL.get());
+                        output.accept(ModItems.ELECTRIC_SHELLER.get());
                         // 其余全部内容（食材 / 调味料 / 水果 / 蔬菜 / 厨具 / 菜品）
                         for (var item : ModItems.allFoods()) {
                             output.accept(item.get());
@@ -341,11 +331,9 @@ CREATIVE_FOOTER = """
             event.accept(ModItems.PLATE.get());
             event.accept(ModItems.SERVING_PLATTER.get());
             event.accept(ModItems.CUTTING_BOARD.get());
-            event.accept(ModItems.WATER_MILL.get());
-            event.accept(ModItems.WATER_MILL_PART.get());
-            event.accept(ModItems.WATER_WHEEL.get());
-            event.accept(ModItems.GRAIN_SHELLER.get());
-            event.accept(ModItems.GRAIN_SHELLER_PART.get());
+            event.accept(ModItems.FURNACE_GENERATOR.get());
+            event.accept(ModItems.ELECTRIC_MILL.get());
+            event.accept(ModItems.ELECTRIC_SHELLER.get());
         }
         if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
             for (var item : ModItems.allFoods()) {
@@ -359,11 +347,9 @@ CREATIVE_FOOTER = """
             event.accept(ModItems.PLATE.get());
             event.accept(ModItems.SERVING_PLATTER.get());
             event.accept(ModItems.CUTTING_BOARD.get());
-            event.accept(ModItems.WATER_MILL.get());
-            event.accept(ModItems.WATER_MILL_PART.get());
-            event.accept(ModItems.WATER_WHEEL.get());
-            event.accept(ModItems.GRAIN_SHELLER.get());
-            event.accept(ModItems.GRAIN_SHELLER_PART.get());
+            event.accept(ModItems.FURNACE_GENERATOR.get());
+            event.accept(ModItems.ELECTRIC_MILL.get());
+            event.accept(ModItems.ELECTRIC_SHELLER.get());
         }
     }
 
@@ -690,59 +676,61 @@ def gen_lang(items, dishes):
         "block.chinese_traditional_food.plate": "餐盘",
         "block.chinese_traditional_food.serving_platter": "大拼盘",
         "block.chinese_traditional_food.cutting_board": "案板",
-        "block.chinese_traditional_food.water_mill": "水磨",
-        "block.chinese_traditional_food.water_mill_part": "水磨部件",
-        "block.chinese_traditional_food.water_wheel": "水车",
-        "tooltip.chinese_traditional_food.water_wheel":
-            "装在水磨两侧接口的外侧一格；泡到水里就会转，水磨随之开工",
-        "block.chinese_traditional_food.grain_sheller": "手摇碾米机",
-        "block.chinese_traditional_food.grain_sheller_part": "碾米机部件",
-        "container.chinese_traditional_food.water_mill": "水磨",
-        "tooltip.chinese_traditional_food.water_mill":
-            "放下后自动展开成 3×3×3 的大型水磨，紧邻水源即可自动研磨",
-        "tooltip.chinese_traditional_food.water_mill_part":
-            "水磨的石台 / 水轮 / 传动箱，补在缺件的位置即可修复水磨",
-        "tooltip.chinese_traditional_food.grain_sheller":
-            "3×3×3 手摇碾米机：带壳谷物右键倒入 · 潜行空手摇柄 · 空手取出米糗",
-        "tooltip.chinese_traditional_food.grain_sheller_part":
-            "碾米机的木架 / 机箱板 / 立柱 / 料斗，补在缺件的位置即可修复机器",
-        "tooltip.chinese_traditional_food.machine_incomplete":
-            "机器结构不完整，先把缺的部件补上",
-        "tooltip.chinese_traditional_food.sheller_full": "装不下了，先摇几圈再倒",
-        "tooltip.chinese_traditional_food.sheller_empty": "里面没有带壳谷物",
-        "tooltip.chinese_traditional_food.sheller_output_full": "出料口堵住了，先把米取走",
-        "tooltip.chinese_traditional_food.machine_progress": "进度",
-        "tooltip.chinese_traditional_food.machine_crank_ok": "摇了一圈，出了东西",
-        "tooltip.chinese_traditional_food.machine_crank_fail": "里面没东西可处理",
+        "block.chinese_traditional_food.furnace_generator": "熔炉发电机",
+        "block.chinese_traditional_food.electric_mill": "电动磨粉机",
+        "block.chinese_traditional_food.electric_sheller": "电动脱壳机",
+        "container.chinese_traditional_food.electric_mill": "电动磨粉机",
+        "container.chinese_traditional_food.electric_sheller": "电动脱壳机",
+        "container.chinese_traditional_food.furnace_generator": "熔炉发电机",
+        "tooltip.chinese_traditional_food.furnace_generator":
+            "烧原版燃料发电，六个面自动往外送电（煤炭就能烧）",
+        "tooltip.chinese_traditional_food.electric_mill":
+            "接上电就能磨粉：一次 8 个，一批 10 秒",
+        "tooltip.chinese_traditional_food.electric_sheller":
+            "接上电就能脱壳：一次 8 个，一批 10 秒",
+        "tooltip.chinese_traditional_food.machine_has_power":
+            "电量 %s / %s FE —— 可以开工",
+        "tooltip.chinese_traditional_food.machine_no_power":
+            "电量 %s / %s FE —— 没电，接一台熔炉发电机",
+        "tooltip.chinese_traditional_food.generator_burning":
+            "正在发电：%s / %s FE，输出 %s FE/t",
+        "tooltip.chinese_traditional_food.generator_idle":
+            "已停机：%s / %s FE，输出 %s FE/t（需要燃料）",
+        "tooltip.chinese_traditional_food.energy_amount": "%s / %s FE",
+        "tooltip.chinese_traditional_food.gui_no_power": "没电：给它接一台熔炉发电机",
+        "tooltip.chinese_traditional_food.gui_burning": "正在发电",
+        "tooltip.chinese_traditional_food.gui_need_fuel": "缺燃料",
+        "tooltip.chinese_traditional_food.gui_output": "输出 40 FE/t",
     })
     en.update({
         "block.chinese_traditional_food.plate": "Plate",
         "block.chinese_traditional_food.serving_platter": "Serving Platter",
         "block.chinese_traditional_food.cutting_board": "Cutting Board",
-        "block.chinese_traditional_food.water_mill": "Water Mill",
-        "block.chinese_traditional_food.water_mill_part": "Water Mill Part",
-        "block.chinese_traditional_food.water_wheel": "Water Wheel",
-        "tooltip.chinese_traditional_food.water_wheel":
-            "Mount outside a mill's axle socket; submerge it in water to power the mill",
-        "block.chinese_traditional_food.grain_sheller": "Hand-cranked Rice Mill",
-        "block.chinese_traditional_food.grain_sheller_part": "Rice Mill Part",
-        "container.chinese_traditional_food.water_mill": "Water Mill",
-        "tooltip.chinese_traditional_food.water_mill":
-            "Unfolds into a 3x3x3 mill; runs automatically next to water",
-        "tooltip.chinese_traditional_food.water_mill_part":
-            "Frame, wheel or gearbox -- put it back to repair the mill",
-        "tooltip.chinese_traditional_food.grain_sheller":
-            "3x3x3 hand mill: right-click with grain, sneak + empty hand to crank, empty hand to collect",
-        "tooltip.chinese_traditional_food.grain_sheller_part":
-            "Frame, panel, pillar or hopper -- put it back to repair the machine",
-        "tooltip.chinese_traditional_food.machine_incomplete":
-            "The machine is incomplete -- put the missing parts back",
-        "tooltip.chinese_traditional_food.sheller_full": "It's full -- crank a few times before pouring more",
-        "tooltip.chinese_traditional_food.sheller_empty": "No unhusked grain inside",
-        "tooltip.chinese_traditional_food.sheller_output_full": "The outlet is blocked -- take the rice out first",
-        "tooltip.chinese_traditional_food.machine_progress": "Progress",
-        "tooltip.chinese_traditional_food.machine_crank_ok": "Cranked once -- something came out",
-        "tooltip.chinese_traditional_food.machine_crank_fail": "There is nothing to process inside",
+        "block.chinese_traditional_food.furnace_generator": "Furnace Generator",
+        "block.chinese_traditional_food.electric_mill": "Electric Mill",
+        "block.chinese_traditional_food.electric_sheller": "Electric Sheller",
+        "container.chinese_traditional_food.electric_mill": "Electric Mill",
+        "container.chinese_traditional_food.electric_sheller": "Electric Sheller",
+        "container.chinese_traditional_food.furnace_generator": "Furnace Generator",
+        "tooltip.chinese_traditional_food.furnace_generator":
+            "Burns vanilla fuel (coal is enough) and pushes power out on all six sides",
+        "tooltip.chinese_traditional_food.electric_mill":
+            "Give it power and it mills: 8 items per batch, 10 seconds each",
+        "tooltip.chinese_traditional_food.electric_sheller":
+            "Give it power and it shells: 8 items per batch, 10 seconds each",
+        "tooltip.chinese_traditional_food.machine_has_power":
+            "Energy %s / %s FE -- ready to run",
+        "tooltip.chinese_traditional_food.machine_no_power":
+            "Energy %s / %s FE -- no power, hook up a Furnace Generator",
+        "tooltip.chinese_traditional_food.generator_burning":
+            "Generating: %s / %s FE, output %s FE/t",
+        "tooltip.chinese_traditional_food.generator_idle":
+            "Idle: %s / %s FE, output %s FE/t (needs fuel)",
+        "tooltip.chinese_traditional_food.energy_amount": "%s / %s FE",
+        "tooltip.chinese_traditional_food.gui_no_power": "No power -- hook up a Furnace Generator",
+        "tooltip.chinese_traditional_food.gui_burning": "Generating",
+        "tooltip.chinese_traditional_food.gui_need_fuel": "Needs fuel",
+        "tooltip.chinese_traditional_food.gui_output": "Output 40 FE/t",
     })
 
     # 按类别写注释分组（JSON 不支持注释，用顺序 + 分组标题的键值对不可行，
@@ -805,13 +793,11 @@ BLOCK_ITEM_MODELS = {
     "plate": "block/plate",
     "serving_platter": "block/serving_platter",
     "cutting_board": "block/cutting_board",
-    # 机器与部件：结构复杂（还会伸到邻格），一律用 2D 图标 ——
-    # 直接拿模型当图标会被 "截断" 成看不出是什么的一角。
-    "water_mill": "item/water_mill",
-    "water_mill_part": "item/water_mill_part",
-    "grain_sheller": "item/grain_sheller",
-    "grain_sheller_part": "item/grain_sheller_part",
-    "water_wheel": "item/water_wheel",
+    # 机器：三个都是单方块，用 2D 图标最清楚（尤其发电机和加工机长得像，
+    # 直接拿模型当图标很难分辨）。
+    "furnace_generator": "item/furnace_generator",
+    "electric_mill": "item/electric_mill",
+    "electric_sheller": "item/electric_sheller",
 }
 
 
@@ -887,8 +873,9 @@ def recipe_object(recipe_id, spec):
 def gen_recipes(items, dishes):
     base = os.path.join(RES, "data", NAMESPACE, "recipe")
     known = ({i["id"] for i in items} | {d["id"] for d in dishes}
-             | {"plate", "serving_platter", "cutting_board", "water_mill", "grain_sheller",
-                "water_mill_part", "grain_sheller_part", "water_wheel", "placed_dish"})
+             | {"plate", "serving_platter", "cutting_board",
+                "furnace_generator", "electric_mill", "electric_sheller",
+                "placed_dish"})
 
     written = 0
     for recipe_id, spec in DATA.RECIPES.items():

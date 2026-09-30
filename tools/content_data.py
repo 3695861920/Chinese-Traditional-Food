@@ -484,27 +484,20 @@ RECIPES = {
     "chili_seeds": ("shapeless", ["chinese_traditional_food:chili"], 2),
     "cucumber_seeds": ("shapeless", ["chinese_traditional_food:cucumber"], 2),
 
-    # ---------------- 自研装置 ----------------
-    "water_mill": ("shaped", {"pattern": ["SSS", "SWS", "III"],
-                               "key": {"S": "minecraft:stone_bricks",
-                                       "W": "minecraft:water_bucket",
-                                       "I": "minecraft:iron_ingot"}}, 1),
-    "grain_sheller": ("shaped", {"pattern": ["PSP", "PIP", "PPP"],
-                                  "key": {"P": "#minecraft:planks",
-                                          "S": "minecraft:stone",
-                                          "I": "minecraft:iron_ingot"}}, 1),
-    # 机器部件：大型水磨 / 碾米机缺件时用它补。
-    # 一次做 4 个：一台机器分别要 14 / 17 个，拆一次也不会卡住。
-    "water_mill_part": ("shaped", {"pattern": ["SSS", "SIS", "SSS"],
-                                     "key": {"S": "minecraft:stone_bricks",
-                                             "I": "minecraft:iron_ingot"}}, 4),
-    "grain_sheller_part": ("shaped", {"pattern": ["PPP", "PIP", "PPP"],
-                                        "key": {"P": "#minecraft:planks",
-                                                "I": "minecraft:iron_ingot"}}, 4),
-    # 水车：装在水磨两侧接口的外侧，需要泡水
-    "water_wheel": ("shaped", {"pattern": ["PIP", "I I", "PIP"],
-                                "key": {"P": "#minecraft:planks",
-                                        "I": "minecraft:iron_ingot"}}, 1),
+    # ---------------- 电力设备（单方块） ----------------
+    # 熔炉发电机：石头外壳 + 铁芯 + 熔炉
+    "furnace_generator": ("shaped", {"pattern": ["III", "IFI", "SSS"],
+                                      "key": {"I": "minecraft:iron_ingot",
+                                              "F": "minecraft:furnace",
+                                              "S": "minecraft:stone"}}, 1),
+    # 电动磨粉机：铁外壳 + 磨盘
+    "electric_mill": ("shaped", {"pattern": ["III", "ISI", "III"],
+                                  "key": {"I": "minecraft:iron_ingot",
+                                          "S": "minecraft:stone_bricks"}}, 1),
+    # 电动脱壳机：铁外壳 + 铁滚筒
+    "electric_sheller": ("shaped", {"pattern": ["III", "ICI", "III"],
+                                     "key": {"I": "minecraft:iron_ingot",
+                                             "C": "minecraft:cauldron"}}, 1),
 
     # ---------------- 调味料 ----------------
     "salt": ("smelting", ["minecraft:dried_kelp"], 1),

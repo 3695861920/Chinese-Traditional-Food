@@ -2,11 +2,12 @@ package com.ctf.chinese_traditional_food.registry;
 
 import com.ctf.chinese_traditional_food.ChineseTraditionalFood;
 import com.ctf.chinese_traditional_food.common.block.entity.CuttingBoardBlockEntity;
-import com.ctf.chinese_traditional_food.common.block.entity.GrainShellerBlockEntity;
+import com.ctf.chinese_traditional_food.common.block.entity.ElectricMillBlockEntity;
+import com.ctf.chinese_traditional_food.common.block.entity.ElectricShellerBlockEntity;
+import com.ctf.chinese_traditional_food.common.block.entity.FurnaceGeneratorBlockEntity;
 import com.ctf.chinese_traditional_food.common.block.entity.PlacedDishBlockEntity;
 import com.ctf.chinese_traditional_food.common.block.entity.PlateBlockEntity;
 import com.ctf.chinese_traditional_food.common.block.entity.ServingPlatterBlockEntity;
-import com.ctf.chinese_traditional_food.common.block.entity.WaterMillBlockEntity;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
@@ -36,13 +37,20 @@ public final class ModBlockEntities {
             BLOCK_ENTITIES.register("cutting_board",
                     () -> new BlockEntityType<>(CuttingBoardBlockEntity::new, ModBlocks.CUTTING_BOARD.get()));
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WaterMillBlockEntity>> WATER_MILL =
-            BLOCK_ENTITIES.register("water_mill",
-                    () -> new BlockEntityType<>(WaterMillBlockEntity::new, ModBlocks.WATER_MILL.get()));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FurnaceGeneratorBlockEntity>> FURNACE_GENERATOR =
+            BLOCK_ENTITIES.register("furnace_generator",
+                    () -> new BlockEntityType<>(FurnaceGeneratorBlockEntity::new,
+                            ModBlocks.FURNACE_GENERATOR.get()));
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GrainShellerBlockEntity>> GRAIN_SHELLER =
-            BLOCK_ENTITIES.register("grain_sheller",
-                    () -> new BlockEntityType<>(GrainShellerBlockEntity::new, ModBlocks.GRAIN_SHELLER.get()));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ElectricMillBlockEntity>> ELECTRIC_MILL =
+            BLOCK_ENTITIES.register("electric_mill",
+                    () -> new BlockEntityType<>(ElectricMillBlockEntity::new,
+                            ModBlocks.ELECTRIC_MILL.get()));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ElectricShellerBlockEntity>> ELECTRIC_SHELLER =
+            BLOCK_ENTITIES.register("electric_sheller",
+                    () -> new BlockEntityType<>(ElectricShellerBlockEntity::new,
+                            ModBlocks.ELECTRIC_SHELLER.get()));
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PlacedDishBlockEntity>> PLACED_DISH =
             BLOCK_ENTITIES.register("placed_dish",

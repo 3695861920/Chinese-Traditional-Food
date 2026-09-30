@@ -2,13 +2,12 @@ package com.ctf.chinese_traditional_food.registry;
 
 import com.ctf.chinese_traditional_food.ChineseTraditionalFood;
 import com.ctf.chinese_traditional_food.common.block.CuttingBoardBlock;
-import com.ctf.chinese_traditional_food.common.block.GrainShellerBlock;
-import com.ctf.chinese_traditional_food.common.block.MachinePartBlock;
+import com.ctf.chinese_traditional_food.common.block.ElectricMillBlock;
+import com.ctf.chinese_traditional_food.common.block.ElectricShellerBlock;
+import com.ctf.chinese_traditional_food.common.block.FurnaceGeneratorBlock;
 import com.ctf.chinese_traditional_food.common.block.PlacedDishBlock;
 import com.ctf.chinese_traditional_food.common.block.PlateBlock;
 import com.ctf.chinese_traditional_food.common.block.ServingPlatterBlock;
-import com.ctf.chinese_traditional_food.common.block.WaterMillBlock;
-import com.ctf.chinese_traditional_food.common.block.WaterWheelBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredBlock;
@@ -17,14 +16,18 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 /**
  * 方块注册表。
  *
- * <p>共 6 个方块：</p>
+ * <p>共 8 个方块：</p>
  * <ul>
  *   <li>餐盘 / 大拼盘 —— 把菜摆出来（1 份 / 4 份）；</li>
  *   <li>案板 —— 放上食材后用刀切；</li>
- *   <li>水磨 —— 邻水自动把谷物磨成粉（3×3×3 大型机器）；</li>
- *   <li>脱壳机 —— 手摇，无界面（3×3×3 大型机器）；</li>
- *   <li>两种机器部件 —— 大型机器的组成零件，自己不带逻辑。</li>
+ *   <li>熔炉发电机 —— 烧燃料发电，给下面几台设备供电；</li>
+ *   <li>电动磨粉机 —— 吃电，把谷物磨成粉；</li>
+ *   <li>电动脱壳机 —— 吃电，给谷物脱壳；</li>
+ *   <li>摆在地上的菜。</li>
  * </ul>
+ *
+ * <p>机器全部是<b>单方块</b>，靠 {@code Capabilities.Energy.BLOCK} 互相连电 ——
+ * 比多方块结构好放、好搬、好接线。</p>
  */
 public final class ModBlocks {
     public static final DeferredRegister.Blocks BLOCKS =
@@ -70,71 +73,39 @@ public final class ModBlocks {
                     .noOcclusion());
 
     /**
-     * 水磨核心：石台正中那扇磨盘，也是整台机器的控制器。
-     *
-     * <p>放下它会自动展开成一整台水磨（石台 + 横轴 + 两侧水车接口 + 立柱），
-     * 空间不够就不让放。水车接口在机身左右两侧，装上会转的水车它才会磨粉。</p>
+     * 熔炉发电机：单方块电源。烧原版燃料，六个面往外送电。
      */
-    public static final DeferredBlock<WaterMillBlock> WATER_MILL = BLOCKS.registerBlock(
-            "water_mill",
-            WaterMillBlock::new,
-            props -> props
-                    .strength(2.0F, 6.0F)
-                    .sound(SoundType.STONE)
-                    .requiresCorrectToolForDrops());
+    public static final DeferredBlock<FurnaceGeneratorBlock> FURNACE_GENERATOR =
+            BLOCKS.registerBlock(
+                    "furnace_generator",
+                    FurnaceGeneratorBlock::new,
+                    props -> props
+                            .strength(3.5F, 6.0F)
+                            .sound(SoundType.STONE)
+                            .noOcclusion()
+                            .requiresCorrectToolForDrops());
 
-    /**
-     * 手摇式脱壳机核心：木机身 + 侧面摇柄，<b>没有界面</b>。
-     *
-     * <p>放下它会自动展开成一整台 3×3×3 的碾米机（木架 + 机箱 + 立柱 + 顶部料斗）。
-     * 带壳谷物右键 = 倒进去，潜行空手右键 = 摇一圈，空手右键 = 取成品。</p>
-     */
-    public static final DeferredBlock<GrainShellerBlock> GRAIN_SHELLER = BLOCKS.registerBlock(
-            "grain_sheller",
-            GrainShellerBlock::new,
-            props -> props
-                    .strength(2.0F, 6.0F)
-                    .sound(SoundType.WOOD)
-                    .requiresCorrectToolForDrops());
+    /** 电动磨粉机：单方块，吃电把谷物磨成粉。 */
+    public static final DeferredBlock<ElectricMillBlock> ELECTRIC_MILL =
+            BLOCKS.registerBlock(
+                    "electric_mill",
+                    ElectricMillBlock::new,
+                    props -> props
+                            .strength(3.5F, 6.0F)
+                            .sound(SoundType.STONE)
+                            .noOcclusion()
+                            .requiresCorrectToolForDrops());
 
-    /**
-     * 水车：挂在水磨两侧的接口上，泡在水里转，给水磨提供动力。
-     *
-     * <p>{@code noOcclusion()} —— 水车是一个薄轮子，有很多镂空，
-     * 不该挡住邻居的贴面剔除。轮轴朝向与转动帧都是方块状态。</p>
-     */
-    public static final DeferredBlock<WaterWheelBlock> WATER_WHEEL = BLOCKS.registerBlock(
-            "water_wheel",
-            WaterWheelBlock::new,
-            props -> props
-                    .strength(1.5F, 4.0F)
-                    .sound(SoundType.WOOD)
-                    .noOcclusion()
-                    .requiresCorrectToolForDrops());
-
-    /**
-     * 水磨部件：石台 / 水轮 / 传动箱。
-     *
-     * <p>同一个方块用 {@code dx/dy/dz} 三个属性表达所有格子，
-     * 用哪个模型由属性决定。玩家拆下来的零件都是这一个物品，
-     * 补回去时会自动认领正确的格子。</p>
-     */
-    public static final DeferredBlock<MachinePartBlock> WATER_MILL_PART = BLOCKS.registerBlock(
-            "water_mill_part",
-            MachinePartBlock::new,
-            props -> props
-                    .strength(1.5F, 4.0F)
-                    .sound(SoundType.STONE)
-                    .requiresCorrectToolForDrops());
-
-    /** 脱壳机部件：木架 / 机箱板 / 立柱 / 顶部料斗。 */
-    public static final DeferredBlock<MachinePartBlock> GRAIN_SHELLER_PART = BLOCKS.registerBlock(
-            "grain_sheller_part",
-            MachinePartBlock::new,
-            props -> props
-                    .strength(1.5F, 4.0F)
-                    .sound(SoundType.WOOD)
-                    .requiresCorrectToolForDrops());
+    /** 电动脱壳机：单方块，吃电给谷物脱壳。 */
+    public static final DeferredBlock<ElectricShellerBlock> ELECTRIC_SHELLER =
+            BLOCKS.registerBlock(
+                    "electric_sheller",
+                    ElectricShellerBlock::new,
+                    props -> props
+                            .strength(3.5F, 6.0F)
+                            .sound(SoundType.METAL)
+                            .noOcclusion()
+                            .requiresCorrectToolForDrops());
 
     /**
      * 直接摆在地上的菜。

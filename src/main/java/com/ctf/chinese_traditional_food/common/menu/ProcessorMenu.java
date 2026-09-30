@@ -1,6 +1,7 @@
 package com.ctf.chinese_traditional_food.common.menu;
 
 import com.ctf.chinese_traditional_food.common.block.entity.AbstractProcessorBlockEntity;
+import com.ctf.chinese_traditional_food.common.energy.MachineEnergy;
 import com.ctf.chinese_traditional_food.common.recipe.ProcessRecipes;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -28,6 +29,9 @@ import org.jetbrains.annotations.Nullable;
  */
 public class ProcessorMenu extends AbstractContainerMenu {
     private static final int MACHINE_SLOTS = AbstractProcessorBlockEntity.SIZE;   // 2
+
+    /** 同步给界面的整数个数：进度、总耗时、电量。 */
+    private static final int DATA_COUNT = 3;
     private static final int PLAYER_INV_START = MACHINE_SLOTS;
 
     /** 机器槽在界面里的位置（相对于界面左上角），由屏幕那边对齐。 */
@@ -48,7 +52,7 @@ public class ProcessorMenu extends AbstractContainerMenu {
     /** 客户端构造：菜单类型 + 空容器占位（数据由服务端同步）。 */
     public ProcessorMenu(MenuType<?> type, int containerId, Inventory playerInventory) {
         this(type, containerId, playerInventory,
-                new SimpleContainer(MACHINE_SLOTS), new SimpleContainerData(2));
+                new SimpleContainer(MACHINE_SLOTS), new SimpleContainerData(DATA_COUNT));
     }
     private ProcessorMenu(MenuType<?> type, int containerId, Inventory playerInventory,
                           Container machine, ContainerData data) {
@@ -111,6 +115,31 @@ public class ProcessorMenu extends AbstractContainerMenu {
             return 0.0F;
         }
         return Math.min(1.0F, this.data.get(0) / (float) max);
+    }
+
+    /**
+     * 当前电量（FE）。
+     *
+     * <p>直接同步原值：缓冲只有 {@code MachineEnergy.MACHINE_BUFFER} = 4000，
+     * 在原版容器数据的 short 范围内（见 {@code MachineEnergy.SYNC_SAFE_MAX}）。</p>
+     */
+    public int getEnergy() {
+        return this.data.get(2);
+    }
+
+    public int getEnergyCapacity() {
+        return MachineEnergy.MACHINE_BUFFER;
+    }
+
+    /** 电量比例 0~1。 */
+    public float getEnergyRatio() {
+        int cap = this.getEnergyCapacity();
+        return cap <= 0 ? 0.0F : Math.min(1.0F, this.getEnergy() / (float) cap);
+    }
+
+    /** 有没有电 —— 用来决定要不要提示"接台发电机"。 */
+    public boolean hasEnergy() {
+        return this.data.get(2) > 0;
     }
 
     // ------------------------------------------------------------------

@@ -2,6 +2,7 @@ package com.ctf.chinese_traditional_food.client;
 
 import com.ctf.chinese_traditional_food.ChineseTraditionalFood;
 import com.ctf.chinese_traditional_food.client.render.CuttingBoardBlockEntityRenderer;
+import com.ctf.chinese_traditional_food.client.render.GeneratorScreen;
 import com.ctf.chinese_traditional_food.client.render.PlateBlockEntityRenderer;
 import com.ctf.chinese_traditional_food.client.render.ProcessorScreen;
 import com.ctf.chinese_traditional_food.client.render.ServingPlatterBlockEntityRenderer;
@@ -30,12 +31,13 @@ public final class ClientSetup {
                 ServingPlatterBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.CUTTING_BOARD.get(),
                 CuttingBoardBlockEntityRenderer::new);
-        // 水磨 / 脱壳机没有额外的动态渲染，普通方块模型就够了，不注册渲染器。
+        // 发电机与两台加工机没有额外的动态渲染，普通方块模型就够了，不注册渲染器。
     }
 
     @SubscribeEvent
     public static void registerScreens(RegisterMenuScreensEvent event) {
         event.register(ModMenus.PROCESSOR.get(), ProcessorScreen::new);
+        event.register(ModMenus.GENERATOR.get(), GeneratorScreen::new);
     }
 
     private ClientSetup() {}

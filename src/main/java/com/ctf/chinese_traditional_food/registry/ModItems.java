@@ -40,25 +40,17 @@ public final class ModItems {
     public static final DeferredItem<BlockItem> CUTTING_BOARD =
             ITEMS.registerSimpleBlockItem(ModBlocks.CUTTING_BOARD);
 
-    /** 水磨，谷物磨粉。 */
-    public static final DeferredItem<BlockItem> WATER_MILL =
-            ITEMS.registerSimpleBlockItem(ModBlocks.WATER_MILL);
+    /** 电动脱壳机，吃电给谷物脱壳。 */
+    public static final DeferredItem<BlockItem> ELECTRIC_SHELLER =
+            ITEMS.registerSimpleBlockItem(ModBlocks.ELECTRIC_SHELLER);
 
-    /** 脱壳机，手摇式，无界面。 */
-    public static final DeferredItem<BlockItem> GRAIN_SHELLER =
-            ITEMS.registerSimpleBlockItem(ModBlocks.GRAIN_SHELLER);
+    /** 电动磨粉机，吃电把谷物磨成粉。 */
+    public static final DeferredItem<BlockItem> ELECTRIC_MILL =
+            ITEMS.registerSimpleBlockItem(ModBlocks.ELECTRIC_MILL);
 
-    /** 水磨部件（石台 / 水轮 / 传动箱）。 */
-    public static final DeferredItem<BlockItem> WATER_MILL_PART =
-            ITEMS.registerSimpleBlockItem(ModBlocks.WATER_MILL_PART);
-
-    /** 碾米机部件（木架 / 机箱板 / 立柱 / 料斗）。 */
-    public static final DeferredItem<BlockItem> GRAIN_SHELLER_PART =
-            ITEMS.registerSimpleBlockItem(ModBlocks.GRAIN_SHELLER_PART);
-
-    /** 水车：装在水磨两侧接口的外侧，泡在水里转，给水磨提供动力。 */
-    public static final DeferredItem<BlockItem> WATER_WHEEL =
-            ITEMS.registerSimpleBlockItem(ModBlocks.WATER_WHEEL);
+    /** 熔炉发电机，烧燃料发电。 */
+    public static final DeferredItem<BlockItem> FURNACE_GENERATOR =
+            ITEMS.registerSimpleBlockItem(ModBlocks.FURNACE_GENERATOR);
 
     // ==================================================================
     // 基础食材

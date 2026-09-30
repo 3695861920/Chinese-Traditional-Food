@@ -110,8 +110,7 @@ def collect_declared():
 # 手写的功能方块：它们注册的是 BlockItem，语言键走 block. 前缀，
 # 且模型 / 方块状态都是手写或由 display_models.py 生成的。
 HAND_WRITTEN_BLOCKS = ("plate", "serving_platter", "cutting_board",
-                       "water_mill", "grain_sheller",
-                       "water_mill_part", "grain_sheller_part", "water_wheel")
+                       "furnace_generator", "electric_mill", "electric_sheller")
 
 
 def check_assets(ids):
@@ -154,7 +153,8 @@ def known_items():
         "minecraft:brown_mushroom", "minecraft:red_mushroom", "minecraft:honey_bottle",
         "minecraft:sweet_berries", "minecraft:cocoa_beans", "minecraft:ink_sac",
         "minecraft:apple", "minecraft:beetroot", "minecraft:stone_bricks",
-        "minecraft:stone", "minecraft:wheat_seeds",
+        "minecraft:stone", "minecraft:wheat_seeds", "minecraft:furnace",
+        "minecraft:cauldron",
     }
     return {"%s:%s" % (NS, i) for i in ids} | allowed_vanilla
 
@@ -236,6 +236,19 @@ def check_tags():
             if isinstance(value, str) and value.startswith(NS + ":") and value not in known:
                 fail("c 标签 %s 引用了不存在的物品 %s"
                      % (os.path.relpath(path, ROOT), value))
+    # 原版 minecraft 命名空间下的标签（mineable/needs_xxx_tool 等）：
+    # 这些是手写的，方块被删掉后很容易忘记同步，所以也要检查。
+    mc_tags = os.path.join(RES, "data", "minecraft", "tags")
+    for path in walk(mc_tags, ".json"):
+        obj = load_json(path)
+        if obj is None:
+            continue
+        n += 1
+        for value in obj.get("values", []):
+            if isinstance(value, str) and not value.startswith("#"):
+                if value.startswith(NS + ":") and value not in known:
+                    fail("原版标签 %s 引用了不存在的方块 %s"
+                         % (os.path.relpath(path, ROOT), value))
     return n
 
 
