@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "chinese_traditional_food:shredded_vegetable",
+    "chinese_traditional_food:shredded_meat",
+    "chinese_traditional_food:fish_fillet",
+    "chinese_traditional_food:shredded_tofu"
+  ]
+}

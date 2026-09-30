@@ -1,6 +1,7 @@
 package com.ctf.chinese_traditional_food.registry;
 
 import com.ctf.chinese_traditional_food.ChineseTraditionalFood;
+import com.ctf.chinese_traditional_food.common.block.entity.CuttingBoardBlockEntity;
 import com.ctf.chinese_traditional_food.common.block.entity.PlateBlockEntity;
 import com.ctf.chinese_traditional_food.common.block.entity.ServingPlatterBlockEntity;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -27,6 +28,10 @@ public final class ModBlockEntities {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ServingPlatterBlockEntity>> SERVING_PLATTER =
             BLOCK_ENTITIES.register("serving_platter",
                     () -> new BlockEntityType<>(ServingPlatterBlockEntity::new, ModBlocks.SERVING_PLATTER.get()));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CuttingBoardBlockEntity>> CUTTING_BOARD =
+            BLOCK_ENTITIES.register("cutting_board",
+                    () -> new BlockEntityType<>(CuttingBoardBlockEntity::new, ModBlocks.CUTTING_BOARD.get()));
 
     public static void register(IEventBus modBus) {
         BLOCK_ENTITIES.register(modBus);

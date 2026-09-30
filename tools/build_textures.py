@@ -668,8 +668,8 @@ def main():
     parser = argparse.ArgumentParser(description="生成 Minecraft 风格纹理")
     parser.add_argument("--size", type=int, default=64,
                         help="器皿类纹理的边长，默认 64（原版是 16）")
-    parser.add_argument("--only", choices=["displays", "content", "all"], default="all",
-                        help="只生成器皿纹理 / 只生成内容图标 / 全部")
+    parser.add_argument("--only", choices=["displays", "content", "utilities", "all"], default="all",
+                        help="只生成器皿纹理 / 只生成内容图标 / 只生成工具方块 / 全部")
     args = parser.parse_args()
     SIZE = args.size
     U = SIZE / 16.0
@@ -696,6 +696,11 @@ def main():
         ):
             print("wrote %-52s %dx%d" % (os.path.relpath(save(img, directory, name), ROOT),
                                          img.width, img.height))
+
+    if args.only in ("utilities", "all"):
+        import texture_utilities as UTIL
+        UTIL.bind(hash_noise, bayer, quantize, shade)
+        UTIL.main(BLOCK_DIR, ITEM_DIR)
 
     if args.only in ("content", "all"):
         # 收集 content_data 里所有需要图标的条目

@@ -36,6 +36,10 @@ public final class ModItems {
     public static final DeferredItem<BlockItem> SERVING_PLATTER =
             ITEMS.registerSimpleBlockItem(ModBlocks.SERVING_PLATTER);
 
+    /** 案板，放上食材后用刀切。 */
+    public static final DeferredItem<BlockItem> CUTTING_BOARD =
+            ITEMS.registerSimpleBlockItem(ModBlocks.CUTTING_BOARD);
+
     // ==================================================================
     // 基础食材
     // ==================================================================
@@ -293,6 +297,42 @@ public final class ModItems {
             props -> props.food(new FoodProperties.Builder()
                         .nutrition(4)
                         .saturationModifier(0.40F)
+                        .build()));
+
+    /** 蔬菜丝（Shredded Vegetables）：2 饥饿 / 0.3 饱和，效果 NONE。 */
+    public static final DeferredItem<DishItem> SHREDDED_VEGETABLE = ITEMS.registerItem(
+            "shredded_vegetable",
+            props -> new DishItem(props, DishEffects.NONE),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(2)
+                        .saturationModifier(0.30F)
+                        .build()));
+
+    /** 肉丝（Shredded Meat）：3 饥饿 / 0.4 饱和，效果 NONE。 */
+    public static final DeferredItem<DishItem> SHREDDED_MEAT = ITEMS.registerItem(
+            "shredded_meat",
+            props -> new DishItem(props, DishEffects.NONE),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(3)
+                        .saturationModifier(0.40F)
+                        .build()));
+
+    /** 鱼片（Fish Fillet）：3 饥饿 / 0.4 饱和，效果 NONE。 */
+    public static final DeferredItem<DishItem> FISH_FILLET = ITEMS.registerItem(
+            "fish_fillet",
+            props -> new DishItem(props, DishEffects.NONE),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(3)
+                        .saturationModifier(0.40F)
+                        .build()));
+
+    /** 豆腐丝（Shredded Tofu）：3 饥饿 / 0.3 饱和，效果 NONE。 */
+    public static final DeferredItem<DishItem> SHREDDED_TOFU = ITEMS.registerItem(
+            "shredded_tofu",
+            props -> new DishItem(props, DishEffects.NONE),
+            props -> props.food(new FoodProperties.Builder()
+                        .nutrition(3)
+                        .saturationModifier(0.30F)
                         .build()));
 
     // ==================================================================
@@ -1773,6 +1813,10 @@ public final class ModItems {
             DRIED_JUJUBE,
             LONGAN,
             LYCHEE,
+            SHREDDED_VEGETABLE,
+            SHREDDED_MEAT,
+            FISH_FILLET,
+            SHREDDED_TOFU,
             ROCK_SUGAR,
             FERMENTED_TOFU,
             DOUCHI,

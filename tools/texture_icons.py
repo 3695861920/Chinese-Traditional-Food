@@ -1458,6 +1458,51 @@ def icon_wine_cup(img, pal, seed):
     paint(img, oval_pts(10.6, 4.2, 0.4, 0.4), (196, 138, 40))
 
 
+def icon_shredded(img, pal, seed):
+    """切好的丝：一小把细长条。"""
+    main, dark, light, accent = pal
+    import random
+    rnd = random.Random(seed)
+    ground_shadow(img, 8, 13.4, 5.0, 1.3, 55)
+    strands = []
+    for i in range(14):
+        base_x = 3.4 + i * 0.68
+        lean = rnd.uniform(-1.4, 1.4)
+        strands.append((base_x, lean))
+    strands.sort(key=lambda t: t[1])
+    for (base_x, lean) in strands:
+        for t in range(0, 34):
+            f = t / 33.0
+            sx = base_x + lean * f + rnd.uniform(-0.06, 0.06)
+            sy = 3.6 + f * 9.4
+            for (x, y) in oval_pts(sx, sy, 0.34, 0.30):
+                c = light if f < 0.45 else (main if f < 0.8 else dark)
+                px(img, x, y, c, 255)
+    # 扎起来的一段
+    for (x, y) in poly_pts([(6.0, 6.4), (10.0, 6.4), (10.0, 7.2), (6.0, 7.2)]):
+        px(img, x, y, accent, 220)
+
+
+def icon_fillet(img, pal, seed):
+    """鱼片：三片斜切的鱼柳。"""
+    main, dark, light, accent = pal
+    ground_shadow(img, 8, 13.4, 5.0, 1.3, 55)
+    for i, (cx, cy) in enumerate(((6.0, 10.6), (10.0, 9.6), (8.0, 6.4))):
+        pts = set(poly_pts([(cx - 2.6, cy + 1.4), (cx + 2.4, cy - 1.0),
+                            (cx + 2.8, cy + 0.4), (cx - 2.2, cy + 2.4)]))
+        for (x, y) in pts:
+            v = _noise(x // 2, y // 2, seed + i * 3)
+            px(img, x, y, light if v > 0.6 else main, 255)
+        # 切片纹
+        for k in range(3):
+            xx = cx - 1.6 + k * 1.6
+            for (x, y) in poly_pts([(xx, cy + 2.0), (xx + 0.28, cy + 2.0),
+                                    (xx - 1.6, cy - 0.8)]):
+                if (x, y) in pts:
+                    px(img, x, y, dark, 170)
+        outline(img, pts, accent)
+
+
 def icon_braised(img, pal, seed):
     """红烧 / 葱烧类：盘里一汪油亮的深色汁 + 食材块。"""
     def inside(pts, cx, cy, r):
@@ -1532,8 +1577,8 @@ PAINTERS = {
     "tool_spoon": icon_tool_spoon, "tool_rolling": icon_tool_rolling,
     "tool_chopsticks": icon_tool_chopsticks,
     "table_saucer": icon_table_saucer, "table_cup": icon_table_cup,
-    # 食材方块
-    "tofu_block": icon_tofu_block,
+    # 食材方块 / 半成品
+    "tofu_block": icon_tofu_block, "shredded": icon_shredded, "fillet": icon_fillet,
     # 菜品
     "dish_soup": icon_dish_soup, "congee": icon_congee, "noodles": icon_noodles,
     "balls_bowl": icon_balls_bowl, "rice_dish": icon_rice_dish,

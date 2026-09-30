@@ -90,8 +90,8 @@ def collect_declared():
         ids.add(row[0])
         kinds[row[0]] = row[4]
         dishes.add(row[0])
-    # 手写的摆放方块
-    for extra in ("plate", "serving_platter"):
+    # 手写的摆放 / 加工方块
+    for extra in ("plate", "serving_platter", "cutting_board"):
         ids.add(extra)
     return ids, dishes, kinds
 
@@ -101,8 +101,9 @@ def check_assets(ids):
     lang_en = load_json(os.path.join(ASSETS, "lang", "en_us.json")) or {}
 
     for item_id in sorted(ids):
-        # 摆放方块注册的是 BlockItem，语言键走 block. 前缀
-        prefixes = ("item.", "block.") if item_id in ("plate", "serving_platter") else ("item.",)
+        # 摆放 / 加工方块注册的是 BlockItem，语言键走 block. 前缀
+        hand_written = ("plate", "serving_platter", "cutting_board")
+        prefixes = ("item.", "block.") if item_id in hand_written else ("item.",)
         checks = {
             "语言(zh)": any("%s%s.%s" % (p, NS, item_id) in lang_zh for p in prefixes),
             "语言(en)": any("%s%s.%s" % (p, NS, item_id) in lang_en for p in prefixes),
@@ -252,6 +253,26 @@ def check_icon_kinds():
         fail("配色 %s 未在 PALETTES 中定义" % name)
 
 
+def check_cutting(ids):
+    """案板切割表：产出必须是本模组真实存在的物品。"""
+    import importlib.util
+    path = os.path.join(ROOT, "src", "main", "java", "com", "ctf",
+                        "chinese_traditional_food", "common", "recipe", "ModCutting.java")
+    if not os.path.exists(path):
+        fail("未找到生成的 ModCutting.java")
+        return 0
+    with open(path, encoding="utf-8") as fh:
+        src = fh.read()
+    entries = re.findall(r'new Entry\("([^"]+)",\s*"([^"]+)",\s*(true|false),\s*(\d+)\)', src)
+    if len(entries) != len(DATA.CUTTING):
+        fail("ModCutting.java 的条目数 %d 与 content_data.CUTTING 的 %d 不一致"
+             % (len(entries), len(DATA.CUTTING)))
+    for (_inp, out, _knife, _time) in entries:
+        if out not in ids:
+            fail("案板切割产出 %s 不是本模组的物品" % out)
+    return len(entries)
+
+
 def main():
     ids, dishes, _kinds = collect_declared()
     print("声明条目: %d（其中菜品 %d）" % (len(ids), len(dishes)))
@@ -263,6 +284,7 @@ def main():
     print("配方文件: %d" % n_recipes)
     print("标签文件: %d" % check_tags())
     print("效果常量: 定义 %d / 引用 %d" % check_java_effects())
+    print("案板规则: %d" % check_cutting(ids))
     check_icon_kinds()
 
     if problems:

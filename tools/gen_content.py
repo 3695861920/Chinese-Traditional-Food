@@ -137,6 +137,10 @@ public final class ModItems {
     /** 大拼盘，摆放 4 份菜。 */
     public static final DeferredItem<BlockItem> SERVING_PLATTER =
             ITEMS.registerSimpleBlockItem(ModBlocks.SERVING_PLATTER);
+
+    /** 案板，放上食材后用刀切。 */
+    public static final DeferredItem<BlockItem> CUTTING_BOARD =
+            ITEMS.registerSimpleBlockItem(ModBlocks.CUTTING_BOARD);
 """
 
 FOOTER = """
@@ -277,9 +281,10 @@ public final class ModCreativeTabs {
                     .title(Component.translatable("itemGroup.chinese_traditional_food.main"))
                     .icon(() -> new ItemStack(ModItems.MAPO_TOFU.get()))
                     .displayItems((params, output) -> {
-                        // 餐具与摆放方块
+                        // 餐具与摆放 / 加工方块
                         output.accept(ModItems.PLATE.get());
                         output.accept(ModItems.SERVING_PLATTER.get());
+                        output.accept(ModItems.CUTTING_BOARD.get());
                         // 其余全部内容（食材 / 调味料 / 水果 / 蔬菜 / 厨具 / 菜品）
                         for (var item : ModItems.allFoods()) {
                             output.accept(item.get());
@@ -299,6 +304,7 @@ CREATIVE_FOOTER = """
         if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
             event.accept(ModItems.PLATE.get());
             event.accept(ModItems.SERVING_PLATTER.get());
+            event.accept(ModItems.CUTTING_BOARD.get());
         }
         if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
             for (var item : ModItems.allFoods()) {
@@ -311,6 +317,7 @@ CREATIVE_FOOTER = """
             }
             event.accept(ModItems.PLATE.get());
             event.accept(ModItems.SERVING_PLATTER.get());
+            event.accept(ModItems.CUTTING_BOARD.get());
         }
     }
 
@@ -329,6 +336,54 @@ def gen_creative_tabs():
 
 
 # ======================================================================
+# 案板切割表（ModCutting.java）
+# ======================================================================
+
+CUTTING_HEADER = '''package com.ctf.chinese_traditional_food.common.recipe;
+
+import com.ctf.chinese_traditional_food.ChineseTraditionalFood;
+import java.util.List;
+
+/**
+ * 案板切割表。
+ *
+ * <p><b>本文件由 {@code tools/gen_content.py} 生成，请不要手改。</b>
+ * 要改配方请编辑 {@code tools/content_data.py} 的 CUTTING 表。</p>
+ *
+ * <p>输入写法：{@code "chinese_traditional_food:tofu"} 或 {@code "#c:raw_meat"}（标签）。
+ * 匹配时<strong>先具体物品、后标签</strong>，所以表的顺序有意义。</p>
+ */
+public final class ModCutting {
+    /** 一条切割规则。
+     *
+     * @param input      输入（物品 id 或 {@code #命名空间:标签路径}）
+     * @param output     产出物品的路径（命名空间固定为本模组）
+     * @param needsKnife 是否需要手持刀类工具
+     * @param extraTime  额外耗时（tick），0 表示瞬间完成
+     */
+    public record Entry(String input, String output, boolean needsKnife, int extraTime) {}
+
+    public static final List<Entry> ENTRIES = List.of(
+'''
+
+CUTTING_FOOTER = '''    );
+
+    private ModCutting() {}
+}
+'''
+
+
+def gen_cutting():
+    lines = []
+    for (input, output, needs_knife, extra) in DATA.CUTTING:
+        lines.append('            new Entry("%s", "%s", %s, %d),'
+                     % (input, output, "true" if needs_knife else "false", extra))
+    body = CUTTING_HEADER + "\n".join(lines) + "\n" + CUTTING_FOOTER
+    write(os.path.join(JAVA, "common", "recipe", "ModCutting.java"), body)
+    print("cutting entries: %d" % len(DATA.CUTTING))
+
+
+# ======================================================================
 # 语言文件
 # ======================================================================
 
@@ -340,10 +395,12 @@ def gen_lang(items, dishes):
     zh.update({
         "block.chinese_traditional_food.plate": "餐盘",
         "block.chinese_traditional_food.serving_platter": "大拼盘",
+        "block.chinese_traditional_food.cutting_board": "案板",
     })
     en.update({
         "block.chinese_traditional_food.plate": "Plate",
         "block.chinese_traditional_food.serving_platter": "Serving Platter",
+        "block.chinese_traditional_food.cutting_board": "Cutting Board",
     })
 
     # 按类别写注释分组（JSON 不支持注释，用顺序 + 分组标题的键值对不可行，
@@ -437,7 +494,8 @@ def recipe_object(recipe_id, spec):
 
 def gen_recipes(items, dishes):
     base = os.path.join(RES, "data", NAMESPACE, "recipe")
-    known = {i["id"] for i in items} | {d["id"] for d in dishes} | {"plate", "serving_platter"}
+    known = ({i["id"] for i in items} | {d["id"] for d in dishes}
+             | {"plate", "serving_platter", "cutting_board"})
 
     written = 0
     for recipe_id, spec in DATA.RECIPES.items():
@@ -503,6 +561,7 @@ def main():
 
     gen_mod_items(items, dishes)
     gen_creative_tabs()
+    gen_cutting()
     gen_lang(items, dishes)
     gen_item_assets(items, dishes)
     gen_recipes(items, dishes)

@@ -1,6 +1,7 @@
 package com.ctf.chinese_traditional_food.registry;
 
 import com.ctf.chinese_traditional_food.ChineseTraditionalFood;
+import com.ctf.chinese_traditional_food.common.block.CuttingBoardBlock;
 import com.ctf.chinese_traditional_food.common.block.PlateBlock;
 import com.ctf.chinese_traditional_food.common.block.ServingPlatterBlock;
 import net.minecraft.world.level.block.SoundType;
@@ -44,6 +45,19 @@ public final class ModBlocks {
             ServingPlatterBlock::new,
             props -> props
                     .strength(0.6F)
+                    .sound(SoundType.WOOD)
+                    .noOcclusion());
+
+    /**
+     * 案板：放上食材后用刀切。
+     *
+     * <p>厚度 1 格，带方块实体（存输入 / 成品），客户端渲染器把两者画在板面上。</p>
+     */
+    public static final DeferredBlock<CuttingBoardBlock> CUTTING_BOARD = BLOCKS.registerBlock(
+            "cutting_board",
+            CuttingBoardBlock::new,
+            props -> props
+                    .strength(0.8F)
                     .sound(SoundType.WOOD)
                     .noOcclusion());
 

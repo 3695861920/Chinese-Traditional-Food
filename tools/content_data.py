@@ -131,6 +131,11 @@ INGREDIENTS = [
     ("longan",                "桂圆",     "Longan",             "berries", "dried",   2, 0.3),
     ("osmanthus",             "桂花",     "Osmanthus",          "flowers", "gold",    0, 0),
     ("lychee",                "荔枝",     "Lychee",             "berries", "red",     4, 0.4),
+    # --- 案板切好的半成品 ---
+    ("shredded_vegetable",    "蔬菜丝",   "Shredded Vegetables", "shredded", "leaf",   2, 0.3),
+    ("shredded_meat",         "肉丝",     "Shredded Meat",       "shredded", "red",    3, 0.4),
+    ("fish_fillet",           "鱼片",     "Fish Fillet",         "fillet",   "steamed", 3, 0.4),
+    ("shredded_tofu",         "豆腐丝",   "Shredded Tofu",       "shredded", "white",  3, 0.3),
 ]
 
 # ======================================================================
@@ -455,6 +460,7 @@ RECIPES = {
     # ---------------- 餐具 / 厨具 ----------------
     "plate": ("shaped", {"pattern": ["C C", " C "], "key": {"C": "minecraft:clay_ball"}}, 1),
     "serving_platter": ("shaped", {"pattern": ["PPP", "P P"], "key": {"P": "minecraft:planks"}}, 1),
+    "cutting_board": ("shaped", {"pattern": ["PPP", "P P"], "key": {"P": "minecraft:stick"}}, 1),
     "chopsticks": ("shaped", {"pattern": ["S", "S"], "key": {"S": "minecraft:stick"}}, 2),
     "rolling_pin": ("shaped", {"pattern": ["S  ", " S ", "  S"], "key": {"S": "minecraft:stick"}}, 1),
     "saucer": ("shaped", {"pattern": ["CC"], "key": {"C": "minecraft:clay_ball"}}, 1),
@@ -515,6 +521,22 @@ DISH_RECIPE_MATERIALS = {
 }
 
 # ======================================================================
+# 案板切割表
+# ======================================================================
+# 每行 = (输入标签或物品, 输出物品, 需要“刀”与否, 额外耗时 tick)
+# 输入以 # 开头表示标签，否则是具体物品 id。
+# 必须先匹配具体物品、再匹配标签，所以顺序有意义。
+CUTTING = [
+    ("chinese_traditional_food:tofu",           "shredded_tofu",      True,  0),
+    ("chinese_traditional_food:wood_ear",       "shredded_vegetable", True,  0),
+    ("chinese_traditional_food:bamboo_shoot",   "shredded_vegetable", True,  0),
+    ("#c:raw_fish",                             "fish_fillet",        True,  0),
+    ("#c:raw_meat",                             "shredded_meat",      True,  0),
+    ("chinese_traditional_food:fermented_tofu", "shredded_tofu",      False, 20),
+    ("#c:vegetables",                           "shredded_vegetable", True,  0),
+]
+
+# ======================================================================
 # c 命名空间通用标签（供配方与其它模组复用）
 # ======================================================================
 C_TAGS = {
@@ -565,6 +587,8 @@ OWN_TAGS = {
     "knives": ["chinese_traditional_food:kitchen_knife", "chinese_traditional_food:cleaver"],
     "raw_meat": ["#c:raw_meat"],
     "tofu": ["chinese_traditional_food:tofu", "chinese_traditional_food:fermented_tofu"],
+    "prepared": ["chinese_traditional_food:shredded_vegetable", "chinese_traditional_food:shredded_meat",
+                 "chinese_traditional_food:fish_fillet", "chinese_traditional_food:shredded_tofu"],
     "seasonings": ["chinese_traditional_food:salt", "chinese_traditional_food:soy_sauce",
                    "chinese_traditional_food:vinegar", "chinese_traditional_food:cooking_wine",
                    "chinese_traditional_food:sichuan_peppercorn", "chinese_traditional_food:star_anise",
