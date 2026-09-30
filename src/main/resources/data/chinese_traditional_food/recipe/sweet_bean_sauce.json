@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "chinese_traditional_food:flour"
+    },
+    {
+      "item": "chinese_traditional_food:salt"
+    }
+  ],
+  "result": {
+    "id": "chinese_traditional_food:sweet_bean_sauce",
+    "count": 1
+  }
+}

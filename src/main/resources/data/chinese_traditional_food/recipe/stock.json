@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:bone_meal"
+    },
+    {
+      "item": "minecraft:water_bucket"
+    },
+    {
+      "item": "chinese_traditional_food:scallion"
+    },
+    {
+      "item": "chinese_traditional_food:ginger"
+    }
+  ],
+  "result": {
+    "id": "chinese_traditional_food:stock",
+    "count": 2
+  }
+}

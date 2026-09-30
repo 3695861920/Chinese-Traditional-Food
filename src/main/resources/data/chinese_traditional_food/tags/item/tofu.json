@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "chinese_traditional_food:tofu"
+    "chinese_traditional_food:tofu",
+    "chinese_traditional_food:fermented_tofu"
   ]
 }

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "chinese_traditional_food:napa_cabbage"
+    },
+    {
+      "item": "chinese_traditional_food:salt"
+    },
+    {
+      "item": "chinese_traditional_food:salt"
+    }
+  ],
+  "result": {
+    "id": "chinese_traditional_food:pickled_vegetable",
+    "count": 2
+  }
+}

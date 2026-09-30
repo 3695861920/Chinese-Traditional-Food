@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "chinese_traditional_food:plate"
+    },
+    {
+      "item": "minecraft:cod"
+    },
+    {
+      "item": "chinese_traditional_food:ginger"
+    },
+    {
+      "item": "chinese_traditional_food:scallion"
+    }
+  ],
+  "result": {
+    "id": "chinese_traditional_food:wuwei_jianxie",
+    "count": 1
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "chinese_traditional_food:flour",
+    "chinese_traditional_food:rice_flour",
+    "chinese_traditional_food:glutinous_rice_flour",
+    "chinese_traditional_food:corn_flour"
+  ]
+}

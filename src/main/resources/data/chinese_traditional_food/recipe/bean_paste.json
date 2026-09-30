@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "chinese_traditional_food:red_bean"
+    },
+    {
+      "item": "chinese_traditional_food:red_bean"
+    },
+    {
+      "item": "minecraft:sugar"
+    }
+  ],
+  "result": {
+    "id": "chinese_traditional_food:bean_paste",
+    "count": 2
+  }
+}

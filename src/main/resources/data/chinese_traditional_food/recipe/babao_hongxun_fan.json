@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:bowl"
+    },
+    {
+      "item": "chinese_traditional_food:rice"
+    },
+    {
+      "item": "chinese_traditional_food:soy_sauce"
+    },
+    {
+      "item": "minecraft:carrot"
+    }
+  ],
+  "result": {
+    "id": "chinese_traditional_food:babao_hongxun_fan",
+    "count": 1
+  }
+}

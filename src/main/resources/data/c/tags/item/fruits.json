@@ -1,0 +1,24 @@
+{
+  "replace": false,
+  "values": [
+    "chinese_traditional_food:pear",
+    "chinese_traditional_food:peach",
+    "chinese_traditional_food:plum",
+    "chinese_traditional_food:apricot",
+    "chinese_traditional_food:jujube",
+    "chinese_traditional_food:persimmon",
+    "chinese_traditional_food:mandarin",
+    "chinese_traditional_food:pomelo",
+    "chinese_traditional_food:banana",
+    "chinese_traditional_food:grape",
+    "chinese_traditional_food:strawberry",
+    "chinese_traditional_food:cherry",
+    "chinese_traditional_food:pomegranate",
+    "chinese_traditional_food:kiwi",
+    "chinese_traditional_food:mango",
+    "chinese_traditional_food:pineapple",
+    "chinese_traditional_food:lychee",
+    "minecraft:apple",
+    "minecraft:sweet_berries"
+  ]
+}

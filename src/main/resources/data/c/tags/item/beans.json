@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "chinese_traditional_food:red_bean",
+    "chinese_traditional_food:mung_bean",
+    "chinese_traditional_food:soybean",
+    "chinese_traditional_food:black_bean",
+    "chinese_traditional_food:pea",
+    "chinese_traditional_food:broad_bean"
+  ]
+}

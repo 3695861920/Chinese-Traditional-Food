@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "chinese_traditional_food:garlic"
+    },
+    {
+      "item": "chinese_traditional_food:vinegar"
+    },
+    {
+      "item": "chinese_traditional_food:vinegar"
+    }
+  ],
+  "result": {
+    "id": "chinese_traditional_food:laba_suan",
+    "count": 2
+  }
+}

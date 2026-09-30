@@ -35,6 +35,7 @@ import argparse
 import colorsys
 import math
 import os
+import sys
 
 from PIL import Image
 
@@ -659,17 +660,25 @@ def save(img, directory, name):
     os.makedirs(directory, exist_ok=True)
     path = os.path.join(directory, name)
     img.save(path)
-    print("wrote %-46s %dx%d" % (os.path.relpath(path, ROOT), img.width, img.height))
+    return path
 
 
 def main():
     global SIZE, U
     parser = argparse.ArgumentParser(description="生成 Minecraft 风格纹理")
     parser.add_argument("--size", type=int, default=64,
-                        help="输出边长，默认 64（原版是 16）")
+                        help="器皿类纹理的边长，默认 64（原版是 16）")
+    parser.add_argument("--only", choices=["displays", "content", "all"], default="all",
+                        help="只生成器皿纹理 / 只生成内容图标 / 全部")
     args = parser.parse_args()
     SIZE = args.size
     U = SIZE / 16.0
+
+    # 内容图标由 texture_icons 绘制（固定 64x64，与 content_data 一一对应）
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import content_data as DATA
+    import texture_icons as ICONS
+    ICONS.bind(hash_noise, bayer, quantize, shade)
 
     _, wood = extract_cc0_palette()
     if not wood or len(wood) < 4:
@@ -677,14 +686,57 @@ def main():
     print("size =", SIZE, " wood palette:",
           " ".join("#%02X%02X%02X" % c for c in wood))
 
-    save(draw_plate_top(with_outline=False), BLOCK_DIR, "plate.png")
-    save(draw_plate_side(), BLOCK_DIR, "plate_side.png")
-    save(draw_platter_block(wood), BLOCK_DIR, "serving_platter.png")
+    if args.only in ("displays", "all"):
+        for img, directory, name in (
+            (draw_plate_top(with_outline=False), BLOCK_DIR, "plate.png"),
+            (draw_plate_side(), BLOCK_DIR, "plate_side.png"),
+            (draw_platter_block(wood), BLOCK_DIR, "serving_platter.png"),
+            (draw_plate_top(with_outline=True), ITEM_DIR, "plate.png"),
+            (draw_platter_item(wood), ITEM_DIR, "serving_platter.png"),
+        ):
+            print("wrote %-52s %dx%d" % (os.path.relpath(save(img, directory, name), ROOT),
+                                         img.width, img.height))
 
-    save(draw_plate_top(with_outline=True), ITEM_DIR, "plate.png")
-    save(draw_platter_item(wood), ITEM_DIR, "serving_platter.png")
-    save(draw_tofu(), ITEM_DIR, "tofu.png")
-    save(draw_mapo_tofu(), ITEM_DIR, "mapo_tofu.png")
+    if args.only in ("content", "all"):
+        # 收集 content_data 里所有需要图标的条目
+        entries = []
+        for row in DATA.INGREDIENTS:
+            entries.append((row[0], row[3], row[4]))
+        for row in DATA.SEASONINGS:
+            entries.append((row[0], row[3], row[4]))
+        for row in DATA.FRUITS:
+            entries.append((row[0], row[3], row[4]))
+        for row in DATA.VEGETABLES:
+            entries.append((row[0], row[3], row[4]))
+        for row in DATA.TOOLS:
+            entries.append((row[0], row[3], row[4]))
+        for row in DATA.DISHES:
+            entries.append((row[0], row[4], row[5]))
+
+        missing_kinds = set()
+        missing_palettes = set()
+        count = 0
+        for (item_id, kind, palette_name) in entries:
+            if kind not in ICONS.PAINTERS:
+                missing_kinds.add(kind)
+                continue
+            if palette_name not in DATA.PALETTES:
+                missing_palettes.add(palette_name)
+                continue
+            palette = DATA.PALETTES[palette_name]
+            # 用 id 派生种子，保证每次构建结果一致，同时让同种造型有细微差别
+            seed = abs(hash(item_id)) % 100000
+            if seed == 0:
+                seed = 1
+            img = ICONS.draw(kind, palette, seed & 0x7FFFFFFF)
+            save(img, ITEM_DIR, "%s.png" % item_id)
+            count += 1
+
+        print("content icons: %d" % count)
+        if missing_kinds:
+            print("!! 缺少画法的图标种类: %s" % ", ".join(sorted(missing_kinds)))
+        if missing_palettes:
+            print("!! 未定义的配色: %s" % ", ".join(sorted(missing_palettes)))
 
 
 if __name__ == "__main__":

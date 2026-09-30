@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "chinese_traditional_food:rice"
+    }
+  ],
+  "result": {
+    "id": "chinese_traditional_food:rice_flour",
+    "count": 2
+  }
+}

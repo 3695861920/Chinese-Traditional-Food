@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "chinese_traditional_food:plate"
+    },
+    {
+      "item": "minecraft:porkchop"
+    },
+    {
+      "item": "chinese_traditional_food:scallion"
+    },
+    {
+      "item": "chinese_traditional_food:garlic"
+    }
+  ],
+  "result": {
+    "id": "chinese_traditional_food:yuxiang_rousi",
+    "count": 1
+  }
+}

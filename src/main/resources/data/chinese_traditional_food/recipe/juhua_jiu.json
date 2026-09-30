@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "chinese_traditional_food:cup"
+    },
+    {
+      "item": "chinese_traditional_food:osmanthus"
+    },
+    {
+      "item": "chinese_traditional_food:cooking_wine"
+    },
+    {
+      "item": "minecraft:sugar"
+    }
+  ],
+  "result": {
+    "id": "chinese_traditional_food:juhua_jiu",
+    "count": 1
+  }
+}

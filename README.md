@@ -37,17 +37,67 @@
 
 ---
 
-## 当前进度（阶段 1 已完成）
+## 当前进度
 
-| 内容 | 位置 |
+| 阶段 | 内容 | 状态 |
+| --- | --- | --- |
+| 0 | 完整物品清单（`docs/物品清单.md`） | ✅ |
+| 1 | 工程骨架、**菜品摆放系统**、示例菜品、3 个自定义效果、核心标签与配方、7 张 64×64 器皿纹理 | ✅ |
+| 2 | **全部 201 个条目**（食材 / 调味料 / 水果 / 蔬菜 / 厨具餐具 / 八大菜系 73 道 / 节日食物 24 道）+ 201 张图标 + 140 个配方 | ✅ |
+| 3 | 水磨 / 脱壳机（方块实体 + GUI + `IItemHandler`）；`c:` 标签体系 | ⬜ |
+| 4 | 灶台 / 蒸笼 / 炒锅 / 汤锅 / 砂锅；案板 + 刀切割 | ⬜ |
+| 5 | 作物种植、果树、村民交易 | ⬜ |
+| 6 | `farmersdelight` / `kaleidoscope_cookery` 兼容配方 | ⬜ |
+
+### 内容规模
+
+| 分类 | 数量 |
 | --- | --- |
-| 完整物品清单（210 条，12 大类） | [`docs/物品清单.md`](docs/物品清单.md) |
-| 工程骨架 / 注册表 | `src/main/java/.../registry/` |
-| 摆放方块 + 方块实体 | `src/main/java/.../common/block/` |
-| 客户端渲染器 | `src/main/java/.../client/render/` |
-| 示例菜品 麻婆豆腐 + 豆腐 | `src/main/java/.../common/item/`、`src/main/resources/data/.../recipe/` |
-| 3 个自定义效果（团圆 / 步步高升 / 圆满） | `registry/ModMobEffects.java` |
-| 7 张 64×64 纹理（Minecraft 像素画风格，程序化生成） | `tools/build_textures.py` |
+| 基础食材 | 32 |
+| 调味料 | 23 |
+| 常见水果 | 16 |
+| 常见蔬菜 | 23 |
+| 厨具与餐具 | 9 |
+| 八大菜系菜品 | 73 |
+| 传统节日食物 | 24 |
+| **合计注册条目** | **201**（另有 2 个摆放方块） |
+| 配方 | 140 |
+| 标签 | 22（7 自有 + 14 `c:` 通用） |
+| 纹理 | 206 张 64×64 |
+
+---
+
+## 内容全部由数据表生成
+
+`tools/content_data.py` 是**唯一的内容来源**。
+改这一个文件，再跑两个脚本，下面这些东西全部自动同步：
+
+```
+tools/content_data.py
+        │
+        ├── python tools/gen_content.py
+        │       → ModItems.java / ModCreativeTabs.java
+        │       → zh_cn.json / en_us.json
+        │       → items/*.json （客户端物品）
+        │       → models/item/*.json
+        │       → recipe/*.json
+        │       → tags/item/*.json、data/c/tags/item/*.json
+        │
+        └── python tools/build_textures.py
+                → textures/item/*.png （参数化绘制）
+
+python tools/validate_content.py    # 完整性校验（建议入库前必跑）
+python tools/preview_icons.py       # 拼一张预览图检查画风
+```
+
+加一道菜只需要在 `content_data.py` 的 `DISHES` 里填一行：
+
+```python
+# id, 中文名, 英文名, 分组, 图标种类, 配色, 饥饿, 饱和, 效果
+("gulao_rou", "咕噜肉", "Sweet and Sour Pork", "yue", "dish_plate", "redbraised", 8, 1.0, "SATED"),
+```
+
+**零新增代码、零新增方块**——它会自动出现在创造标签页，并直接能在餐盘 / 大拼盘上摆出来。
 
 ---
 
@@ -88,8 +138,13 @@ src/main/resources/
 └── data/chinese_traditional_food/       配方 / 战利品表 / 标签
 
 tools/
-├── fetch_cc0_assets.ps1                 抓取 CC0 素材（提取配色用）
-└── build_textures.py                    64×64 Minecraft 风格纹理生成脚本
+├── content_data.py                      内容数据表（唯一内容来源）
+├── gen_content.py                       生成 Java / 语言 / 模型 / 配方 / 标签
+├── build_textures.py                    生成 64×64 纹理（器皿 + 内容图标）
+├── texture_icons.py                     约 50 种图标造型的画法
+├── validate_content.py                  完整性校验
+├── preview_icons.py                     图标预览拼图
+└── fetch_cc0_assets.ps1                 抓取 CC0 素材（取色用）
 docs/物品清单.md                          完整物品清单与设计文档
 ATTRIBUTION.md                            素材署名与许可证
 ```

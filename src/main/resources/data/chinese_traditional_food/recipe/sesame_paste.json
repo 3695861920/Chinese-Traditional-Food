@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "chinese_traditional_food:sesame"
+    },
+    {
+      "item": "chinese_traditional_food:sesame"
+    }
+  ],
+  "result": {
+    "id": "chinese_traditional_food:sesame_paste",
+    "count": 1
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "chinese_traditional_food:star_anise"
+    },
+    {
+      "item": "chinese_traditional_food:cinnamon_bark"
+    },
+    {
+      "item": "chinese_traditional_food:sichuan_peppercorn"
+    },
+    {
+      "item": "chinese_traditional_food:bay_leaf"
+    },
+    {
+      "item": "chinese_traditional_food:cumin"
+    }
+  ],
+  "result": {
+    "id": "chinese_traditional_food:five_spice_powder",
+    "count": 1
+  }
+}

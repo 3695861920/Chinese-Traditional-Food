@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "chinese_traditional_food:salt",
+    "chinese_traditional_food:soy_sauce",
+    "chinese_traditional_food:vinegar",
+    "chinese_traditional_food:cooking_wine",
+    "chinese_traditional_food:sichuan_peppercorn",
+    "chinese_traditional_food:star_anise",
+    "chinese_traditional_food:cinnamon_bark",
+    "chinese_traditional_food:chili_powder",
+    "chinese_traditional_food:doubanjiang",
+    "minecraft:sugar"
+  ]
+}

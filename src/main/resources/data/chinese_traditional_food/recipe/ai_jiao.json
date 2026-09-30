@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "chinese_traditional_food:plate"
+    },
+    {
+      "item": "chinese_traditional_food:flour"
+    },
+    {
+      "item": "chinese_traditional_food:scallion"
+    },
+    {
+      "item": "chinese_traditional_food:ginger"
+    }
+  ],
+  "result": {
+    "id": "chinese_traditional_food:ai_jiao",
+    "count": 1
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:bowl"
+    },
+    {
+      "item": "chinese_traditional_food:stock"
+    },
+    {
+      "item": "chinese_traditional_food:soy_sauce"
+    },
+    {
+      "item": "chinese_traditional_food:star_anise"
+    }
+  ],
+  "result": {
+    "id": "chinese_traditional_food:fotiaoqiang",
+    "count": 1
+  }
+}

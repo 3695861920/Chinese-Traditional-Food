@@ -1,0 +1,22 @@
+{
+  "replace": false,
+  "values": [
+    "chinese_traditional_food:napa_cabbage",
+    "chinese_traditional_food:bok_choy",
+    "chinese_traditional_food:radish",
+    "chinese_traditional_food:spinach",
+    "chinese_traditional_food:celery",
+    "chinese_traditional_food:chive",
+    "chinese_traditional_food:eggplant",
+    "chinese_traditional_food:cucumber",
+    "chinese_traditional_food:winter_melon",
+    "chinese_traditional_food:luffa",
+    "chinese_traditional_food:bitter_melon",
+    "chinese_traditional_food:green_bean",
+    "chinese_traditional_food:tomato",
+    "chinese_traditional_food:chili",
+    "minecraft:carrot",
+    "minecraft:potato",
+    "minecraft:beetroot"
+  ]
+}

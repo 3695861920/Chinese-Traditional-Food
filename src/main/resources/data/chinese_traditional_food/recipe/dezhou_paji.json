@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "chinese_traditional_food:serving_platter"
+    },
+    {
+      "item": "minecraft:beef"
+    },
+    {
+      "item": "chinese_traditional_food:soy_sauce"
+    },
+    {
+      "item": "chinese_traditional_food:star_anise"
+    }
+  ],
+  "result": {
+    "id": "chinese_traditional_food:dezhou_paji",
+    "count": 1
+  }
+}

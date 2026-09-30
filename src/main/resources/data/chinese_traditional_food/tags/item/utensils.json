@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "chinese_traditional_food:kitchen_knife",
+    "chinese_traditional_food:cleaver",
+    "chinese_traditional_food:spatula",
+    "chinese_traditional_food:slotted_spoon",
+    "chinese_traditional_food:soup_spoon",
+    "chinese_traditional_food:rolling_pin",
+    "chinese_traditional_food:chopsticks",
+    "chinese_traditional_food:saucer",
+    "chinese_traditional_food:cup",
+    "minecraft:bowl"
+  ]
+}

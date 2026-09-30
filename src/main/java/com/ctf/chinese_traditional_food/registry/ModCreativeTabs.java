@@ -14,8 +14,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 /**
  * 创造模式标签页。
  *
- * <p>自带一个"国风·传统食物"主标签页；同时把代表条目挂到原版的食物 / 原材料标签页，
- * 方便在创造模式里快速找到。</p>
+ * <p><b>本文件由 {@code tools/gen_content.py} 生成，请不要手改。</b></p>
  */
 public final class ModCreativeTabs {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS =
@@ -26,23 +25,36 @@ public final class ModCreativeTabs {
                     .title(Component.translatable("itemGroup.chinese_traditional_food.main"))
                     .icon(() -> new ItemStack(ModItems.MAPO_TOFU.get()))
                     .displayItems((params, output) -> {
-                        // 菜品
-                        output.accept(ModItems.MAPO_TOFU.get());
-                        // 基础食材
-                        output.accept(ModItems.TOFU.get());
-                        // 餐具：把菜摆出来的关键
+                        // 餐具与摆放方块
                         output.accept(ModItems.PLATE.get());
                         output.accept(ModItems.SERVING_PLATTER.get());
+                        // 其余全部内容（食材 / 调味料 / 水果 / 蔬菜 / 厨具 / 菜品）
+                        for (var item : ModItems.allFoods()) {
+                            output.accept(item.get());
+                        }
                     })
                     .build());
 
     /** 追加到原版标签页（mod 事件总线，逻辑客户端）。 */
     public static void addToVanillaTabs(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey() == CreativeModeTabs.FOOD_AND_DRINKS) {
-            event.accept(ModItems.MAPO_TOFU.get());
-            event.accept(ModItems.TOFU.get());
+            for (var item : ModItems.allFoods()) {
+                event.accept(item.get());
+            }
         }
         if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
+            event.accept(ModItems.PLATE.get());
+            event.accept(ModItems.SERVING_PLATTER.get());
+        }
+        if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
+            for (var item : ModItems.allFoods()) {
+                event.accept(item.get());
+            }
+        }
+        if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
+            for (var item : ModItems.allFoods()) {
+                event.accept(item.get());
+            }
             event.accept(ModItems.PLATE.get());
             event.accept(ModItems.SERVING_PLATTER.get());
         }

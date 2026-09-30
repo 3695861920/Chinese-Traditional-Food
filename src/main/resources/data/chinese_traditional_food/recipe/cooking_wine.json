@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "chinese_traditional_food:rice"
+    },
+    {
+      "item": "chinese_traditional_food:rice"
+    },
+    {
+      "item": "minecraft:sugar"
+    }
+  ],
+  "result": {
+    "id": "chinese_traditional_food:cooking_wine",
+    "count": 1
+  }
+}

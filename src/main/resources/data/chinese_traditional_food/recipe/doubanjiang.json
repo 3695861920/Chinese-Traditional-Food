@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "chinese_traditional_food:broad_bean"
+    },
+    {
+      "item": "chinese_traditional_food:chili"
+    },
+    {
+      "item": "chinese_traditional_food:salt"
+    }
+  ],
+  "result": {
+    "id": "chinese_traditional_food:doubanjiang",
+    "count": 1
+  }
+}

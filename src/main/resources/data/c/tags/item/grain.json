@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "chinese_traditional_food:rice",
+    "chinese_traditional_food:glutinous_rice",
+    "chinese_traditional_food:millet",
+    "chinese_traditional_food:sorghum",
+    "chinese_traditional_food:corn",
+    "minecraft:wheat"
+  ]
+}

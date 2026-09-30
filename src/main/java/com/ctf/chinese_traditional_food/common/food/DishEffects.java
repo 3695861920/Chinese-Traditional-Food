@@ -2,19 +2,26 @@ package com.ctf.chinese_traditional_food.common.food;
 
 import com.ctf.chinese_traditional_food.registry.ModMobEffects;
 import java.util.List;
+import java.util.stream.Stream;
 import net.minecraft.world.effect.MobEffects;
 
 /**
  * 菜品效果预设表。
  *
- * <p>命名与 <code>docs/物品清单.md</code> 的「自定义状态效果一览」一一对应。
- * 原版已有对应物的效果直接复用原版（省一个注册项，也方便 JEI 之类的模组识别）。</p>
+ * <p>名称与 <code>tools/content_data.py</code> 里 DISHES 表的最后一列一一对应，
+ * 由生成器写进 {@code ModItems}。原版已有对应物的效果直接复用原版
+ * （省一个注册项，也方便 JEI 之类的模组识别）。</p>
+ *
+ * <p>单一效果与组合效果都在这里，菜谱只写名字、不写具体数值，
+ * 将来调平衡只改这一个文件。</p>
  */
 public final class DishEffects {
-    /** 无任何效果（原味食材，例如生豆腐）。 */
-    public static final List<ServeEffect> NONE = List.of();
+    // ==================================================================
+    // 单效果
+    // ==================================================================
 
-    // ---- 自定义效果（见 ModMobEffects） ----
+    /** 无效果（原味食材，例如生豆腐）。 */
+    public static final List<ServeEffect> NONE = List.of();
 
     /** 团圆（生命恢复）5 秒。 */
     public static final List<ServeEffect> REUNION = List.of(ServeEffect.of(ModMobEffects.REUNION, 5));
@@ -24,8 +31,6 @@ public final class DishEffects {
     public static final List<ServeEffect> PERFECTION = List.of(
             ServeEffect.of(ModMobEffects.PERFECTION, 10),
             ServeEffect.of(MobEffects.LUCK, 10));
-
-    // ---- 原版效果模拟 ----
 
     /** 暖身（抗寒）= 抗性提升 I，10 秒。 */
     public static final List<ServeEffect> WARMTH = List.of(ServeEffect.of(MobEffects.RESISTANCE, 10));
@@ -38,13 +43,27 @@ public final class DishEffects {
     /** 爽脆 = 急迫 I，8 秒。 */
     public static final List<ServeEffect> CRISP = List.of(ServeEffect.of(MobEffects.HASTE, 8));
 
-    /** 组合技：滋补 + 暖身。 */
-    public static final List<ServeEffect> NOURISH_AND_WARMTH = concat(NOURISH, WARMTH);
-    /** 组合技：滋补 + 饱足。 */
-    public static final List<ServeEffect> NOURISH_AND_SATED = concat(NOURISH, SATED);
+    // ==================================================================
+    // 组合效果（硬菜 / 大菜用，吃一道顶两道）
+    // ==================================================================
 
-    private static List<ServeEffect> concat(List<ServeEffect> a, List<ServeEffect> b) {
-        return java.util.stream.Stream.concat(a.stream(), b.stream()).toList();
+    public static final List<ServeEffect> NOURISH_WARMTH = join(NOURISH, WARMTH);
+    public static final List<ServeEffect> NOURISH_SATED = join(NOURISH, SATED);
+    public static final List<ServeEffect> REFRESH_NOURISH = join(REFRESH, NOURISH);
+    public static final List<ServeEffect> REFRESH_SATED = join(REFRESH, SATED);
+    public static final List<ServeEffect> REUNION_SATED = join(REUNION, SATED);
+    public static final List<ServeEffect> PERFECTION_NOURISH = join(PERFECTION, NOURISH);
+    public static final List<ServeEffect> PERFECTION_SATED = join(PERFECTION, SATED);
+    public static final List<ServeEffect> WARMTH_REFRESH = join(WARMTH, REFRESH);
+    public static final List<ServeEffect> WARMTH_NOURISH = join(WARMTH, NOURISH);
+
+    /**
+     * 佛跳墙、孔府一品锅这类压轴大菜：滋补 + 暖身 + 饱足，一次给满。
+     */
+    public static final List<ServeEffect> FEAST = join(join(NOURISH, WARMTH), SATED);
+
+    private static List<ServeEffect> join(List<ServeEffect> a, List<ServeEffect> b) {
+        return Stream.concat(a.stream(), b.stream()).toList();
     }
 
     private DishEffects() {}
