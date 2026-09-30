@@ -1,0 +1,33 @@
+# Gradle
+.gradle/
+build/
+out/
+classes/
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.settings/
+.classpath
+.project
+bin/
+
+# Minecraft dev run directories
+run/
+runs/
+run-data/
+
+# 下载的第三方素材（体积大、可用 tools/fetch_cc0_assets.ps1 随时重新拉取）
+tools/downloads/
+
+# OS
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc

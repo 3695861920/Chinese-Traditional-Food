@@ -1,0 +1,20 @@
+{
+  "itemGroup.chinese_traditional_food.main": "国风·传统食物",
+
+  "block.chinese_traditional_food.plate": "餐盘",
+  "block.chinese_traditional_food.serving_platter": "大拼盘",
+
+  "item.chinese_traditional_food.plate": "餐盘",
+  "item.chinese_traditional_food.serving_platter": "大拼盘",
+  "item.chinese_traditional_food.tofu": "豆腐",
+  "item.chinese_traditional_food.mapo_tofu": "麻婆豆腐",
+
+  "effect.chinese_traditional_food.reunion": "团圆",
+  "effect.chinese_traditional_food.rise_up": "步步高升",
+  "effect.chinese_traditional_food.perfection": "圆满",
+
+  "tooltip.chinese_traditional_food.dish_display": "空手右键夹一口，潜行右键整份端走",
+
+  "recipe.chinese_traditional_food.tofu": "点卤成豆腐",
+  "recipe.chinese_traditional_food.mapo_tofu": "麻婆豆腐"
+}

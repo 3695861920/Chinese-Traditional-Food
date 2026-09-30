@@ -1,0 +1,20 @@
+{
+  "itemGroup.chinese_traditional_food.main": "Chinese Traditional Food",
+
+  "block.chinese_traditional_food.plate": "Plate",
+  "block.chinese_traditional_food.serving_platter": "Serving Platter",
+
+  "item.chinese_traditional_food.plate": "Plate",
+  "item.chinese_traditional_food.serving_platter": "Serving Platter",
+  "item.chinese_traditional_food.tofu": "Tofu",
+  "item.chinese_traditional_food.mapo_tofu": "Mapo Tofu",
+
+  "effect.chinese_traditional_food.reunion": "Reunion",
+  "effect.chinese_traditional_food.rise_up": "Rising Step",
+  "effect.chinese_traditional_food.perfection": "Perfection",
+
+  "tooltip.chinese_traditional_food.dish_display": "Empty-hand right-click to take a bite, sneak right-click to pick the whole dish up",
+
+  "recipe.chinese_traditional_food.tofu": "Coagulating Tofu",
+  "recipe.chinese_traditional_food.mapo_tofu": "Mapo Tofu"
+}

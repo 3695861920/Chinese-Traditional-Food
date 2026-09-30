@@ -1,0 +1,23 @@
+{
+  "parent": "minecraft:block/block",
+  "render_type": "cutout",
+  "textures": {
+    "particle": "chinese_traditional_food:block/plate",
+    "plate": "chinese_traditional_food:block/plate",
+    "plate_side": "chinese_traditional_food:block/plate_side"
+  },
+  "elements": [
+    {
+      "from": [1, 0, 1],
+      "to": [15, 0.5, 15],
+      "faces": {
+        "down": { "texture": "#plate_side", "uv": [0, 0, 16, 16], "cullface": "down" },
+        "up": { "texture": "#plate", "uv": [0, 0, 16, 16] },
+        "north": { "texture": "#plate_side", "uv": [0, 0, 16, 16] },
+        "south": { "texture": "#plate_side", "uv": [0, 0, 16, 16] },
+        "west": { "texture": "#plate_side", "uv": [0, 0, 16, 16] },
+        "east": { "texture": "#plate_side", "uv": [0, 0, 16, 16] }
+      }
+    }
+  ]
+}
