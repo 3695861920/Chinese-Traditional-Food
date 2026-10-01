@@ -668,7 +668,7 @@ def main():
                         help="纹理边长，默认 16（原版分辨率）；最大 64")
     parser.add_argument("--only",
                         choices=["displays", "content", "utilities", "machines",
-                                 "compressed", "all"],
+                                 "compressed", "crops", "trees", "all"],
                         default="all",
                         help="只生成器皿 / 内容图标 / 工具方块 / 机器与界面 / 压缩方块 / 全部")
     args = parser.parse_args()
@@ -722,30 +722,112 @@ def main():
         MACH.main(BLOCK_DIR, ITEM_DIR, GUI_DIR, finalize=to_item_size)
 
     if args.only in ("compressed", "all"):
-        # 食材包装方块：
-        #   <id>.png      包装本身（布纹 / 木板 / 釉面 / 压块）
-        #   <id>_top.png  袋口 / 箱口 / 缸口露出来的内容物
-        # 外加 2 张共用图（捆扎绳 / 木箱板条）。
+        # 食材包装方块（每个都是**完整方块**）：
+        #   <id>.png      包装本身（编织袋 / 木桶桶板 / 压块）—— 侧壁与底
+        #   <id>_top.png  顶面（袋口的内容物 + 绳圈 / 桶口的铁箍 + 内容物 /
+        #                       箱口的货 / 压块的压边）
+        #
+        # 箱子（crate）的侧壁与桶底**直接套用原版木桶的贴图**，
+        # 所以它既不需要自己那张底图，也不再需要共用的木板与捆绳贴图。
         import texture_compressed as COMP
         import gen_compressed as COMP_DATA
         COMP.bind(hash_noise, bayer, quantize, shade)
         COMP.set_size(SIZE)
-        save(COMP.band(), BLOCK_DIR, "compressed_band.png")
-        save(COMP.crate(), BLOCK_DIR, "compressed_crate.png")
         n = 0
         for (bid, _zh, _en, _src, form, pal_name, family) in COMP_DATA.COMPRESSED:
             pal = DATA.PALETTES.get(pal_name)
             if pal is None:
                 print("!! 包装方块 %s 的配色 %s 未定义" % (bid, pal_name))
                 continue
-            # 木箱的四壁用**共用**的木板贴图（见 compressed_crate.png），
-            # 所以箱子不需要自己那张底图 —— 只有箱口的内容物是各自一张。
-            if form != "crate":
+            # 箱的侧面直接用原版木桶贴图，不需要自己画；
+            # 顺手指把以前生成过的同名文件删掉，否则会留下孤儿贴图
+            # （校验脚本会报，而且游戏里还占着一份无用资源）。
+            if form == "crate":
+                stale = os.path.join(BLOCK_DIR, "%s.png" % bid)
+                if os.path.exists(stale):
+                    os.remove(stale)
+            else:
                 save(COMP.shell(bid, pal, form), BLOCK_DIR, "%s.png" % bid)
-            if form in COMP_DATA.SHOWS_CONTENTS + ("crate", "jar"):
-                save(COMP.contents(bid, pal, family), BLOCK_DIR, "%s_top.png" % bid)
+            if form == "crate":
+                top = COMP.crate_top(bid, pal, family)
+            else:
+                top = COMP.shell_top(bid, pal, form, family)
+            save(top, BLOCK_DIR, "%s_top.png" % bid)
             n += 1
-        print("compressed textures: %d + band + crate" % n)
+        print("compressed textures: %d（箱的侧面用原版贴图，只生成顶面）" % n)
+
+    if args.only in ("crops", "all"):
+        # 作物植株：**完全程序化生成**（tools/crop_art.py），
+        # 不依赖任何现成素材 —— 曲线、叶形、果实都是算出来的。
+        #
+        # 关键是超采样：先在 8 倍分辨率的画布上画浮点曲线，
+        # 降采样时才把"抗锯齿"这件事自然做掉。见 crop_art.py 的说明。
+        import crop_art as ART
+        import gen_crops
+
+        palettes = {}
+        kinds = {}
+        for row in (DATA.INGREDIENTS + DATA.SEEDS + DATA.SEASONINGS
+                    + DATA.FRUITS + DATA.VEGETABLES):
+            palettes[row[0]] = row[4]
+            kinds[row[0]] = row[3]
+        n = 0
+        for (crop, _zh, _en, _seed, prod, habit) in DATA.CROPS:
+            pal_name = palettes.get(prod)
+            if pal_name is None:
+                print("!! 作物 %s 的产物 %s 找不到配色" % (crop, prod))
+                continue
+            pal = DATA.PALETTES[pal_name]
+            # 收获物的**图标种类**决定成熟时结什么果（番茄圆、茄子长、蒜头扁…），
+            # 这是同株型作物之间最主要的区别
+            kind = kinds.get(prod, "")
+            for stage in range(8):
+                save(ART.render(crop, pal, habit, stage, kind), BLOCK_DIR,
+                     "%s.png" % gen_crops.crop_texture(crop, stage))
+            # 野生植株长得最壮（就是成熟形态），单独存一张
+            save(ART.render(crop, pal, habit, 7, kind), BLOCK_DIR,
+                 "%s.png" % gen_crops.wild_texture(crop))
+            n += 1
+        print("crop plants: %d 种 ×（8 阶段 + 1 野生），程序化生成" % n)
+
+    if args.only in ("trees", "all"):
+        # 果树：树苗 / 树叶 / 木制品 —— 全部程序化生成
+        import texture_trees as TREES
+        import gen_trees
+        import gen_woods
+        TREES.bind(hash_noise, bayer, quantize, shade)
+        palettes = {}
+        for row in (DATA.INGREDIENTS + DATA.FRUITS + DATA.VEGETABLES + DATA.SEASONINGS):
+            palettes[row[0]] = row[4]
+        n = 0
+        for (fruit, _size) in DATA.TREE_FRUITS:
+            pal = DATA.PALETTES[palettes.get(fruit)] if palettes.get(fruit) else None
+            if pal is None:
+                print("!! 果树 %s 找不到配色" % fruit)
+                continue
+            save(TREES.sapling(fruit, pal), BLOCK_DIR,
+                 "%s.png" % gen_trees.sapling(fruit))
+            # 树叶**两张**：
+            #   ..._leaves.png      方块贴图，镂空三成
+            #   ..._leaves_item.png 物品图标，实心 —— 否则物品栏里是块镂空的绿
+            save(TREES.leaves(fruit, pal), BLOCK_DIR,
+                 "%s.png" % gen_trees.leaves(fruit))
+            save(TREES.leaves_item(fruit, pal), ITEM_DIR,
+                 "%s_item.png" % gen_trees.leaves(fruit))
+
+            # 木制品：13 种树各一套原木 / 去皮 / 木板
+            save(TREES.log_side(fruit), BLOCK_DIR,
+                 "%s.png" % gen_woods.log(fruit))
+            save(TREES.log_top(fruit), BLOCK_DIR,
+                 "%s_top.png" % gen_woods.log(fruit))
+            save(TREES.stripped_side(fruit), BLOCK_DIR,
+                 "%s.png" % gen_woods.stripped_log(fruit))
+            save(TREES.stripped_top(fruit), BLOCK_DIR,
+                 "%s_top.png" % gen_woods.stripped_log(fruit))
+            save(TREES.planks(fruit), BLOCK_DIR,
+                 "%s.png" % gen_woods.planks(fruit))
+            n += 1
+        print("tree textures: %d 种果树（树苗/树叶/树叶图标/原木/去皮/木板）" % n)
 
     if args.only in ("content", "all"):
         # 收集 content_data 里所有需要图标的条目

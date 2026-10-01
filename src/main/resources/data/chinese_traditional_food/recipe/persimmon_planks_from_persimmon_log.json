@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "group": "planks",
+  "ingredients": [
+    "chinese_traditional_food:persimmon_log"
+  ],
+  "result": {
+    "id": "chinese_traditional_food:persimmon_planks",
+    "count": 4
+  }
+}

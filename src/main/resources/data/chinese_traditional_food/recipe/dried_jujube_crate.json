@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AAA",
+    "AAA",
+    "AAA"
+  ],
+  "key": {
+    "A": "chinese_traditional_food:dried_jujube"
+  },
+  "result": {
+    "id": "chinese_traditional_food:dried_jujube_crate",
+    "count": 1
+  }
+}

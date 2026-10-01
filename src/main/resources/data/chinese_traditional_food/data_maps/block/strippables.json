@@ -1,0 +1,83 @@
+{
+  "replace": false,
+  "values": {
+    "chinese_traditional_food:plum_log": {
+      "stripped_block": "chinese_traditional_food:plum_stripped_log"
+    },
+    "chinese_traditional_food:plum_wood": {
+      "stripped_block": "chinese_traditional_food:plum_stripped_wood"
+    },
+    "chinese_traditional_food:apricot_log": {
+      "stripped_block": "chinese_traditional_food:apricot_stripped_log"
+    },
+    "chinese_traditional_food:apricot_wood": {
+      "stripped_block": "chinese_traditional_food:apricot_stripped_wood"
+    },
+    "chinese_traditional_food:jujube_log": {
+      "stripped_block": "chinese_traditional_food:jujube_stripped_log"
+    },
+    "chinese_traditional_food:jujube_wood": {
+      "stripped_block": "chinese_traditional_food:jujube_stripped_wood"
+    },
+    "chinese_traditional_food:mandarin_log": {
+      "stripped_block": "chinese_traditional_food:mandarin_stripped_log"
+    },
+    "chinese_traditional_food:mandarin_wood": {
+      "stripped_block": "chinese_traditional_food:mandarin_stripped_wood"
+    },
+    "chinese_traditional_food:pear_log": {
+      "stripped_block": "chinese_traditional_food:pear_stripped_log"
+    },
+    "chinese_traditional_food:pear_wood": {
+      "stripped_block": "chinese_traditional_food:pear_stripped_wood"
+    },
+    "chinese_traditional_food:peach_log": {
+      "stripped_block": "chinese_traditional_food:peach_stripped_log"
+    },
+    "chinese_traditional_food:peach_wood": {
+      "stripped_block": "chinese_traditional_food:peach_stripped_wood"
+    },
+    "chinese_traditional_food:cherry_log": {
+      "stripped_block": "chinese_traditional_food:cherry_stripped_log"
+    },
+    "chinese_traditional_food:cherry_wood": {
+      "stripped_block": "chinese_traditional_food:cherry_stripped_wood"
+    },
+    "chinese_traditional_food:pomegranate_log": {
+      "stripped_block": "chinese_traditional_food:pomegranate_stripped_log"
+    },
+    "chinese_traditional_food:pomegranate_wood": {
+      "stripped_block": "chinese_traditional_food:pomegranate_stripped_wood"
+    },
+    "chinese_traditional_food:longan_log": {
+      "stripped_block": "chinese_traditional_food:longan_stripped_log"
+    },
+    "chinese_traditional_food:longan_wood": {
+      "stripped_block": "chinese_traditional_food:longan_stripped_wood"
+    },
+    "chinese_traditional_food:lychee_log": {
+      "stripped_block": "chinese_traditional_food:lychee_stripped_log"
+    },
+    "chinese_traditional_food:lychee_wood": {
+      "stripped_block": "chinese_traditional_food:lychee_stripped_wood"
+    },
+    "chinese_traditional_food:persimmon_log": {
+      "stripped_block": "chinese_traditional_food:persimmon_stripped_log"
+    },
+    "chinese_traditional_food:persimmon_wood": {
+      "stripped_block": "chinese_traditional_food:persimmon_stripped_wood"
+    },
+    "chinese_traditional_food:pomelo_log": {
+      "stripped_block": "chinese_traditional_food:pomelo_stripped_log"
+    },
+    "chinese_traditional_food:pomelo_wood": {
+      "stripped_block": "chinese_traditional_food:pomelo_stripped_wood"
+    },
+    "chinese_traditional_food:mango_log": {
+      "stripped_block": "chinese_traditional_food:mango_stripped_log"
+    },
+    "chinese_traditional_food:mango_wood": {
+      "stripped_block": "chinese_traditional_food:mango_stripped_wood"
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#minecraft:is_jungle",
+  "features": "chinese_traditional_food:wild_bitter_melon",
+  "step": "vegetal_decoration"
+}

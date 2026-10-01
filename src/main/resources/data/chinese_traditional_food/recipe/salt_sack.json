@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AAA",
+    "AAA",
+    "AAA"
+  ],
+  "key": {
+    "A": "chinese_traditional_food:salt"
+  },
+  "result": {
+    "id": "chinese_traditional_food:salt_sack",
+    "count": 1
+  }
+}

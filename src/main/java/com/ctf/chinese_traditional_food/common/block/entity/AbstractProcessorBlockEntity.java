@@ -307,8 +307,11 @@ public abstract class AbstractProcessorBlockEntity extends BlockEntity
      *
      * <p>"第一个"而不是"轮流"：这样机器对玩家是可预测的。
      * 想让某样先做，把它放到靠前的槽里就行，不需要研究调度算法。</p>
+     *
+     * <p>锅覆写成"当前那道菜用到的第一个材料所在格"。
+     * 它只用于两件事：换槽时重置进度、界面上高亮一格。</p>
      */
-    private int activeInputSlot() {
+    protected int activeInputSlot() {
         for (int slot = FIRST_INPUT_SLOT; slot < this.outputSlot(); slot++) {
             ItemStack input = this.inventory.getItem(slot);
             if (!input.isEmpty() && ProcessRecipes.find(this.kind(), input) != null) {
@@ -323,8 +326,10 @@ public abstract class AbstractProcessorBlockEntity extends BlockEntity
      *
      * <p>取三者的最小值：批次上限、进料数量、出料口还能放下的数量。
      * 返回 0 表示这一批做不了（没料 / 出料满 / 配方不认识）。</p>
+     *
+     * <p>锅覆写成"能不能凑齐一道菜的材料"。</p>
      */
-    private int plannedBatchSize() {
+    protected int plannedBatchSize() {
         ItemStack input = this.inventory.getItem(this.activeInputSlot());
         if (input.isEmpty()) {
             return 0;
@@ -349,7 +354,7 @@ public abstract class AbstractProcessorBlockEntity extends BlockEntity
     }
 
     /** 出料口还能放下几份这种东西；放不下返回 0。 */
-    private int outputRoom(ItemStack product) {
+    protected final int outputRoom(ItemStack product) {
         ItemStack out = this.inventory.getItem(this.outputSlot());
         int limit = product.getMaxStackSize();
         if (out.isEmpty()) {
@@ -361,8 +366,12 @@ public abstract class AbstractProcessorBlockEntity extends BlockEntity
         return (limit - out.getCount()) / Math.max(1, product.getCount());
     }
 
-    /** 结算一批：扣掉输入、放上产物与副产物。 */
-    private void finishBatch(int count) {
+    /**
+     * 结算一批：扣掉输入、放上产物与副产物。
+     *
+     * <p>锅覆写成"每样材料各扣一份，产出一份"。</p>
+     */
+    protected void finishBatch(int count) {
         int slot = this.activeInputSlot();
         ItemStack input = this.inventory.getItem(slot);
         ProcessRecipes.Resolved rule = ProcessRecipes.find(this.kind(), input);
@@ -371,14 +380,7 @@ public abstract class AbstractProcessorBlockEntity extends BlockEntity
         }
 
         ItemStack result = rule.result().copyWithCount(rule.result().getCount() * count);
-        int outSlot = this.outputSlot();
-        ItemStack out = this.inventory.getItem(outSlot);
-        if (out.isEmpty()) {
-            this.inventory.setItem(outSlot, result);
-        } else {
-            out.grow(result.getCount());
-            this.inventory.setChanged();
-        }
+        this.putResult(result);
 
         input.shrink(count);
         if (input.isEmpty()) {
@@ -394,8 +396,24 @@ public abstract class AbstractProcessorBlockEntity extends BlockEntity
         }
     }
 
+    /** 把主产物放进出料口（塞不下就丢在机器上方）。 */
+    protected final void putResult(ItemStack result) {
+        int outSlot = this.outputSlot();
+        ItemStack out = this.inventory.getItem(outSlot);
+        if (out.isEmpty()) {
+            this.inventory.setItem(outSlot, result);
+        } else if (ItemStack.isSameItemSameComponents(out, result)
+                && out.getCount() + result.getCount() <= out.getMaxStackSize()) {
+            out.grow(result.getCount());
+            this.inventory.setChanged();
+        } else {
+            this.pushOut(result);
+        }
+    }
+
     /** 把多余的东西塞进出料口，塞不下就丢在机器上方。 */
-    private void pushOut(ItemStack stack) {
+    /** 把多余的东西塞进出料口，塞不下就丢在机器上方。 */
+    protected void pushOut(ItemStack stack) {
         int outSlot = this.outputSlot();
         ItemStack out = this.inventory.getItem(outSlot);
         if (!out.isEmpty() && ItemStack.isSameItemSameComponents(out, stack)

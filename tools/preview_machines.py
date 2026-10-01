@@ -64,10 +64,58 @@ def iso(x, y, z):
     return (x - z) * COS30, (x + z) * SIN30 - y
 
 
-def render(name):
+def texture_path(model, ref, depth=0):
+    """把 ``"#side"`` 这样的键引用解析成真实贴图路径。
+
+    模型的 ``textures`` 里可以填别的键（以 # 开头），一层层解到底为止。
+    **注意**：``textures`` 里的键名**不带** #（写的是 ``"side": "..."``），
+    而面上引用时**带** #（写的是 ``"texture": "#side"``）——
+    查表前得把这个 # 去掉（第一版就是忘了去，全都解不出来，
+    预览图里所有方块都是品红的）。
+    """
+    if isinstance(ref, str) and ref.startswith("#") and depth < 8:
+        nxt = model.get("textures", {}).get(ref[1:])
+        if nxt:
+            return texture_path(model, nxt, depth + 1)
+    return ref
+
+
+def elements_of(model):
+    """拿到一个模型的全部盒子。
+
+    <h3>为什么需要这个</h3>
+    包装方块现在用的是原版 parent（``cube_bottom_top``），模型里
+    <b>没有 elements</b> —— 只有一个 parent 和几个贴图键。
+    直接去读 ``model["elements"]`` 会 KeyError（预览图就是这么崩的）。
+    所以这里按 parent 的语义合成一个"整格方块"出来。
+    """
+    if "elements" in model:
+        return model["elements"]
+
+    parent = model.get("parent", "")
+    if parent.endswith("cube_all"):
+        faces = {f: "#all" for f in ("up", "down", "north", "south", "west", "east")}
+    else:
+        # cube_bottom_top：上下面各自一张、四面共用一张
+        faces = {"up": "#top", "down": "#bottom",
+                 "north": "#side", "south": "#side",
+                 "west": "#side", "east": "#side"}
+    return [{
+        "from": [0, 0, 0], "to": [16, 16, 16],
+        "faces": {f: {"texture": t} for f, t in faces.items()},
+    }]
+
+
+def render(name, palette=None):
+    """把一个方块模型渲染成等轴测图。
+
+    ``palette`` 可选：{贴图路径: (r, g, b)}。不传就用 {@link BASE} 里的占位色。
+    包装方块那边会传入"从真实贴图采出来的平均色" —— 占位色只能看出结构，
+    看不出"箱子里装的是不是番茄"，那正是包装方块最该看的东西。
+    """
     model = load(name)
     quads = []
-    for el in model["elements"]:
+    for el in elements_of(model):
         f, t = el["from"], el["to"]
         x0, y0, z0, x1, y1, z1 = f[0], f[1], f[2], t[0], t[1], t[2]
         # 画家算法：按**离观察者最远的那个角**排序，远的先画。
@@ -85,7 +133,9 @@ def render(name):
             data = el["faces"].get(face)
             if not data:
                 continue
-            base = BASE.get(data["texture"], (255, 0, 255))
+            key = texture_path(model, data["texture"])
+            source = palette if palette is not None else BASE
+            base = source.get(key) or BASE.get(key) or (255, 0, 255)
             s = SHADE.get(face, 0.7)
             colour = tuple(min(255, int(c * s)) for c in base)
             quads.append((depth, [iso(*p) for p in pts], colour))

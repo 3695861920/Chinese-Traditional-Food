@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "particle": "chinese_traditional_food:block/cherry_sack",
+    "bottom": "chinese_traditional_food:block/cherry_sack",
+    "side": "chinese_traditional_food:block/cherry_sack",
+    "top": "chinese_traditional_food:block/cherry_sack_top"
+  }
+}

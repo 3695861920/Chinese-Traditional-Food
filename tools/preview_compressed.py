@@ -16,30 +16,58 @@ from PIL import Image
 import preview_machines as PM
 import gen_compressed as COMP
 
-# 包装方块用到的材质键（preview_machines 的 BASE 里没有，补上）。
-# 漏登记的键会被画成品红 —— 那正是"这里有个材质没认出来"的信号。
-PM.BASE.update({
-    "#body": (196, 168, 128),
-    "#contents": (210, 160, 110),
-    "#crate": (176, 132, 86),
-    "#band": (110, 86, 60),
-})
+# 包装方块的贴图路径（新模型的键是 side/top/bottom，不是 #body/#contents）
+NS = "chinese_traditional_food"
 
+# 原版木桶 / 陶罐贴图的近似平均色（箱子与缸直接用它们）
+BARREL_SIDE = (138, 96, 56)
+BARREL_BOTTOM = (150, 105, 62)
+POT_SIDE = (150, 100, 82)
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "tools", "downloads", "compressed.png")
+TEX_DIR = os.path.join(ROOT, "src", "main", "resources", "assets",
+                       "chinese_traditional_food", "textures", "block")
+
+
+def _average(path):
+    """一张贴图的平均色（缩到 1×1 就是求均值，PIL 自己会算）。"""
+    with Image.open(path) as src:
+        return src.convert("RGBA").resize((1, 1), Image.BOX).getpixel((0, 0))[:3]
+
+
+def real_palette(bid, form):
+    """按方块的**真实贴图**采出一组颜色，键是贴图路径。
+
+    占位色只能看出"这地方有块木头"，看不出"箱子里装的是番茄还是大米"——
+    而对包装方块来说，后者正是最该看的东西。所以这里把每张贴图压成平均色，
+    等轴测图就带上了真实色相（虽然仍看不出细节）。
+    """
+    pal = {
+        "minecraft:block/barrel_side": BARREL_SIDE,
+        "minecraft:block/barrel_bottom": BARREL_BOTTOM,
+        # 缸身改成自绘了，不再需要原版陶土的近似色
+    }
+    side = os.path.join(TEX_DIR, "%s.png" % bid)
+    top = os.path.join(TEX_DIR, "%s_top.png" % bid)
+    if os.path.exists(side):
+        pal["%s:block/%s" % (NS, bid)] = _average(side)
+    if os.path.exists(top):
+        pal["%s:block/%s_top" % (NS, bid)] = _average(top)
+    return pal
 
 
 def main():
     cols = int(sys.argv[1]) if len(sys.argv) > 1 else 7
     cols = max(1, min(20, cols))
 
-    names = [row[0] for row in COMP.COMPRESSED]
+    rows_all = COMP.COMPRESSED
+    names = [row[0] for row in rows_all]
     imgs = []
-    for n in names:
+    for (bid, _zh, _en, _src, form, _pal, _fam) in rows_all:
         try:
-            imgs.append(PM.render(n))
+            imgs.append(PM.render(bid, real_palette(bid, form)))
         except Exception as exc:                      # noqa: BLE001
-            print("!! 渲染失败 %s: %s" % (n, exc))
+            print("!! 渲染失败 %s: %s" % (bid, exc))
 
     tile_w = max(i.width for i in imgs) + 8
     tile_h = max(i.height for i in imgs) + 8
@@ -63,8 +91,6 @@ def main():
     texture_sheet(names)
 
 
-TEX_DIR = os.path.join(ROOT, "src", "main", "resources", "assets",
-                       "chinese_traditional_food", "textures", "block")
 TEX_OUT = os.path.join(ROOT, "tools", "downloads", "compressed_textures.png")
 
 

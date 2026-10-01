@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#minecraft:is_river",
+  "features": "chinese_traditional_food:wild_wood_ear",
+  "step": "vegetal_decoration"
+}

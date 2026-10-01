@@ -10,11 +10,12 @@
   3. 每个物品在 content_data 里声明，且有对应的：语言键、客户端物品、物品模型、纹理；
   4. 每个配方都能解析，且引用的物品 / 标签都真实存在（本模组物品 + 已知原版物品）；
   5. 本模组标签引用的物品都存在；
-  6. 每个菜品都有配方。
+  6. 每道菜都能在某口锅里做出来（菜品不再有工作台配方）。
 
 任何一项失败都会以非零退出码结束，方便挂到 CI 上。
 """
 
+import io
 import json
 import os
 import re
@@ -24,6 +25,7 @@ from PIL import Image
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import content_data as DATA  # noqa: E402
+import gen_content  # noqa: E402  （锅谱计划就写在里面，校验要对得上）
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RES = os.path.join(ROOT, "src", "main", "resources")
@@ -107,6 +109,10 @@ def collect_declared():
     # 生成出来的压缩方块也算"已声明"，否则配方检查会误报
     for extra in compressed_blocks():
         ids.add(extra)
+    # 13 套木制品（原木/去皮/木板/楼梯/台阶/栅栏/栅栏门）。
+    # 漏掉这一步的后果是：标签与配方检查会把 117 个方块全报成"不存在的物品"。
+    for extra in wood_blocks():
+        ids.add(extra)
     return ids, dishes, kinds
 
 
@@ -128,9 +134,47 @@ def compressed_blocks():
     return [row[0] for row in gen_compressed.COMPRESSED]
 
 
+def wood_blocks():
+    """13 套木制品的方块 id（每种木 9 个 = 117 个）。
+
+    同样从生成器的数据里读，不手抄。**加了新的木质形态不用改这里** ——
+    `gen_woods.FORMS` 是唯一的清单。
+    """
+    import gen_woods
+    out = []
+    for fruit in gen_woods.fruits():
+        for _form, fn in gen_woods.FORMS:
+            out.append(fn(fruit))
+    return out
+
+
+# ======================================================================
+# 树苗 / 树叶（ModTrees 生成，名字由 gen_trees 定）
+# ======================================================================
+
+def tree_blocks():
+    """树苗与树叶：它们也是 BlockItem（`block.` 语言键 + `items/*.json`）。"""
+    import gen_trees
+    out = []
+    for (fruit, _size) in DATA.TREE_FRUITS:
+        out.append(gen_trees.sapling(fruit))
+        out.append(gen_trees.leaves(fruit))
+    return out
+
 # 生成出来的压缩方块：语言键与资源由 tools/gen_compressed.py 负责，
 # 这里做成一堆常量，避免每次调用都重新读一遍数据表。
 COMPRESSED_IDS = tuple(compressed_blocks())
+
+# 种子（方块物品）——它们的翻译键在 block. 前缀下，不在 item. 下。
+# 详见 tools/check_lang.py 开头那段说明。
+SEED_IDS = tuple(row[3] for row in DATA.CROPS)
+
+# 所有"注册的是 BlockItem"的生成物：翻译键走 block. 前缀、
+# 只有 items/<id>.json 没有 models/item/<id>.json。
+# 漏一个就会在 check_assets 里被当成普通物品，去查不存在的
+# `item.` 语言键与 `textures/item/<id>.png`，然后误报一大串。
+BLOCK_ITEM_IDS = (tuple(compressed_blocks()) + tuple(wood_blocks())
+                  + tuple(tree_blocks()) + tuple(SEED_IDS))
 
 
 def check_assets(ids):
@@ -138,12 +182,11 @@ def check_assets(ids):
     lang_en = load_json(os.path.join(ASSETS, "lang", "en_us.json")) or {}
 
     for item_id in sorted(ids):
-        # 手写功能方块注册的是 BlockItem：
-        #   语言键走 block. 前缀，客户端物品直接指向三维方块模型，
-        #   所以只需要检查 items/<id>.json（26.1 的真正入口）。
-        if item_id in HAND_WRITTEN_BLOCKS or item_id in COMPRESSED_IDS:
+        # 手写功能方块 + 全部生成出来的方块物品：
+        #   语言键走 block. 前缀，客户端物品只需要 items/<id>.json。
+        if (item_id in HAND_WRITTEN_BLOCKS or item_id in BLOCK_ITEM_IDS):
             if not any("block.%s.%s" % (NS, item_id) in d for d in (lang_zh, lang_en)):
-                fail("%s 缺少语言键" % item_id)
+                fail("%s 缺少语言键（block. 前缀）" % item_id)
             if not os.path.exists(os.path.join(ASSETS, "items", "%s.json" % item_id)):
                 fail("%s 缺少客户端物品定义" % item_id)
             continue
@@ -189,6 +232,8 @@ def known_items():
         "minecraft:melon_seeds", "minecraft:pumpkin_seeds",
         # 灶火系统（炉灶 / 炒锅 / 蒸笼 / 汤锅）的配方材料
         "minecraft:bricks",
+        # 锅里的"真做法"要用的：熬高汤的骨头、酿醋/酱的糖
+        "minecraft:bone",
     }
     return {"%s:%s" % (NS, i) for i in ids} | allowed_vanilla
 
@@ -197,6 +242,7 @@ def check_recipes(dishes):
     known = known_items()
     recipes_dir = os.path.join(DATA_DIR, "recipe")
     have_recipe = set()
+    dish_with_workbench = []
 
     for path in walk(recipes_dir, ".json"):
         obj = load_json(path)
@@ -254,12 +300,38 @@ def check_recipes(dishes):
         rid = result.get("id")
         if rid and rid.startswith(NS + ":") and rid not in known:
             fail("配方 %s 的产物 %s 不存在" % (recipe_id, rid))
+        # 菜品一律下锅做，不该再冒出工作台配方
+        # （外部模组搭的桥不算：那种配方带 neoforge:conditions，是故意留的旁路）
+        if rid and rid[len(NS) + 1:] in dishes and not obj.get("neoforge:conditions"):
+            dish_with_workbench.append(recipe_id)
 
-    for dish in sorted(dishes):
-        if dish not in have_recipe:
-            fail("菜品 %s 没有配方" % dish)
+    # ---- 菜品：只认锅谱（ModRecipes 里的 CookEntry 表），不认工作台配方 ----
+    if dish_with_workbench:
+        fail("这些菜品还在用工作台配方，应该改成锅谱: %s"
+             % ", ".join(sorted(dish_with_workbench)))
+
+    cooked = cooked_items()
+    missing = sorted(set(dishes) - cooked)
+    if missing:
+        fail("这些菜品没有任何锅谱（蒸/煮/炒）: %s" % ", ".join(missing))
 
     return len(list(walk(recipes_dir, ".json"))), len(have_recipe)
+
+
+def cooked_items():
+    """从生成的 ModRecipes.java 里读出所有锅谱产物（短名，不带命名空间）。
+
+    锅谱是 Java 常量表而不是 JSON，所以这里直接扫源码 ——
+    反正它由 gen_content.py 生成，格式是定死的。
+    """
+    path = os.path.join(
+        "src", "main", "java", "com", "ctf", "chinese_traditional_food",
+        "common", "recipe", "ModRecipes.java")
+    if not os.path.exists(path):
+        fail("找不到 %s（锅谱都写在这里，先跑 gen_content.py）" % path)
+    with open(path, "r", encoding="utf-8") as fh:
+        source = fh.read()
+    return set(re.findall(r'new CookEntry\("([a-z_0-9]+)"', source))
 
 
 def check_tags():
@@ -349,6 +421,26 @@ def check_icon_kinds():
         fail("配色 %s 未在 PALETTES 中定义" % name)
 
 
+def cook_table(src, name):
+    """从 ModRecipes.java 里抠出某一张 CookEntry 表的正文。
+
+    表长这样（中间是若干行 ``new CookEntry(...)``）：
+
+        public static final List<CookEntry> WOK = List.of(
+            ...
+        );
+
+    只抠到对应的 ``);`` 为止，免得把后面几张表也数进来。
+    """
+    head = "List<CookEntry> %s = List.of(" % name
+    start = src.find(head)
+    if start < 0:
+        return ""
+    start += len(head)
+    end = src.find("\n    );", start)
+    return src[start:end if end >= 0 else len(src)]
+
+
 def check_cutting(ids):
     """硬编码处理表：条数要对得上，产出必须是本模组真实存在的物品。"""
     path = os.path.join(ROOT, "src", "main", "java", "com", "ctf",
@@ -360,15 +452,12 @@ def check_cutting(ids):
         src = fh.read()
 
     # 装置规则：new Entry("输入", "产出", 数量, "副产物", 概率F, tick)
-    # 现在有两类装置共用一个 record：
-    #   * 耗电的（磨粉 / 脱壳）—— MILLING + SHELLING
-    #   * 坐炉灶的（蒸 / 煮 / 炒）—— STEAMING + BOILING + COOKING
-    # 它们生成到同一个 ModRecipes.java 里，所以条数要一起算。
+    # 只包含**耗电**的两种：磨粉（MILLING）与脱壳（SHELLING）。
+    # 蒸/煮/炒靠炉灶生火，它们用的是不带副产物的 CookEntry（下一段查）。
     entries = re.findall(
         r'new Entry\("([^"]+)",\s*"([^"]+)",\s*(\d+),\s*"([^"]*)",\s*([\d.]+)F,\s*(\d+)\)',
         src)
-    expected = (len(DATA.MILLING) + len(DATA.SHELLING)
-                + len(DATA.STEAMING) + len(DATA.BOILING) + len(DATA.COOKING))
+    expected = len(DATA.MILLING) + len(DATA.SHELLING)
     if len(entries) != expected:
         fail("ModRecipes.java 的装置规则数 %d 与 content_data 的 %d 不一致"
              % (len(entries), expected))
@@ -377,6 +466,32 @@ def check_cutting(ids):
             fail("装置规则产出 %s 不是本模组的物品" % out)
         if byproduct and byproduct not in ids:
             fail("装置规则副产物 %s 不是本模组的物品" % byproduct)
+
+    # 锅谱：new CookEntry("产出", 数量, tick, List.of("材料", ...))
+    # 菜品**只**从这里产出，所以条数必须和 dish_cook_plan 算出来的一模一样。
+    known = known_items()
+    cook = re.findall(
+        r'new CookEntry\("([^"]+)",\s*(\d+),\s*(\d+),\s*List\.of\(([^)]*)\)\)',
+        src)
+    # dish_cook_plan 只需要 id 与 kind，这里直接从元组表拼出来，
+    # 免得把 collect() 整条链拉进校验脚本
+    dish_rows = [dict(id=row[0], kind=row[4]) for row in DATA.DISHES]
+    dish_ids = {row[0] for row in DATA.DISHES}
+    plan = gen_content.dish_cook_plan(dish_rows)
+    for pot, rows in plan.items():
+        got = len(re.findall(r'new CookEntry\("', cook_table(src, pot)))
+        if got != len(rows):
+            fail("ModRecipes.java 的 %s 锅谱 %d 条，计划里是 %d 条"
+                 % (pot, got, len(rows)))
+    for (out, _count, _ticks, mats) in cook:
+        if out not in ids and out not in dish_ids:
+            fail("锅谱产出 %s 既不是本模组的物品也不是菜品" % out)
+        for mat in re.findall(r'"([^"]+)"', mats):
+            if mat.startswith("#"):
+                continue        # 标签由 check_tags 负责
+            # 材料要写成全名，和 known_items() 的"ns:path"形式对齐
+            if mat not in known:
+                fail("锅谱里的材料 %s 不存在" % mat)
 
     # 案板规则：new CuttingEntry("输入", "产出", true/false, tick)
     cutting = re.findall(r'new CuttingEntry\("([^"]+)",\s*"([^"]+)",\s*(true|false),\s*(\d+)\)',
@@ -388,7 +503,7 @@ def check_cutting(ids):
         if out not in ids:
             fail("案板切割产出 %s 不是本模组的物品" % out)
 
-    return len(entries) + len(cutting)
+    return len(entries) + len(cook) + len(cutting)
 
 
 def check_model_refs():
@@ -506,6 +621,42 @@ def check_model_refs():
     return n
 
 
+def check_item_models():
+    """**反向**检查：每个注册进来的物品，都得有 `assets/<ns>/items/<id>.json`。
+
+    26.1 起物品图标不再从方块模型或 `models/item/` 猜，必须显式声明。
+    漏掉一个的后果**非常隐蔽**：
+
+    * 不崩、不报红字、编译也过；
+    * 只在完整日志（`run/logs/latest.log`）里留下一行
+      `Missing item model for location <ns>:<id>`；
+    * 游戏里那个物品直接变成没有贴图的东西。
+
+    这一版就踩过：13 个树苗 + 果木原木全都没有物品定义，
+    而排查时只搜了 `Missing model`（没搜 `Missing item model`），于是漏了很久。
+    所以这里从 Java 注册处**反着**查一遍，彻底堵掉这类漏网。
+    """
+    java_root = os.path.join(ROOT, "src", "main", "java")
+    items_dir = os.path.join(RES, "assets", NS, "items")
+    pattern = re.compile(
+        r"ITEMS\.(?:registerSimpleBlockItem|registerItem|register)\(\s*\"([^\"]+)\"")
+
+    registered = {}
+    for path in walk(java_root, ".java"):
+        for lineno, line in enumerate(io.open(path, encoding="utf-8"), 1):
+            m = pattern.search(line)
+            if m:
+                registered.setdefault(m.group(1),
+                                      os.path.relpath(path, ROOT) + ":" + str(lineno))
+
+    for item_id, where in sorted(registered.items()):
+        if not os.path.exists(os.path.join(items_dir, "%s.json" % item_id)):
+            fail("物品 %s 没有 items/%s.json（注册于 %s）—— "
+                 "进游戏会报 Missing item model"
+                 % (item_id, item_id, where))
+    return len(registered)
+
+
 def main():
     ids, dishes, _kinds = collect_declared()
     print("声明条目: %d（其中菜品 %d）" % (len(ids), len(dishes)))
@@ -519,6 +670,7 @@ def main():
     print("效果常量: 定义 %d / 引用 %d" % check_java_effects())
     print("硬编码处理表: %d 条" % check_cutting(ids))
     print("资源引用: %d 处" % check_model_refs())
+    print("物品图标定义: %d 个注册物品" % check_item_models())
     check_icon_kinds()
 
     if problems:

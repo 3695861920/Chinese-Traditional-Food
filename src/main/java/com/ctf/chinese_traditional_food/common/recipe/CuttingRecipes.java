@@ -113,5 +113,29 @@ public final class CuttingRecipes {
     /** 匹配结果。 */
     public record Result(ItemStack output, int extraTime, boolean usedKnife) {}
 
+    /**
+     * 案板表里的一条（给配方查看器用）。
+     *
+     * <p>和内部的 {@code Resolved} 长得几乎一样，之所以单独开一个
+     * 公开 record：内部那条是 {@code private}，把它开放出去等于把
+     * "以后可以随便改"的自由丢掉了。多写十行换一个稳定的对外契约，值。</p>
+     *
+     * @param item       具体输入物品；标签规则时为 {@code null}
+     * @param tag        标签输入；具体物品规则时为 {@code null}
+     * @param result     产出
+     * @param needsKnife 是否必须手持刀
+     */
+    public record Cut(@Nullable Item item, @Nullable TagKey<Item> tag,
+                      ItemStack result, boolean needsKnife) {}
+
+    /** 整张案板表（已解析）。 */
+    public static List<Cut> all() {
+        List<Cut> list = new ArrayList<>();
+        for (Resolved rule : rules()) {
+            list.add(new Cut(rule.item(), rule.tag(), rule.result(), rule.needsKnife()));
+        }
+        return list;
+    }
+
     private CuttingRecipes() {}
 }

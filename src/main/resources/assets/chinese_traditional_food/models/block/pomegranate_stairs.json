@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/stairs",
+  "textures": {
+    "bottom": "chinese_traditional_food:block/pomegranate_planks",
+    "top": "chinese_traditional_food:block/pomegranate_planks",
+    "side": "chinese_traditional_food:block/pomegranate_planks"
+  }
+}

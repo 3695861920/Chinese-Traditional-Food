@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/fence_gate_wall_open",
+  "textures": {
+    "texture": "chinese_traditional_food:block/jujube_planks"
+  }
+}

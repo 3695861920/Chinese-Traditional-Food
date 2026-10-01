@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AAA",
+    "AAA",
+    "AAA"
+  ],
+  "key": {
+    "A": "chinese_traditional_food:sorghum"
+  },
+  "result": {
+    "id": "chinese_traditional_food:sorghum_sack",
+    "count": 1
+  }
+}

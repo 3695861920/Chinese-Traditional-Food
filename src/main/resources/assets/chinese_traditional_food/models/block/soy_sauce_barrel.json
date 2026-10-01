@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "particle": "chinese_traditional_food:block/soy_sauce_barrel",
+    "bottom": "chinese_traditional_food:block/soy_sauce_barrel",
+    "side": "chinese_traditional_food:block/soy_sauce_barrel",
+    "top": "chinese_traditional_food:block/soy_sauce_barrel_top"
+  }
+}

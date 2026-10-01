@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "particle": "chinese_traditional_food:block/lotus_seed_sack",
+    "bottom": "chinese_traditional_food:block/lotus_seed_sack",
+    "side": "chinese_traditional_food:block/lotus_seed_sack",
+    "top": "chinese_traditional_food:block/lotus_seed_sack_top"
+  }
+}

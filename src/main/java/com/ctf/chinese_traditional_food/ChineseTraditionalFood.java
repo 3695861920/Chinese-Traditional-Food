@@ -4,9 +4,12 @@ import com.ctf.chinese_traditional_food.registry.ModBlockEntities;
 import com.ctf.chinese_traditional_food.registry.ModBlocks;
 import com.ctf.chinese_traditional_food.registry.ModCompressed;
 import com.ctf.chinese_traditional_food.registry.ModCreativeTabs;
+import com.ctf.chinese_traditional_food.registry.ModCrops;
 import com.ctf.chinese_traditional_food.registry.ModItems;
 import com.ctf.chinese_traditional_food.registry.ModMenus;
 import com.ctf.chinese_traditional_food.registry.ModMobEffects;
+import com.ctf.chinese_traditional_food.registry.ModTrees;
+import com.ctf.chinese_traditional_food.registry.ModWoods;
 import com.mojang.logging.LogUtils;
 import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.IEventBus;
@@ -36,6 +39,12 @@ public class ChineseTraditionalFood {
         ModItems.register(modBus);
         // 食材压缩方块（34 种）是生成出来的，单独一个注册表
         ModCompressed.register(modBus);
+        ModCrops.register(modBus);
+        ModTrees.register(modBus);
+        // 13 套木制品（原木/去皮/木板/楼梯/台阶/栅栏/栅栏门 = 117 个方块）。
+        // **必须排在 ModTrees 之后**：树苗长成树时会去注册表里取 <fruit>_log，
+        // 而注册表在那之后才能查。
+        ModWoods.register(modBus);
         ModMenus.register(modBus);
         ModMobEffects.register(modBus);
         ModCreativeTabs.register(modBus);

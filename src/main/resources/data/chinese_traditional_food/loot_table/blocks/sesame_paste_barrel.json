@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:block",
+  "random_sequence": "chinese_traditional_food:blocks/sesame_paste_barrel",
+  "pools": [
+    {
+      "rolls": 1,
+      "bonus_rolls": 0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "chinese_traditional_food:sesame_paste_barrel"
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "chinese_traditional_food:block/pomelo_slab"
+    },
+    "type=top": {
+      "model": "chinese_traditional_food:block/pomelo_slab_top"
+    },
+    "type=double": {
+      "model": "chinese_traditional_food:block/pomelo_planks"
+    }
+  }
+}

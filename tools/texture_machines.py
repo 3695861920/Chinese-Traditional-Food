@@ -633,12 +633,13 @@ PROC_OUTPUT = (116, 35)
 ARROW = (79, 34, 24, 17)                    # 面板里的空箭头
 ARROW_FULL = (176, 0)                       # 画布上的满箭头
 
-# ---- 锅具（炒锅 / 蒸笼 / 汤锅）：2×2 四格原料区 ----
-# 这四个坐标必须和 ProcessorMenu.GRID_* 一一对应。
-COOKER_GRID_X, COOKER_GRID_Y = 44, 24
-COOKER_GRID_STEP = 22
-COOKER_OUTPUT = (122, 33)
-COOKER_ARROW = (92, 33, 24, 17)
+# ---- 锅具（炒锅 / 蒸笼 / 汤锅）：3×3 九格原料区 ----
+# 这些坐标必须和 ProcessorMenu.GRID_* 一一对应。
+COOKER_GRID_X, COOKER_GRID_Y = 30, 20
+COOKER_GRID_STEP = 18
+COOKER_GRID_COLUMNS = 3
+COOKER_OUTPUT = (118, 38)
+COOKER_ARROW = (86, 37)
 
 # ---- 「正在加工」的高亮框：放在面板外的条带里（见 cooker_gui 的注释）----
 SLOT_MARK = (176, 140)
@@ -815,17 +816,17 @@ def processor_gui():
 
 
 def cooker_gui():
-    """锅具的界面：面板 + **2×2 四格原料区** + 出料槽。
+    """锅具的界面：面板 + **3×3 九格原料区** + 出料槽。
 
-    四格按 ``ProcessorMenu`` 的 ``GRID_INPUT_X/Y/STEP`` 摆，
-    箭头也跟着右移 —— 这两处坐标必须和 Java 那边一致，
+    九格按 ``ProcessorMenu.GRID_INPUT_X/Y/STEP/COLUMNS`` 摆，
+    箭头与出料口相应右移 —— 这两处坐标必须和 Java 那边一致，
     改了一边记得改另一边（``tools/preview_gui.py`` 可以对着看）。
     """
     img = _canvas()
     img.alpha_composite(_panel(GUI_W, GUI_H, 733), (0, 0))
-    for i in range(4):
-        x = COOKER_GRID_X + (i % 2) * COOKER_GRID_STEP
-        y = COOKER_GRID_Y + (i // 2) * COOKER_GRID_STEP
+    for i in range(9):
+        x = COOKER_GRID_X + (i % COOKER_GRID_COLUMNS) * COOKER_GRID_STEP
+        y = COOKER_GRID_Y + (i // COOKER_GRID_COLUMNS) * COOKER_GRID_STEP
         _slot(img, (x, y))
     _slot(img, COOKER_OUTPUT)
     _player_inventory(img)

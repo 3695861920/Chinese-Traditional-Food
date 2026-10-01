@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=y": {
+      "model": "chinese_traditional_food:block/pear_log"
+    },
+    "axis=z": {
+      "model": "chinese_traditional_food:block/pear_log_horizontal",
+      "x": 90
+    },
+    "axis=x": {
+      "model": "chinese_traditional_food:block/pear_log_horizontal",
+      "x": 90,
+      "y": 90
+    }
+  }
+}

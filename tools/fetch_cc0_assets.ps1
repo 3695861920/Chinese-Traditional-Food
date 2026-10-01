@@ -4,11 +4,13 @@
 #
 # 素材来源与许可证：
 #   1) Kenney.nl    - Pixel Platformer Food Expansion  (CC0 1.0) 18x18 像素食物
-#   2) Kenney.nl    - Pixel Platformer Farm Expansion  (CC0 1.0) 18x18 像素农作物
-#   3) OpenGameArt  - "16x16px Food Items" by maruki   (CC0 1.0) 16x16 像素食物
-#   4) OpenGameArt  - "Food Pixel Art (45 icons)" by Luca Pixel (CC0 1.0) 16x16
+#   2) OpenGameArt  - "16x16px Food Items" by maruki   (CC0 1.0) 16x16 像素食物
+#   3) OpenGameArt  - "Food Pixel Art (45 icons)" by Luca Pixel (CC0 1.0) 16x16
 #
-# 下载完成后由 tools/build_textures.py 做像素化与 Minecraft 化处理。
+# 注：**作物植株与树苗已经不依赖这些素材了** —— 它们由
+# tools/crop_art.py / tools/texture_trees.py 完全程序化生成。
+# 这里剩下的食物图标素材仅供 tools/texture_icons.py 取配色参考。
+# 完整来源说明见 CREDITS.md。
 # 本机实测 kenney.nl / opengameart.org 均可直连。
 
 $ErrorActionPreference = 'Stop'

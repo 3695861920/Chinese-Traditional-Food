@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "chinese_traditional_food:block/longan_sapling"
+  }
+}

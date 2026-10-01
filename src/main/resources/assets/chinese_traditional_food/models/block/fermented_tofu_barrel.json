@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "particle": "chinese_traditional_food:block/fermented_tofu_barrel",
+    "bottom": "chinese_traditional_food:block/fermented_tofu_barrel",
+    "side": "chinese_traditional_food:block/fermented_tofu_barrel",
+    "top": "chinese_traditional_food:block/fermented_tofu_barrel_top"
+  }
+}

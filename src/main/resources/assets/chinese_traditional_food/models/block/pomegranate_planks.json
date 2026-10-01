@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "chinese_traditional_food:block/pomegranate_planks"
+  }
+}

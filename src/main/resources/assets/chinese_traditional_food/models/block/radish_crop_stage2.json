@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/crop",
+  "textures": {
+    "crop": "chinese_traditional_food:block/radish_crop_stage2"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "chinese_traditional_food:block/pear_slab"
+    },
+    "type=top": {
+      "model": "chinese_traditional_food:block/pear_slab_top"
+    },
+    "type=double": {
+      "model": "chinese_traditional_food:block/pear_planks"
+    }
+  }
+}

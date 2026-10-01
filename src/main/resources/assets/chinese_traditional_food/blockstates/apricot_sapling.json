@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "stage=0": {
+      "model": "chinese_traditional_food:block/apricot_sapling"
+    },
+    "stage=1": {
+      "model": "chinese_traditional_food:block/apricot_sapling"
+    }
+  }
+}

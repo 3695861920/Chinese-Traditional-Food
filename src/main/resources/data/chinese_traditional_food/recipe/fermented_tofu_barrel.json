@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AAA",
+    "AAA",
+    "AAA"
+  ],
+  "key": {
+    "A": "chinese_traditional_food:fermented_tofu"
+  },
+  "result": {
+    "id": "chinese_traditional_food:fermented_tofu_barrel",
+    "count": 1
+  }
+}

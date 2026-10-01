@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#minecraft:is_river",
+  "features": "chinese_traditional_food:wild_celery",
+  "step": "vegetal_decoration"
+}

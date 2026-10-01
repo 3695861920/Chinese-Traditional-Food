@@ -1,0 +1,18 @@
+{
+  "replace": false,
+  "values": [
+    "chinese_traditional_food:plum_slab",
+    "chinese_traditional_food:apricot_slab",
+    "chinese_traditional_food:jujube_slab",
+    "chinese_traditional_food:mandarin_slab",
+    "chinese_traditional_food:pear_slab",
+    "chinese_traditional_food:peach_slab",
+    "chinese_traditional_food:cherry_slab",
+    "chinese_traditional_food:pomegranate_slab",
+    "chinese_traditional_food:longan_slab",
+    "chinese_traditional_food:lychee_slab",
+    "chinese_traditional_food:persimmon_slab",
+    "chinese_traditional_food:pomelo_slab",
+    "chinese_traditional_food:mango_slab"
+  ]
+}

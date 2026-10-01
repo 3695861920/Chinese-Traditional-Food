@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/outer_stairs",
+  "textures": {
+    "bottom": "chinese_traditional_food:block/pomelo_planks",
+    "top": "chinese_traditional_food:block/pomelo_planks",
+    "side": "chinese_traditional_food:block/pomelo_planks"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AAA",
+    "AAA",
+    "AAA"
+  ],
+  "key": {
+    "A": "chinese_traditional_food:goji_berry"
+  },
+  "result": {
+    "id": "chinese_traditional_food:goji_berry_sack",
+    "count": 1
+  }
+}

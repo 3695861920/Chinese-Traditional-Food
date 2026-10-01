@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "particle": "chinese_traditional_food:block/star_anise_sack",
+    "bottom": "chinese_traditional_food:block/star_anise_sack",
+    "side": "chinese_traditional_food:block/star_anise_sack",
+    "top": "chinese_traditional_food:block/star_anise_sack_top"
+  }
+}

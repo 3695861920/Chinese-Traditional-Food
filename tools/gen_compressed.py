@@ -93,18 +93,166 @@ COMPRESSED = [
     ("sesame_crate",       "芝麻箱",   "Sesame Crate",     "sesame",         "crate", "white",    "grain"),
     ("bamboo_shoot_crate", "笋箱",     "Bamboo Shoot Crate", "bamboo_shoot", "crate", "bamboo",   "leafy"),
     # --- 调味 / 腌货 -> 陶缸 ---
-    ("doubanjiang_jar",    "豆瓣酱缸", "Doubanjiang Jar",  "doubanjiang",       "jar", "paste",   "paste"),
-    ("pickled_jar",        "腌菜缸",   "Pickled Vegetable Jar", "pickled_vegetable", "jar", "leaf", "leafy"),
-    ("douchi_jar",         "豆豉缸",   "Douchi Jar",       "douchi",            "jar", "black",   "grain"),
-    ("sichuan_peppercorn_jar", "花椒缸", "Peppercorn Jar", "sichuan_peppercorn", "jar", "sichuan", "grain"),
+    ("doubanjiang_barrel",  "豆瓣酱桶", "Doubanjiang Barrel", "doubanjiang",       "barrel", "paste",   "paste"),
+    ("pickled_barrel",      "腌菜桶",   "Pickled Vegetable Barrel", "pickled_vegetable", "barrel", "leaf", "leafy"),
+    ("douchi_barrel",       "豆豉桶",   "Douchi Barrel",     "douchi",            "barrel", "black",   "grain"),
+    ("sichuan_peppercorn_barrel", "花椒桶", "Peppercorn Barrel", "sichuan_peppercorn", "barrel", "sichuan", "grain"),
     # --- 压块 ---
     ("bean_paste_brick",   "豆沙块",   "Bean Paste Block", "bean_paste",     "brick", "paste", "paste"),
     ("tofu_brick",         "豆腐块",   "Tofu Block",       "tofu",           "brick", "white", "solid"),
     ("rice_bran_brick",    "米糠块",   "Bran Block",       "rice_bran",      "brick", "wheat", "grain"),
 ]
 
-# 需要"袋口 / 箱口露内容物"的样式：这些方块会多生成一张 <id>_top.png
-SHOWS_CONTENTS = ("bag", "sack")
+# ======================================================================
+# 自动补齐：剩下那些还没打包的原材料
+# ======================================================================
+# 农夫乐事的做法是"每种作物一只箱子"，这里也照做：
+# 凡是上面没写进 COMPRESSED 的原材料，按下面这张表补一份包装。
+#
+# 名字与配色**直接取自 content_data 那一行**，不在这儿再抄一遍 ——
+# 以后往 content_data 里加一样作物，它自己就会多出一只箱子 / 一只袋子。
+#
+# 三种样式怎么选（跟农夫乐事一个思路）：
+#   sack  散装果菜 —— 小颗的果子、粉料、香料，装袋子里
+#   crate 大颗果菜 —— 白菜、冬瓜、萝卜这类，敞口木箱一眼看得见
+#   jar   酱料液体 —— 酱油、醋、豆瓣酱，装缸里
+#
+# 表：(源物品, 包装样式, 内容物形态)
+# 形态决定贴图画什么，取值见文件头的说明（grain/round/leafy/lump/paste/solid）。
+PACK_THE_REST = [
+    # --- 果子 -> 布袋 ---
+    ("pear", "sack", "round"), ("peach", "sack", "round"),
+    ("plum", "sack", "round"), ("apricot", "sack", "round"),
+    ("jujube", "sack", "round"), ("persimmon", "sack", "round"),
+    ("mandarin", "sack", "round"), ("pomelo", "sack", "round"),
+    ("banana", "sack", "round"), ("grape", "sack", "round"),
+    ("strawberry", "sack", "round"), ("cherry", "sack", "round"),
+    ("pomegranate", "sack", "round"), ("kiwi", "sack", "round"),
+    ("mango", "sack", "round"), ("pineapple", "crate", "round"),
+    # --- 叶菜 / 瓜豆 -> 木箱 ---
+    ("bok_choy", "crate", "leafy"), ("spinach", "crate", "leafy"),
+    ("celery", "crate", "leafy"), ("chive", "crate", "leafy"),
+    ("cilantro", "crate", "leafy"), ("scallion", "crate", "leafy"),
+    ("garlic_sprout", "crate", "leafy"),
+    ("dried_bamboo_shoot", "crate", "leafy"),
+    ("winter_melon", "crate", "round"), ("luffa", "crate", "round"),
+    ("bitter_melon", "crate", "round"), ("green_bean", "crate", "lump"),
+    # --- 五谷杂粮 / 干货 -> 袋 ---
+    ("paddy", "sack", "grain"), ("sorghum", "sack", "grain"),
+    ("millet_grass", "sack", "leafy"),
+    ("glutinous_rice_flour", "sack", "grain"),
+    ("broad_bean", "sack", "grain"), ("lotus_seed", "sack", "grain"),
+    ("goji_berry", "sack", "round"), ("longan", "sack", "round"),
+    ("lychee", "sack", "round"), ("osmanthus", "sack", "grain"),
+    ("corn", "crate", "lump"), ("chinese_yam", "crate", "lump"),
+    ("dried_jujube", "crate", "lump"),
+    # --- 调味料 -> 粉装袋 / 酱装缸 ---
+    ("salt", "sack", "grain"), ("rock_sugar", "sack", "grain"),
+    ("cumin", "sack", "grain"), ("chili_powder", "sack", "grain"),
+    ("pepper_powder", "sack", "grain"), ("five_spice_powder", "sack", "grain"),
+    ("star_anise", "sack", "lump"), ("cinnamon_bark", "sack", "lump"),
+    ("dried_chili", "sack", "lump"), ("bay_leaf", "sack", "leafy"),
+    ("soy_sauce", "barrel", "paste"), ("vinegar", "barrel", "paste"),
+    ("cooking_wine", "barrel", "paste"), ("sweet_bean_sauce", "barrel", "paste"),
+    ("oyster_sauce", "barrel", "paste"), ("sesame_oil", "barrel", "paste"),
+    ("sesame_paste", "barrel", "paste"), ("fermented_tofu", "barrel", "paste"),
+    ("chili_oil", "barrel", "paste"), ("stock", "barrel", "paste"),
+]
+
+# 样式 -> (id 后缀, 中文后缀, 英文后缀)
+#
+# 注意 `barrel` 这一档的前身叫 `jar`（陶缸）。用户要求
+# "那些桶装材料，大不了设计成颜色不同的木桶来对应不同的材料"，
+# 所以贴图、后缀、中英文名全部改成了木桶 —— 不然代码里写着 jar、
+# 游戏里却是只木桶，以后没人搞得清。旧文件由 `cleanup_legacy()` 删掉。
+FORM_SUFFIX = {
+    "bag": ("_bag", "袋", "Sack"),
+    "sack": ("_sack", "袋", "Sack"),
+    "crate": ("_crate", "箱", "Crate"),
+    "barrel": ("_barrel", "桶", "Barrel"),
+    "brick": ("_block", "块", "Block"),
+}
+
+
+def _expand_rest():
+    """把 PACK_THE_REST 展开成和 COMPRESSED 同样的 7 元组，追加进去。"""
+    import content_data as CDATA
+
+    # 物品 id -> (中文名, 英文名, 配色键)
+    info = {}
+    for row in (CDATA.INGREDIENTS + CDATA.SEEDS + CDATA.SEASONINGS
+                + CDATA.FRUITS + CDATA.VEGETABLES):
+        info[row[0]] = (row[1], row[2], row[4])
+
+    taken = {row[0] for row in COMPRESSED}
+    taken |= {row[3] for row in COMPRESSED}
+
+    for (src, form, family) in PACK_THE_REST:
+        if src in taken:
+            continue        # 上面已经手工打包过了
+        entry = info.get(src)
+        if entry is None:
+            raise ValueError("PACK_THE_REST 里的 %s 在 content_data 里找不到" % src)
+        zh, en, palette = entry
+        suffix, zh_suffix, en_suffix = FORM_SUFFIX[form]
+        block_id = src + suffix
+        if block_id in taken:
+            raise ValueError("包装方块 id 撞车：%s" % block_id)
+        COMPRESSED.append((block_id, zh + zh_suffix, en + " " + en_suffix,
+                           src, form, palette, family))
+        taken.add(block_id)
+
+
+_expand_rest()
+
+
+# ======================================================================
+# 清理上一版的残留
+# ======================================================================
+
+# "陶缸"时代用过的**全部** id。
+#
+# 木桶把 `_jar` 换成了 `_barrel`，旧 id 的文件不删就会变成孤儿
+# （`items/*.json` 指一个不存在的模型、顶面贴图没人引用 →
+# `validate_content.py` 会报，游戏里还会冒 "Couldn't parse data file"）。
+#
+# 为什么不按 `FORM_SUFFIX` 反推：手工写进 COMPRESSED 的那 4 只缸
+# 用的 id 是 `pickled_jar` 而不是 `<源物品>_jar`（源物品是
+# `pickled_vegetable`），反推不出来 —— 第一版就是这样漏掉了 `pickled_jar`，
+# 客户端日志里留了一条 "Couldn't parse data file ... blocks/pickled_jar"。
+# 所以这里**明写清单**，宁可啰嗦也不要漏。
+LEGACY_JAR_IDS = [
+    # 手工写在 COMPRESSED 里的 4 只
+    "doubanjiang_jar", "pickled_jar", "douchi_jar", "sichuan_peppercorn_jar",
+    # PACK_THE_REST 自动展开的 10 只（id = 源物品 + "_jar"）
+    "soy_sauce_jar", "vinegar_jar", "cooking_wine_jar", "sweet_bean_sauce_jar",
+    "oyster_sauce_jar", "sesame_oil_jar", "sesame_paste_jar",
+    "fermented_tofu_jar", "chili_oil_jar", "stock_jar",
+]
+
+
+def cleanup_legacy():
+    """删掉 `_jar`（陶缸）时代的全部文件。"""
+    targets = []
+    for old in LEGACY_JAR_IDS:
+        targets += [
+            os.path.join(RES, "blockstates", "%s.json" % old),
+            os.path.join(RES, "models", "block", "%s.json" % old),
+            os.path.join(RES, "items", "%s.json" % old),
+            os.path.join(RES, "textures", "block", "%s.png" % old),
+            os.path.join(RES, "textures", "block", "%s_top.png" % old),
+            os.path.join(DATA, "loot_table", "blocks", "%s.json" % old),
+            os.path.join(DATA, "recipe", "%s.json" % old),
+            os.path.join(DATA, "recipe", "%s_unpack.json" % old),
+        ]
+    removed = 0
+    for path in targets:
+        if os.path.isfile(path):
+            os.remove(path)
+            removed += 1
+    if removed:
+        print("compressed legacy cleanup: 删掉 %d 个陶缸时代的残留文件" % removed)
+    return removed
 
 
 def _write(path, obj):
@@ -118,124 +266,100 @@ def _write(path, obj):
 
 # ======================================================================
 # 模型
-# ======================================================================
-#
-# 材质键：
-#   #body      包装本身（布纹 / 木板 / 釉面 / 压块）—— 每种方块一张
-#   #contents  袋口 / 箱口露出的内容物 —— 每种方块一张（<id>_top.png）
-#   #crate     木箱的板条 —— 所有箱子共用
-#   #band      捆扎绳 / 箱箍 / 缸沿 —— 所有方块共用
-
-FACES = ("up", "down", "north", "south", "west", "east")
+# 模型只用原版那几套 parent，不再需要自己拼 elements；
+# 所以旧的 FACES / _faces / _el / _ring 全部删掉（留着就是死代码）。
 
 
-def _faces(texture):
-    return {f: {"texture": texture, "uv": [0, 0, 16, 16]} for f in FACES}
+def _model(form, bid):
+    """按包装样式给出方块模型。
 
+    <h3>为什么放弃上一版"一堆 elements 堆出来的造型"</h3>
 
-def _el(x0, y0, z0, x1, y1, z1, texture, overrides=None):
-    """一个实心盒子。``overrides`` 逐面换材质（例如箱口顶面换成内容物）。"""
-    f = _faces(texture)
-    for key, tex in (overrides or {}).items():
-        f[key] = {"texture": tex, "uv": [0, 0, 16, 16]}
-    return {"from": [x0, y0, z0], "to": [x1, y1, z1], "faces": f}
+    用户的要求是两条很具体的话：
 
+    * **"米袋这些做成完整的一整个方块，材质贴近羊毛和布袋"**
+    * **"萝卜箱之类的做成类似于原版木桶的形式（直接套用这些材质）"**
 
-def _ring(x0, z0, x1, z1, t, y0, y1, texture, top=None):
-    """一圈厚壁（上下通长、左右避开）—— 精确铺满、不重叠。"""
-    return [
-        _el(x0, y0, z0, x1, y1, z0 + t, texture, {"up": top} if top else None),
-        _el(x0, y0, z1 - t, x1, y1, z1, texture, {"up": top} if top else None),
-        _el(x0, y0, z0 + t, x0 + t, y1, z1 - t, texture),
-        _el(x1 - t, y0, z0 + t, x1, y1, z1 - t, texture),
-    ]
+    原版木桶（barrel）的模型其实是<b>一句话</b>：
 
+        {"parent": "minecraft:block/cube_bottom_top",
+         "textures": {"bottom": ..., "side": ..., "top": ...}}
 
-def _model(form):
-    E = []
+    上一版为了"立体感"堆了十几个盒子，代价是：共面闪烁、模型庞大、
+    顶面贴图被斜面拉伸、码墙时格子间露缝。既然要的是"完整方块 +
+    看得见装的是什么"，那就退回原版这套最朴素的写法：
 
-    if form == "bag":
-        # 麻袋：满格的鼓腹 + 顶上收细的脖子；袋口的顶面露出内容物
-        E.append(_el(0.2, 0.0, 0.2, 15.8, 12.8, 15.8, "#body"))
-        E.append(_el(3.0, 12.8, 3.0, 13.0, 15.0, 13.0, "#body"))
-        E.append(_el(4.4, 15.0, 4.4, 11.6, 15.8, 11.6, "#body",
-                     {"up": "#contents"}))
-        # 袋口堆出来的一点内容物（让"鼓着"更明显）
-        E.append(_el(2.6, 12.6, 2.6, 13.4, 13.8, 13.4, "#contents"))
-        # 捆扎绳
-        E.append(_el(2.6, 12.8, 2.6, 13.4, 13.6, 13.4, "#band"))
+    <table border="1">
+      <tr><th>样式</th><th>parent</th><th>说明</th></tr>
+      <tr><td>袋（编织袋）</td><td>cube_bottom_top</td>
+          <td>侧面 = 经纬交织布 + 顶部一道麻绳，顶面 = 内容物 + 一圈绳</td></tr>
+      <tr><td>桶（原来的陶缸）</td><td>cube_bottom_top</td>
+          <td>侧面 = 竖桶板 + 两道铁箍（木色按内容物染），顶面 = 铁箍圈 + 内容物</td></tr>
+      <tr><td>箱</td><td>cube_bottom_top</td>
+          <td>侧面与底面 = <b>原版木桶的贴图</b>，顶面 = 木口 + 铺满的货</td></tr>
+      <tr><td>压块</td><td>cube_all</td><td>六面同一张压实贴图</td></tr>
+    </table>
 
-    elif form == "sack":
-        # 布袋：更矮胖、口是散开的，内容物堆到袋口之上
-        E.append(_el(0.2, 0.0, 0.2, 15.8, 11.6, 15.8, "#body"))
-        E.append(_el(1.0, 11.6, 1.0, 15.0, 13.4, 15.0, "#body",
-                     {"up": "#contents"}))
-        # 袋口上面堆着的一层货
-        E.append(_el(1.6, 13.4, 1.6, 14.4, 14.6, 14.4, "#contents"))
-        E.append(_el(0.8, 11.4, 0.8, 15.2, 12.4, 15.2, "#band"))
+    这样"装的是什么"全部由<b>顶面</b>表达，侧视一律干净，
+    而且它就是一个完整方块 —— 能当建材码墙、能直接叠。
+    """
+    if form == "crate":
+        # 木桶的形式：桶身与桶底**直接套用原版木桶的材质**
+        # （barrel_side 自带那两道箍，barrel_bottom 是桶底的横板）
+        return {
+            "parent": "minecraft:block/cube_bottom_top",
+            "textures": {
+                "particle": "minecraft:block/barrel_side",
+                "bottom": "minecraft:block/barrel_bottom",
+                "side": "minecraft:block/barrel_side",
+                "top": "%s:block/%s_top" % (NS, bid),
+            },
+        }
 
-    elif form == "crate":
-        # 木箱：**敞口** —— 四面墙只到箱高，箱口铺满内容物。
-        # 这是最像农夫乐事菜箱的一种。
-        t = 2.2                       # 壁厚
-        wall_top = 11.0               # 墙只有这么高
-        E.append(_el(0.0, 0.0, 0.0, 16.0, 1.4, 16.0, "#crate"))       # 箱底
-        E += _ring(0.0, 0.0, 16.0, 16.0, t, 1.4, wall_top, "#crate")  # 四面墙
-        # 四角立柱：比墙面高一点，箱口因此有"骨架"
-        for (cx, cz) in ((0.2, 0.2), (14.2, 0.2), (0.2, 14.2), (14.2, 14.2)):
-            E.append(_el(cx, 0.0, cz, cx + 1.6, 12.4, cz + 1.6, "#crate"))
-        # 箱箍：两道，比墙面略凸
-        E += _ring(-0.2, -0.2, 16.2, 16.2, 0.5, 3.6, 4.6, "#band")
-        E += _ring(-0.2, -0.2, 16.2, 16.2, 0.5, 8.4, 9.4, "#band")
-        # 箱口的内容物：顶面铺满，一直堆到略微高过墙
-        E.append(_el(t, 1.4, t, 16.0 - t, 12.6, 16.0 - t, "#contents"))
+    if form == "barrel":
+        # **木桶**：贴图由我们自己生成（见 texture_compressed._barrel_staves / _barrel_top）。
+        #
+        # 用户的要求是"那些桶装材料，大不了设计成颜色不同的木桶来对应不同的材料"。
+        # 所以桶板颜色跟着内容物走 —— 豆瓣酱的桶偏红、醋的桶偏琥珀、酱油的桶偏黑褐。
+        #
+        # 为什么不用原版木桶的贴图：那张是固定的橡木色，
+        # 34 只缸会一模一样，与"颜色要对应材料"直接冲突。
+        # 中间试过的两条“套用原版”的路也都不行：
+        #   1. `minecraft:entity/decorated_pot/decorated_pot_side`
+        #      —— 陶罐本体那张在 entity/ 下，**不在方块图集里**，
+        #      方块模型用不了（日志报 Missing textures）。
+        #   2. `minecraft:block/terracotta` —— 那张是原版拿来拼
+        #      “带纹陶块”的**图案贴图**，自带斜向色带，单独铺满一个
+        #      方块就是一片错乱的花。
+        # 所以按"竖桶板 + 两道铁箍"自己画，木色由配色决定。
+        return {
+            "parent": "minecraft:block/cube_bottom_top",
+            "textures": {
+                "particle": "%s:block/%s" % (NS, bid),
+                "bottom": "%s:block/%s" % (NS, bid),
+                "side": "%s:block/%s" % (NS, bid),
+                "top": "%s:block/%s_top" % (NS, bid),
+            },
+        }
 
-    elif form == "jar":
-        # 陶缸：满格的鼓腹 + 收口 + 缸盖
-        E.append(_el(0.0, 0.0, 0.0, 16.0, 3.0, 16.0, "#body"))
-        E.append(_el(-0.1, 3.0, -0.1, 16.1, 10.6, 16.1, "#body"))
-        E.append(_el(0.4, 10.6, 0.4, 15.6, 13.6, 15.6, "#body"))
-        # 缸盖：顶面用内容物（揭盖的状态）—— 让玩家看得见里面
-        E.append(_el(0.0, 13.6, 0.0, 16.0, 15.2, 16.0, "#body",
-                     {"up": "#contents"}))
-        E.append(_el(1.6, 15.2, 1.6, 14.4, 15.8, 14.4, "#band"))
-
-    else:  # brick
-        # 压块：满格的压实块，中间一道模缝
-        E.append(_el(0.0, 0.0, 0.0, 16.0, 7.4, 16.0, "#body"))
-        E.append(_el(0.0, 7.4, 0.0, 16.0, 16.0, 16.0, "#body"))
-        E.append(_el(-0.1, 7.0, -0.1, 16.1, 8.0, 16.1, "#band"))
-
-    return E
+    # 袋 / 压块：**一整块布 / 压实的料**，顶面各另外一张。
+    return {
+        "parent": "minecraft:block/cube_bottom_top",
+        "textures": {
+            "particle": "%s:block/%s" % (NS, bid),
+            "bottom": "%s:block/%s" % (NS, bid),
+            "side": "%s:block/%s" % (NS, bid),
+            "top": "%s:block/%s_top" % (NS, bid),
+        },
+    }
 
 
 def build_models():
     for (bid, _zh, _en, _src, form, _pal, _fam) in COMPRESSED:
-        # 木箱的四壁用**共用**的木板贴图，所以它不需要自己那张 "body"
-        # （箱口的内容物仍然是各自一张 <id>_top.png）。
-        textures = {
-            # particle（挖掉时的碎屑）也要指向**真实存在**的贴图：
-            # 箱子没有自己的底图，就用共用的木板。
-            "particle": "%s:block/%s" % (NS, "compressed_crate" if form == "crate" else bid),
-            "band": "%s:block/compressed_band" % NS,
-        }
-        if form == "crate":
-            textures["crate"] = "%s:block/compressed_crate" % NS
-            textures["contents"] = "%s:block/%s_top" % (NS, bid)
-        else:
-            textures["body"] = "%s:block/%s" % (NS, bid)
-            if form in SHOWS_CONTENTS + ("jar",):
-                textures["contents"] = "%s:block/%s_top" % (NS, bid)
-            else:
-                # 压块不需要单独一张，直接拿主体当内容物
-                textures["contents"] = "%s:block/%s" % (NS, bid)
-
-        _write(os.path.join(RES, "models", "block", "%s.json" % bid), {
-            "parent": "minecraft:block/block",
-            "textures": textures,
-            "elements": _model(form),
-        })
-        # 物品栏直接用方块模型（有立体感）
+        # 模型现在极简（见 _model），贴图键交给它自己拼
+        _write(os.path.join(RES, "models", "block", "%s.json" % bid),
+               _model(form, bid))
+        # 物品栏直接用方块模型（完整方块，六面都对）
         _write(os.path.join(RES, "items", "%s.json" % bid), {
             "model": {"type": "minecraft:model",
                       "model": "%s:block/%s" % (NS, bid)}
@@ -374,7 +498,12 @@ def build_java():
     print("compressed java: ModCompressed.java (%d blocks)" % len(COMPRESSED))
 
 
-if __name__ == "__main__":
+def main():
+    cleanup_legacy()
     build_models()
     build_recipes()
     build_java()
+
+
+if __name__ == "__main__":
+    main()

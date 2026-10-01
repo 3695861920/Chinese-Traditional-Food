@@ -60,6 +60,28 @@ public final class ModCreativeTabs {
                 event.accept(item.get());
             }
         }
+        if (event.getTabKey() == CreativeModeTabs.NATURAL_BLOCKS) {
+            // 植株也在"自然"页 —— 找种子的时候最直觉
+            for (var block : ModCrops.allPlants()) {
+                event.accept(block.get());
+            }
+            // 果树：树苗与树叶。
+            // 两者**都必须**是方块物品（ModTrees 里已经给树叶也注册了物品）——
+            // accept 收的是 ItemLike，而 Block.asItem() 在没有 BlockItem 时
+            // 返回空气，会直接抛 "The stack count must be 1 for 0 minecraft:air"。
+            for (var item : ModTrees.allSaplings()) {
+                event.accept(item.get());
+            }
+            for (var item : ModTrees.allLeaves()) {
+                event.accept(item.get());
+            }
+        }
+        if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
+            // 13 套木制品：原木 / 木头 / 去皮 / 木板 / 楼梯 / 台阶 / 栅栏 / 栅栏门
+            for (var item : ModWoods.allItems()) {
+                event.accept(item.get());
+            }
+        }
         if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
             event.accept(ModItems.PLATE.get());
             event.accept(ModItems.CUTTING_BOARD.get());
@@ -77,6 +99,10 @@ public final class ModCreativeTabs {
         if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
             for (var item : ModItems.allFoods()) {
                 event.accept(item.get());
+            }
+            // 种子是"原料"：每一样都能种下去，是整条食材线的起点
+            for (var seed : ModCrops.allSeeds()) {
+                event.accept(seed.get());
             }
         }
         if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {

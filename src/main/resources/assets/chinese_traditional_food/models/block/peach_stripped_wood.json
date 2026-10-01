@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "chinese_traditional_food:block/peach_stripped_log",
+    "side": "chinese_traditional_food:block/peach_stripped_log"
+  }
+}

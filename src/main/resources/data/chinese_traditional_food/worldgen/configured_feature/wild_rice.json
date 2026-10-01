@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:simple_block",
+  "config": {
+    "to_place": {
+      "type": "minecraft:weighted_state_provider",
+      "entries": [
+        {
+          "data": {
+            "Name": "chinese_traditional_food:wild_rice"
+          },
+          "weight": 1
+        }
+      ]
+    }
+  }
+}

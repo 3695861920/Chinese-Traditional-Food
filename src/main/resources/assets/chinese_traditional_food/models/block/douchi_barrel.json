@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "particle": "chinese_traditional_food:block/douchi_barrel",
+    "bottom": "chinese_traditional_food:block/douchi_barrel",
+    "side": "chinese_traditional_food:block/douchi_barrel",
+    "top": "chinese_traditional_food:block/douchi_barrel_top"
+  }
+}

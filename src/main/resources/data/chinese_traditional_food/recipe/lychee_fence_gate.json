@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "YXY",
+    "YXY"
+  ],
+  "key": {
+    "X": "chinese_traditional_food:lychee_planks",
+    "Y": "minecraft:stick"
+  },
+  "result": {
+    "id": "chinese_traditional_food:lychee_fence_gate",
+    "count": 1
+  },
+  "group": "fence_gate"
+}

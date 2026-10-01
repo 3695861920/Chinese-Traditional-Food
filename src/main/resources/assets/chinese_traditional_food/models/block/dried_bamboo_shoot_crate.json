@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "particle": "minecraft:block/barrel_side",
+    "bottom": "minecraft:block/barrel_bottom",
+    "side": "minecraft:block/barrel_side",
+    "top": "chinese_traditional_food:block/dried_bamboo_shoot_crate_top"
+  }
+}

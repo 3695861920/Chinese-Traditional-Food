@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "chinese_traditional_food:cumin_sack"
+  ],
+  "result": {
+    "id": "chinese_traditional_food:cumin",
+    "count": 9
+  }
+}

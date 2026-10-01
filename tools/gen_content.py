@@ -23,6 +23,9 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import content_data as DATA  # noqa: E402
+import gen_crops  # noqa: E402  （作物植株：ModCrops.java / 模型 / 掉落 / 世界生成）
+import gen_trees  # noqa: E402  （果树：ModTrees.java / 模型 / 掉落）
+import gen_woods  # noqa: E402  （13 套木制品：ModWoods.java / 117 个方块）
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 JAVA = os.path.join(ROOT, "src", "main", "java", "com", "ctf", "chinese_traditional_food")
@@ -259,7 +262,8 @@ def gen_mod_items(items, dishes):
     # --- 按类别分组 ---
     sections = [
         ("基础食材", [i for i in items if i["category"] == "ingredient"]),
-        ("作物种子", [i for i in items if i["category"] == "seed"]),
+        # 作物种子不在这里 —— 它们是 ModCrops 里的方块物品（种下去会变成植株），
+        # 见 tools/gen_crops.py。
         ("调味料", [i for i in items if i["category"] == "seasoning"]),
         ("常见水果", [i for i in items if i["category"] == "fruit"]),
         ("常见蔬菜", [i for i in items if i["category"] == "vegetable"]),
@@ -375,6 +379,28 @@ CREATIVE_FOOTER = """
                 event.accept(item.get());
             }
         }
+        if (event.getTabKey() == CreativeModeTabs.NATURAL_BLOCKS) {
+            // 植株也在"自然"页 —— 找种子的时候最直觉
+            for (var block : ModCrops.allPlants()) {
+                event.accept(block.get());
+            }
+            // 果树：树苗与树叶。
+            // 两者**都必须**是方块物品（ModTrees 里已经给树叶也注册了物品）——
+            // accept 收的是 ItemLike，而 Block.asItem() 在没有 BlockItem 时
+            // 返回空气，会直接抛 "The stack count must be 1 for 0 minecraft:air"。
+            for (var item : ModTrees.allSaplings()) {
+                event.accept(item.get());
+            }
+            for (var item : ModTrees.allLeaves()) {
+                event.accept(item.get());
+            }
+        }
+        if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
+            // 13 套木制品：原木 / 木头 / 去皮 / 木板 / 楼梯 / 台阶 / 栅栏 / 栅栏门
+            for (var item : ModWoods.allItems()) {
+                event.accept(item.get());
+            }
+        }
         if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
             event.accept(ModItems.PLATE.get());
             event.accept(ModItems.CUTTING_BOARD.get());
@@ -392,6 +418,10 @@ CREATIVE_FOOTER = """
         if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
             for (var item : ModItems.allFoods()) {
                 event.accept(item.get());
+            }
+            // 种子是"原料"：每一样都能种下去，是整条食材线的起点
+            for (var seed : ModCrops.allSeeds()) {
+                event.accept(seed.get());
             }
         }
         if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
@@ -460,6 +490,21 @@ public final class ModRecipes {
     public record Entry(String input, String output, int outputCount,
                         String byproduct, float byproductChance, int ticks) {}
 
+    /**
+     * 一条"锅谱"。**这是菜品唯一的做法。**
+     *
+     * <p>与 {@link Entry} 的区别是<b>可以要好几样材料</b>：一口锅要凑齐
+     * 配料才做得出一道菜，而不是一样东西变一样。材料里重复写两次就表示
+     * 要两份（比如腊八蒜要两瓶醋）。</p>
+     *
+     * @param output        产出物品 id
+     * @param outputCount   产出数量
+     * @param ticks         耗时（tick）
+     * @param ingredients   需要的材料（物品 id 或 {@code #命名空间:标签路径}）
+     */
+    public record CookEntry(String output, int outputCount, int ticks,
+                            List<String> ingredients) {}
+
     /** 一条案板切割规则。
      *
      * @param input      输入（物品 id 或 {@code #命名空间:标签路径}）
@@ -481,20 +526,20 @@ CUTTING_MID = '''    );
 
 CUTTING_FOOTER = '''    );
 
-    /** 蒸笼：蒸汽催熟。坐在炉灶上使用，不耗电。 */
-    public static final List<Entry> STEAMING = List.of(
+    /** 蒸笼的锅谱：面点、糕饼这类靠蒸汽的东西。 */
+    public static final List<CookEntry> STEAMER = List.of(
 '''
 
 BOILING_MID = '''    );
 
-    /** 汤锅：加水 / 高汤吊成汤。坐在炉灶上使用。 */
-    public static final List<Entry> BOILING = List.of(
+    /** 汤锅的锅谱：炖、汤、饭这类久煮的东西。 */
+    public static final List<CookEntry> SOUP_POT = List.of(
 '''
 
 COOKING_MID = '''    );
 
-    /** 炒锅：猛火快炒。坐在炉灶上使用。 */
-    public static final List<Entry> COOKING = List.of(
+    /** 炒锅的锅谱：炒、煎、整菜这类猛火的东西。 */
+    public static final List<CookEntry> WOK = List.of(
 '''
 
 CUTTING_REAL = '''    );
@@ -528,7 +573,86 @@ def _entry_lines(entries):
     return lines
 
 
-def gen_recipes_table():
+def _cook_lines(entries):
+    """把 (产出, 数量, tick, [材料...]) 写成 CookEntry 的构造调用。"""
+    lines = []
+    for (out, count, ticks, ingredients) in entries:
+        mats = ", ".join('"%s"' % m for m in ingredients)
+        lines.append('            new CookEntry("%s", %d, %d, List.of(%s))'
+                     % (_bare(out), count, ticks, mats))
+    return lines
+
+
+def dish_cook_plan(dishes):
+    """算出每道菜该在哪口锅里做、要哪些材料。
+
+    返回 {@code {锅名: [(产出, 数量, tick, [材料...]), ...]}}。
+
+    三道规矩：
+
+    1. **简单转化优先**。像"面粉 -> 馒头"这种一样进一样出的，已经在
+       STEAMING 那一类表里写好了；如果菜单/小吃里恰好有同名的菜，
+       就不再给它生成一份"面粉 + 葱 + 姜"的怪配方。
+    2. **手写过的不自动生成**。少数菜（麻婆豆腐、腊八蒜）的用料得精确，
+       写在 {@code DISH_COOK_OVERRIDE} 里。
+    3. 其余的按"图标种类 -> 做法 -> 锅"三级映射批量展开 ——
+       所以加一道新菜只要在 DISHES 里填一行，锅谱会自动跟上。
+    """
+    # 第 1 条：已经被简单转化产出的东西，不再自动配锅谱
+    shortcuts = set()
+    for table in (DATA.STEAMING, DATA.BOILING, DATA.COOKING):
+        for (_inp, out, _count, _by, _chance, _ticks) in table:
+            shortcuts.add(out.split(":")[-1])
+    # 多材料的调味料配方（见 DATA.POT）同样是"已经写好了"的，不要再自动生成
+    for (_pot, out, _count, _ticks, _mats) in DATA.POT:
+        shortcuts.add(out.split(":")[-1])
+
+    plan = {"STEAMER": [], "SOUP_POT": [], "WOK": []}
+
+    # 多材料的酱 / 醋 / 酒 / 汤底：直接按写好的锅与材料放进计划
+    for (pot, out, count, ticks, mats) in DATA.POT:
+        plan[pot].append((out, count, ticks, list(mats)))
+
+    # 简单转化本身也是一条锅谱（一样材料）
+    for table, key in ((DATA.STEAMING, "STEAMER"),
+                       (DATA.BOILING, "SOUP_POT"),
+                       (DATA.COOKING, "WOK")):
+        for (inp, out, count, by, chance, ticks) in table:
+            if by or chance:
+                raise ValueError(
+                    "锅谱里的简单转化不支持副产物（%s -> %s）；"
+                    "要副产物请改用 Entry 那张表" % (inp, out))
+            plan[key].append((out, count, ticks, [inp]))
+
+    for dish in dishes:
+        did = dish["id"]
+        override = DATA.DISH_COOK_OVERRIDE.get(did)
+        if override is not None:
+            cooker, mats, count, ticks = override
+            plan[cooker].append((did, count, ticks, list(mats)))
+            continue
+
+        if did in shortcuts:
+            continue        # 第 1 条
+
+        mapping = DATA.DISH_RECIPE_KIND.get(dish["kind"])
+        if mapping is None:
+            raise ValueError(
+                "菜品 %s（图标种类 %s）没有锅谱映射："
+                "请在 DISH_RECIPE_KIND 里加上容器与做法，"
+                "或把这道菜写进 DISH_COOK_OVERRIDE" % (did, dish["kind"]))
+        _vessel, method = mapping
+        cooker = DATA.DISH_COOKER.get(method)
+        if cooker is None:
+            raise ValueError("做法 %s 没有对应的锅（DISH_COOKER）" % method)
+        plan[cooker].append((did, 1, DATA.DISH_COOK_TICKS[method],
+                             list(DATA.DISH_RECIPE_MATERIALS[method])))
+    return plan
+
+
+def gen_recipes_table(dishes):
+    plan = dish_cook_plan(dishes)
+
     # 注意：List.of(...) 的实参列表不能有尾随逗号（数组初始化才行），
     # 所以用 ",\n".join 而不是给每行都加逗号。
     parts = [CUTTING_HEADER,
@@ -536,11 +660,11 @@ def gen_recipes_table():
              CUTTING_MID,
              ",\n".join(_entry_lines(DATA.SHELLING)), "\n",
              CUTTING_FOOTER,
-             ",\n".join(_entry_lines(DATA.STEAMING)), "\n",
+             ",\n".join(_cook_lines(plan["STEAMER"])), "\n",
              BOILING_MID,
-             ",\n".join(_entry_lines(DATA.BOILING)), "\n",
+             ",\n".join(_cook_lines(plan["SOUP_POT"])), "\n",
              COOKING_MID,
-             ",\n".join(_entry_lines(DATA.COOKING)), "\n",
+             ",\n".join(_cook_lines(plan["WOK"])), "\n",
              CUTTING_REAL,
              ",\n".join('            new CuttingEntry("%s", "%s", %s, %d)'
                         % (i, o, "true" if k else "false", t)
@@ -549,9 +673,11 @@ def gen_recipes_table():
     write(os.path.join(JAVA, "common", "recipe", "ModRecipes.java"), "".join(parts))
     # 早期版本叫 ModCutting，现已合并进 ModRecipes；留着会编译进旧表
     drop_if_exists(os.path.join(JAVA, "common", "recipe", "ModCutting.java"))
-    print("machine recipes: milling=%d shelling=%d steam=%d boil=%d cook=%d cutting=%d"
-          % (len(DATA.MILLING), len(DATA.SHELLING), len(DATA.STEAMING),
-             len(DATA.BOILING), len(DATA.COOKING), len(DATA.CUTTING)))
+    print("recipes: milling=%d shelling=%d | 锅谱 steamer=%d soup_pot=%d wok=%d | cutting=%d"
+          % (len(DATA.MILLING), len(DATA.SHELLING),
+             len(plan["STEAMER"]), len(plan["SOUP_POT"]), len(plan["WOK"]),
+             len(DATA.CUTTING)))
+    return plan
 
 
 # ======================================================================
@@ -760,6 +886,9 @@ def gen_lang(items, dishes):
     zh.update({
         "block.chinese_traditional_food.plate": "餐盘",
         "block.chinese_traditional_food.cutting_board": "案板",
+        # 摆在地上的菜：没有对应物品（拿不起来），但准星指着它时
+        # Jade 会显示名字，所以还是得有键，否则那里会显示出一串键名
+        "block.chinese_traditional_food.placed_dish": "摆放的菜品",
         "block.chinese_traditional_food.furnace_generator": "熔炉发电机",
         "block.chinese_traditional_food.electric_mill": "电动磨粉机",
         "block.chinese_traditional_food.electric_sheller": "电动脱壳机",
@@ -805,10 +934,16 @@ def gen_lang(items, dishes):
         "tooltip.chinese_traditional_food.gui_burning": "正在发电",
         "tooltip.chinese_traditional_food.gui_need_fuel": "缺燃料",
         "tooltip.chinese_traditional_food.gui_output": "输出 40 FE/t",
+        # ---- JEI（配方查看器）上的文案 ----
+        "jei.chinese_traditional_food.duration": "耗时 %s 秒",
+        "jei.chinese_traditional_food.byproduct": "有 %s%% 的概率额外得到",
+        "jei.chinese_traditional_food.needs_knife": "需要手持刀才好使",
+        "jei.chinese_traditional_food.pot_hint": "把它放在电磁炉正上方就能开火",
     })
     en.update({
         "block.chinese_traditional_food.plate": "Plate",
         "block.chinese_traditional_food.cutting_board": "Cutting Board",
+        "block.chinese_traditional_food.placed_dish": "Placed Dish",
         "block.chinese_traditional_food.furnace_generator": "Furnace Generator",
         "block.chinese_traditional_food.electric_mill": "Electric Mill",
         "block.chinese_traditional_food.electric_sheller": "Electric Sheller",
@@ -854,11 +989,27 @@ def gen_lang(items, dishes):
         "tooltip.chinese_traditional_food.gui_burning": "Generating",
         "tooltip.chinese_traditional_food.gui_need_fuel": "Needs fuel",
         "tooltip.chinese_traditional_food.gui_output": "Output 40 FE/t",
+        # ---- JEI（配方查看器）上的文案 ----
+        "jei.chinese_traditional_food.duration": "%s s",
+        "jei.chinese_traditional_food.byproduct": "%s%% chance of an extra drop",
+        "jei.chinese_traditional_food.needs_knife": "Requires a knife in hand",
+        "jei.chinese_traditional_food.pot_hint": "Stand it on an induction cooker to fire up",
     })
 
     # 按类别写注释分组（JSON 不支持注释，用顺序 + 分组标题的键值对不可行，
     # 所以这里直接按键排序输出，人工阅读依然清晰）
     for item in items + dishes:
+        if item["category"] == "seed":
+            # 种子是**方块物品**（BlockItem），键必须跟着方块走。
+            #
+            # NeoForge 的 registerSimpleBlockItem 会给物品加上
+            # `useBlockDescriptionPrefix`，于是它的翻译键是 `block.<物品id>`
+            # 而不是 `item.<物品id>`。写在 item. 下的话，游戏里
+            # 会把键名原样显示出来（"block.chinese_traditional_food.rice_seeds"）——
+            # 这就是玩家看到的"语言坏了"。
+            zh["block.chinese_traditional_food.%s" % item["id"]] = item["zh"]
+            en["block.chinese_traditional_food.%s" % item["id"]] = item["en"]
+            continue
         zh["item.chinese_traditional_food.%s" % item["id"]] = item["zh"]
         en["item.chinese_traditional_food.%s" % item["id"]] = item["en"]
 
@@ -890,6 +1041,38 @@ def gen_lang(items, dishes):
         bid, zh_name, en_name = row[0], row[1], row[2]
         zh["block.%s.%s" % (NAMESPACE, bid)] = zh_name
         en["block.%s.%s" % (NAMESPACE, bid)] = en_name
+
+    # 作物植株与野生植株的方块名。同样是"唯一的语言来源"把它一起写掉 ——
+    # gen_crops.py 不碰 lang 文件，免得两边抢着重写（和压缩方块一个道理）。
+    names = {row[0]: (row[1], row[2]) for row in DATA.CROPS}
+    for (crop_id, zh_name, en_name, _seed, _prod, _habit) in DATA.CROPS:
+        zh["block.%s.%s_crop" % (NAMESPACE, crop_id)] = "%s植株" % zh_name
+        en["block.%s.%s_crop" % (NAMESPACE, crop_id)] = "%s Crop" % en_name
+    for row in DATA.WILD_CROPS:
+        zh_name, en_name = names[row[0]]
+        zh["block.%s.wild_%s" % (NAMESPACE, row[0])] = "野生%s" % zh_name
+        en["block.%s.wild_%s" % (NAMESPACE, row[0])] = "Wild %s" % en_name
+
+    # 果树：树苗 / 树叶 / 以及 13 套木制品。名字里的水果名直接取那一行，不手抄。
+    fruit_names = {row[0]: (row[1], row[2]) for row in DATA.FRUITS}
+    fruit_names.update({row[0]: (row[1], row[2]) for row in DATA.INGREDIENTS})
+    for (fruit, _size) in DATA.TREE_FRUITS:
+        zh_name, en_name = fruit_names[fruit]
+        zh["block.%s.%s_sapling" % (NAMESPACE, fruit)] = "%s树苗" % zh_name
+        en["block.%s.%s_sapling" % (NAMESPACE, fruit)] = "%s Sapling" % en_name
+        zh["block.%s.%s_leaves" % (NAMESPACE, fruit)] = "%s树叶" % zh_name
+        en["block.%s.%s_leaves" % (NAMESPACE, fruit)] = "%s Leaves" % en_name
+
+    # 木质方块：`枣木原木` / `枣木木板` / `去皮枣木原木` ……
+    # 后缀与名字模板都在 content_data 里，所以这里一个名字都不用硬编码。
+    # **注意**：这些是方块物品（BlockItem），键必须是 `block.` —— 写 `item.`
+    # 的话游戏里会直接显示键名（踩过，见 check_lang.py 的说明）。
+    for (fruit, _size) in DATA.TREE_FRUITS:
+        zh_name, en_name = fruit_names[fruit]
+        for (_suffix, zh_tpl, en_tpl, _src) in DATA.TREE_WOOD_FORMS:
+            bid = "%s%s" % (fruit, _suffix)
+            zh["block.%s.%s" % (NAMESPACE, bid)] = zh_tpl.format(w=zh_name)
+            en["block.%s.%s" % (NAMESPACE, bid)] = en_tpl.format(f=en_name)
 
     write_json(os.path.join(RES, "assets", NAMESPACE, "lang", "zh_cn.json"), zh)
     write_json(os.path.join(RES, "assets", NAMESPACE, "lang", "en_us.json"), en)
@@ -1016,6 +1199,12 @@ def recipe_object(recipe_id, spec):
 
 
 def gen_recipes(items, dishes):
+    """生成工作台 / 熔炉配方。
+
+    <b>菜品不在这里。</b> 所有菜品一律用锅做，锅谱由
+    {@link gen_recipes_table} 写进 {@code ModRecipes}。
+    这里只处理"工作台能直接做出来的东西"：食材加工、调料、厨具、机器。
+    """
     base = os.path.join(RES, "data", NAMESPACE, "recipe")
     known = ({i["id"] for i in items} | {d["id"] for d in dishes}
              | {"plate", "cutting_board",
@@ -1024,28 +1213,59 @@ def gen_recipes(items, dishes):
                 "stove", "wok", "steamer", "soup_pot",
                 "placed_dish"})
 
+    # 菜品 id 集合：这些**不该**出现在工作台配方里（要用锅）
+    dish_ids = {d["id"] for d in dishes}
+
     written = 0
+    skipped = 0
+    keep = set()
     for recipe_id, spec in DATA.RECIPES.items():
         if recipe_id not in known:
             raise ValueError("配方 %s 对应的物品不存在" % recipe_id)
+        if recipe_id in dish_ids:
+            # 手滑把菜写进 RECIPES 了 —— 直接报错，免得出现"工作台也能做"的双重做法
+            raise ValueError(
+                "配方 %s 是一道菜，菜品必须用锅做：请把它写进 DISH_COOK_OVERRIDE，"
+                "或改成靠 DISH_RECIPE_KIND 自动展开" % recipe_id)
         write_json(os.path.join(base, "%s.json" % recipe_id), recipe_object(recipe_id, spec))
+        keep.add(recipe_id)
         written += 1
 
-    # 其余菜品按"图标种类 -> 容器 + 主料组合"自动展开
-    for dish in dishes:
-        if dish["id"] in DATA.RECIPES:
+    # ---- 清理：把"以前生成过、现在不该再有"的配方删掉 ----
+    #
+    # 生成器只写不删的话，删掉 RECIPES 里的条目并不会让旧 json 消失，
+    # 结果就是"改了代码但游戏里的配方没变"（数据包照样加载那些残留文件）。
+    #
+    # 但清理**必须知道有哪些文件是别的生成器管理**的：压缩方块那 190 条配方
+    # 也写在这个目录里（由 gen_compressed.py 生成），不知道就会一起删掉 ——
+    # 第一次加这段清理时就误删过一次。
+    try:
+        import gen_compressed as COMP
+        for row in COMP.COMPRESSED:
+            keep.add(row[0])                  # 9 个原料 → 1 个方块
+            keep.add("%s_unpack" % row[0])     # 1 个方块 → 9 个原料
+    except Exception:                          # noqa: BLE001
+        pass
+
+    # 木制品那 78 条配方也写在这个目录里（gen_woods.py 生成）。
+    # 忘了排除的话，第一次加清理就会把它们全删掉 —— 压缩方块那次已经栽过一回。
+    try:
+        import gen_woods as WOODS
+        keep |= WOODS.recipe_ids()
+    except Exception:                          # noqa: BLE001
+        pass
+
+    for name in sorted(os.listdir(base)):
+        path = os.path.join(base, name)
+        if not os.path.isfile(path) or not name.endswith(".json"):
             continue
-        mapping = DATA.DISH_RECIPE_KIND.get(dish["kind"])
-        if mapping is None:
-            raise ValueError("菜品 %s 的图标种类 %s 没有配方映射"
-                             % (dish["id"], dish["kind"]))
-        vessel, material_kind = mapping
-        mats = [vessel] + list(DATA.DISH_RECIPE_MATERIALS[material_kind])
-        write_json(os.path.join(base, "%s.json" % dish["id"]),
-                   recipe_object(dish["id"], ("shapeless", mats, 1)))
-        written += 1
+        recipe_id = name[:-5]
+        if recipe_id in keep:
+            continue
+        os.remove(path)
+        skipped += 1
 
-    print("recipes: %d" % written)
+    print("recipes: workbench=%d（另清理了 %d 个不再需要的配方文件）" % (written, skipped))
 
 
 # ======================================================================
@@ -1066,6 +1286,12 @@ def gen_tags(dishes):
     for tag, values in DATA.OWN_TAGS.items():
         if tag in ("dishes", "placeable_dishes"):
             continue
+        # seeds 标签的成员变了：种子不再由 ModItems 注册，而是 ModCrops 里的
+        # 方块物品，所以这里按 CROPS 表现算，别用 content_data 里那份手写的旧清单
+        # （那份里有一半 id 已经不存在了，进游戏会报 "missing following references"）。
+        if tag == "seeds":
+            values = ["%s:%s" % (NAMESPACE, row[3]) for row in DATA.CROPS]
+            values.append("minecraft:wheat_seeds")
         write_json(os.path.join(item_tags, "%s.json" % tag), {
             "replace": False,
             "values": values,
@@ -1088,13 +1314,23 @@ def main():
 
     gen_mod_items(items, dishes)
     gen_creative_tabs()
-    gen_recipes_table()
+    # 锅谱要先算：gen_recipes 会清理旧的"菜品工作台配方"，
+    # 而 gen_recipes_table 需要完整的菜品表来展开
+    gen_recipes_table(dishes)
     gen_dish_placement(dishes)
     gen_lang(items, dishes)
     gen_item_assets(items, dishes)
     gen_block_item_assets()
     gen_recipes(items, dishes)
     gen_tags(dishes)
+    # 作物：它要写 ModCrops.java、植株模型与掉浇、以及野生作物的世界生成
+    gen_crops.main()
+    # 果树：ModTrees.java + 树苗/树叶模型与掉浇
+    gen_trees.main()
+    # 13 套木制品：ModWoods.java + 117 个方块的模型/掉落/配方/标签/去皮数据图。
+    # **必须在 gen_recipes 之后** —— 它写的配方要参与下面这一步的清理集合，
+    # 而那个集合是在 gen_recipes 里读 gen_woods.recipe_ids() 算出来的。
+    gen_woods.main()
 
 
 if __name__ == "__main__":

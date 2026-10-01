@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "XYX",
+    "XYX"
+  ],
+  "key": {
+    "X": "chinese_traditional_food:mango_planks",
+    "Y": "minecraft:stick"
+  },
+  "result": {
+    "id": "chinese_traditional_food:mango_fence",
+    "count": 3
+  },
+  "group": "fence"
+}

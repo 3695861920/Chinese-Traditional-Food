@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/leaves",
+  "textures": {
+    "all": "chinese_traditional_food:block/jujube_leaves"
+  }
+}

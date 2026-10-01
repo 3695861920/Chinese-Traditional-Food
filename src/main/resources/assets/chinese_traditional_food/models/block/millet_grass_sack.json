@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "particle": "chinese_traditional_food:block/millet_grass_sack",
+    "bottom": "chinese_traditional_food:block/millet_grass_sack",
+    "side": "chinese_traditional_food:block/millet_grass_sack",
+    "top": "chinese_traditional_food:block/millet_grass_sack_top"
+  }
+}

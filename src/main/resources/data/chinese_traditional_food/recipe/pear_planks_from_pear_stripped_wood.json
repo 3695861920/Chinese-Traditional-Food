@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "group": "planks",
+  "ingredients": [
+    "chinese_traditional_food:pear_stripped_wood"
+  ],
+  "result": {
+    "id": "chinese_traditional_food:pear_planks",
+    "count": 4
+  }
+}

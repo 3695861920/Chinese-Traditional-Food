@@ -52,9 +52,9 @@ public class ProcessorScreen extends AbstractContainerScreen<ProcessorMenu> {
     private static final int ARROW_W = 24;
     private static final int ARROW_H = 17;
 
-    // ---- 四进料口：2×2 原料区占得宽，箭头相应右移 ----
-    private static final int COOKER_ARROW_X = 92;
-    private static final int COOKER_ARROW_Y = 33;
+    // ---- 九进料口（锅）：3×3 原料区占得宽，箭头相应右移 ----
+    private static final int COOKER_ARROW_X = 86;
+    private static final int COOKER_ARROW_Y = 37;
 
     /** 满帧（箭头 / 动力条）一律画在面板右侧的条带上，两张图共用同一坐标。 */
     private static final int ARROW_FULL_X = 176;
@@ -101,11 +101,11 @@ public class ProcessorScreen extends AbstractContainerScreen<ProcessorMenu> {
                 x, y, 0.0F, 0.0F, PANEL_W, PANEL_H, TEX_W, TEX_H);
 
         // 多进料口：把"正在加工的那一格"框出来 ——
-        // 否则玩家分不清四个格子里到底轮到谁了
+        // 否则玩家分不清九格里到底轮到谁了
         if (this.multiSlot()) {
             int active = this.menu.getActiveSlot();
-            int sx = x + ProcessorMenu.inputSlotX(active, 2) - 1;
-            int sy = y + ProcessorMenu.inputSlotY(active, 2) - 1;
+            int sx = x + ProcessorMenu.inputSlotX(active, 9) - 1;
+            int sy = y + ProcessorMenu.inputSlotY(active, 9) - 1;
             graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE_COOKER,
                     sx, sy,
                     (float) SLOT_MARK_U, (float) SLOT_MARK_V,

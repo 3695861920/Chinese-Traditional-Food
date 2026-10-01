@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AAA",
+    "AAA",
+    "AAA"
+  ],
+  "key": {
+    "A": "chinese_traditional_food:sweet_bean_sauce"
+  },
+  "result": {
+    "id": "chinese_traditional_food:sweet_bean_sauce_barrel",
+    "count": 1
+  }
+}

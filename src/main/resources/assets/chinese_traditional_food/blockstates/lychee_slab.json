@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "chinese_traditional_food:block/lychee_slab"
+    },
+    "type=top": {
+      "model": "chinese_traditional_food:block/lychee_slab_top"
+    },
+    "type=double": {
+      "model": "chinese_traditional_food:block/lychee_planks"
+    }
+  }
+}

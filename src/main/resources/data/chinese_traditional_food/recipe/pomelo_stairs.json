@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "X  ",
+    "XX ",
+    "XXX"
+  ],
+  "key": {
+    "X": "chinese_traditional_food:pomelo_planks"
+  },
+  "result": {
+    "id": "chinese_traditional_food:pomelo_stairs",
+    "count": 4
+  },
+  "group": "stairs"
+}

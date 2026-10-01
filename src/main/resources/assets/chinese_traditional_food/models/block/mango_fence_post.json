@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/fence_post",
+  "textures": {
+    "texture": "chinese_traditional_food:block/mango_planks"
+  }
+}

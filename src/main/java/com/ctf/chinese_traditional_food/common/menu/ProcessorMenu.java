@@ -53,12 +53,13 @@ public class ProcessorMenu extends AbstractContainerMenu {
     public static final int OUTPUT_X = 116;
     public static final int OUTPUT_Y = 35;
 
-    /** 多进料口机器（锅）的槽位坐标：2×2 原料区 + 右侧出料。 */
-    public static final int GRID_INPUT_X = 44;
-    public static final int GRID_INPUT_Y = 24;
-    public static final int GRID_STEP = 22;
-    public static final int GRID_OUTPUT_X = 122;
-    public static final int GRID_OUTPUT_Y = 33;
+    /** 多进料口机器（锅）的槽位坐标：3×3 原料区 + 右侧出料。 */
+    public static final int GRID_INPUT_X = 30;
+    public static final int GRID_INPUT_Y = 20;
+    public static final int GRID_STEP = 18;
+    public static final int GRID_COLUMNS = 3;
+    public static final int GRID_OUTPUT_X = 118;
+    public static final int GRID_OUTPUT_Y = 38;
 
     private final int inputSlots;
     private final int machineSlots;
@@ -134,7 +135,7 @@ public class ProcessorMenu extends AbstractContainerMenu {
         if (inputSlots <= 1) {
             return INPUT_X;
         }
-        return GRID_INPUT_X + (index % 2) * GRID_STEP;
+        return GRID_INPUT_X + (index % GRID_COLUMNS) * GRID_STEP;
     }
 
     /** 进料槽的纵坐标。 */
@@ -142,7 +143,7 @@ public class ProcessorMenu extends AbstractContainerMenu {
         if (inputSlots <= 1) {
             return INPUT_Y;
         }
-        return GRID_INPUT_Y + (index / 2) * GRID_STEP;
+        return GRID_INPUT_Y + (index / GRID_COLUMNS) * GRID_STEP;
     }
 
     /** 出料槽的横坐标。 */
