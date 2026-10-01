@@ -10,11 +10,13 @@ import com.ctf.chinese_traditional_food.common.block.LargeElectricShellerBlock;
 import com.ctf.chinese_traditional_food.common.block.LargeFurnaceGeneratorBlock;
 import com.ctf.chinese_traditional_food.common.block.PlacedDishBlock;
 import com.ctf.chinese_traditional_food.common.block.PlateBlock;
+import com.ctf.chinese_traditional_food.common.block.RiceCropBlock;
 import com.ctf.chinese_traditional_food.common.block.SoupPotBlock;
 import com.ctf.chinese_traditional_food.common.block.SteamerBlock;
 import com.ctf.chinese_traditional_food.common.block.StoveBlock;
 import com.ctf.chinese_traditional_food.common.block.WokBlock;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.material.PushReaction;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -208,6 +210,22 @@ public final class ModBlocks {
                     .sound(SoundType.STONE)
                     .noOcclusion()
                     .noLootTable());
+
+    // ==================================================================
+    // 农作物
+    // ==================================================================
+
+    /** 水稻作物：长在耕地上，8 个生长阶段，成熟后掉落稻谷和种子。 */
+    public static final DeferredBlock<RiceCropBlock> RICE_CROP =
+            BLOCKS.registerBlock(
+                    "rice_crop",
+                    RiceCropBlock::new,
+                    props -> props
+                            .noCollission()
+                            .randomTicks()
+                            .instabreak()
+                            .sound(SoundType.CROP)
+                            .pushReaction(PushReaction.DESTROY));
 
     public static void register(IEventBus modBus) {
         BLOCKS.register(modBus);
