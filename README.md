@@ -754,4 +754,4 @@ python tools/build_textures.py --size 16     # 想要高清材质包可改 --siz
 
 ## 许可证
 
-MIT。本模组完全独立实现，不复制 TFC、TFC Food Port 或任何其他模组的代码。
+MIT。本模组完全独立实现.
