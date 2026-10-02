@@ -220,12 +220,7 @@ public final class ModBlocks {
             BLOCKS.registerBlock(
                     "rice_crop",
                     RiceCropBlock::new,
-                    props -> props
-                            .noCollission()
-                            .randomTicks()
-                            .instabreak()
-                            .sound(SoundType.CROP)
-                            .pushReaction(PushReaction.DESTROY));
+                    props -> props); // 直接返回原属性，BushBlock 会自动处理无碰撞、随机刻、瞬破和音效
 
     public static void register(IEventBus modBus) {
         BLOCKS.register(modBus);
