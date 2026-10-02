@@ -7,6 +7,7 @@ import java.util.List;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemNameBlockItem;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -389,7 +390,9 @@ public final class ModItems {
     // ==================================================================
 
     /** 稻种（Rice Seeds）。 */
-    public static final DeferredItem<Item> RICE_SEEDS = ITEMS.registerSimpleItem("rice_seeds");
+    public static final DeferredItem<Item> RICE_SEEDS = ITEMS.registerItem(
+        "rice_seeds",
+        props -> new ItemNameBlockItem(ModBlocks.RICE_CROP.get(), props));
 
     /** 谷种（Millet Seeds）。 */
     public static final DeferredItem<Item> MILLET_SEEDS = ITEMS.registerSimpleItem("millet_seeds");
