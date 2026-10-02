@@ -1,13 +1,16 @@
-name: Build NeoForge Mod
+name: Build NeoForge Mod on Windows
 
 on:
   push:
     branches: [ feature/rice-crop-growth ]
-  workflow_dispatch: # 允许手动点击按钮触发
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -16,13 +19,15 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: '25'
-          distribution: 'temurin' # 如果这行报错，改成 'zulu' 或 'microsoft'
+          distribution: 'temurin'
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
 
       - name: Build with Gradle
-        run: ./gradlew build --stacktrace
+        shell: cmd
+        run: gradlew build
+        # 注意：你的项目没有 :client 子模块，所以这里必须是全局的 gradlew build
 
       - name: Upload Mod Jar
         uses: actions/upload-artifact@v4
